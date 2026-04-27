@@ -1,0 +1,377 @@
+key: age_at_nephrectomy
+  Count: 489
+  Nulls: 0
+  Types: {'int': 489}
+  Examples: [72, 74, 43, 49, 50]
+
+key: age_when_quit_smoking
+  Count: 489
+  Nulls: 339
+  Types: {'None': 339, 'int': 150}
+  Examples: [32, 54, 55, 24, 58]
+
+key: alcohol_use
+  Count: 489
+  Nulls: 1
+  Types: {'str': 488, 'None': 1}
+  Examples: ['quit_in_last_3_months', 'two_or_less_daily', 'never_or_not_in_the_last_3_months', 'more_than_two_daily', 'not_found_in_emr']
+
+key: aua_risk_score
+  Count: 489
+  Nulls: 6
+  Types: {'str': 483, 'None': 6}
+  Examples: ['intermediate_risk', 'benign', 'low_risk', 'high_risk', 'very_high_risk']
+
+key: bmi
+  Count: 489
+  Nulls: 1
+  Types: {'float': 488, 'None': 1}
+  Examples: [33.71, 38.69, 28.13, 28.59, 29.47]
+
+key: case_id
+  Count: 489
+  Nulls: 0
+  Types: {'str': 489}
+  Examples: ['case_00004', 'case_00000', 'case_00001', 'case_00003', 'case_00002']
+
+key: chewing_tobacco_use
+  Count: 489
+  Nulls: 1
+  Types: {'str': 488, 'None': 1}
+  Examples: ['never_or_not_in_the_last_3_months', 'quit_in_last_3_months', 'not_found_in_emr', 'current_chewing_tobacco_user']
+
+key: clavien_surgical_complications
+  Count: 489
+  Nulls: 0
+  Types: {'str': 489}
+  Examples: ['1', '3b', '0', '5', '2']
+
+key: comorbidities.aids
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False]
+
+key: comorbidities.cerebrovascular_disease
+  Count: 489
+  Nulls: 1
+  Types: {'bool': 488, 'None': 1}
+  Examples: [False, True]
+
+key: comorbidities.chronic_kidney_disease
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.congestive_heart_failure
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.connective_tissue_disease
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.copd
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.dementia
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.diabetes_mellitus_with_end_organ_damage
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.hemiplegia_from_stroke
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.leukemia
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.localized_solid_tumor
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.malignant_lymphoma
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.metastatic_solid_tumor
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.mild_liver_disease
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.moderate_to_severe_liver_disease
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.myocardial_infarction
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.peptic_ulcer_disease
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.peripheral_vascular_disease
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: comorbidities.uncomplicated_diabetes_mellitus
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: cytoreductive
+  Count: 489
+  Nulls: 2
+  Types: {'bool': 487, 'None': 2}
+  Examples: [False, True]
+
+key: er_visit
+  Count: 489
+  Nulls: 2
+  Types: {'bool': 487, 'None': 2}
+  Examples: [False, True]
+
+key: estimated_blood_loss
+  Count: 489
+  Nulls: 9
+  Types: {'int': 480, 'None': 9}
+  Examples: [130, 100, 200, 1100, 400]
+
+key: first_postop_egfr.days_after_nephrectomy
+  Count: 489
+  Nulls: 92
+  Types: {'int': 397, 'None': 92}
+  Examples: [76, 114, 500, 117, 184]
+
+key: first_postop_egfr.value
+  Count: 489
+  Nulls: 152
+  Types: {'float': 337, 'None': 152}
+  Examples: [76.0, 80.0, 85.0, 54.0, 58.0]
+
+key: gender
+  Count: 489
+  Nulls: 0
+  Types: {'str': 489}
+  Examples: ['male', 'female', 'transgender_male_to_female']
+
+key: hospitalization
+  Count: 489
+  Nulls: 0
+  Types: {'int': 489}
+  Examples: [0, 1, 2, 3, 6]
+
+key: intraoperative_complications.blood_transfusion
+  Count: 489
+  Nulls: 0
+  Types: {'bool': 489}
+  Examples: [False, True]
+
+key: intraoperative_complications.cardiac_event
+  Count: 489
+  Nulls: 1
+  Types: {'bool': 488, 'None': 1}
+  Examples: [False]
+
+key: intraoperative_complications.injury_to_surrounding_organ
+  Count: 489
+  Nulls: 1
+  Types: {'bool': 488, 'None': 1}
+  Examples: [False, True]
+
+key: ischemia_time
+  Count: 489
+  Nulls: 230
+  Types: {'int': 259, 'None': 230}
+  Examples: [13, 15, 17, 18, 20]
+
+key: last_postop_egfr.days_after_nephrectomy
+  Count: 489
+  Nulls: 103
+  Types: {'int': 386, 'None': 103}
+  Examples: [1958, 114, 500, 1623, 1694]
+
+key: last_postop_egfr.value
+  Count: 489
+  Nulls: 165
+  Types: {'float': 324, 'None': 165}
+  Examples: [80.0, 83.0, 84.0, 54.0, 58.0]
+
+key: last_preop_egfr.days_before_nephrectomy
+  Count: 489
+  Nulls: 96
+  Types: {'int': 393, 'None': 96}
+  Examples: [1, 7, 54, 27, 61]
+
+key: last_preop_egfr.value
+  Count: 489
+  Nulls: 192
+  Types: {'float': 297, 'None': 192}
+  Examples: [67.0, 77.0, 86.0, 87.0, 60.0]
+
+key: malignant
+  Count: 489
+  Nulls: 7
+  Types: {'bool': 482, 'None': 7}
+  Examples: [False, True]
+
+key: operative_time
+  Count: 489
+  Nulls: 5
+  Types: {'int': 484, 'None': 5}
+  Examples: [324, 229, 293, 180, 123]
+
+key: pack_years
+  Count: 489
+  Nulls: 236
+  Types: {'float': 253, 'None': 236}
+  Examples: [0.0, 6.0, 7.0, 15.0, 50.0]
+
+key: pathologic_size
+  Count: 489
+  Nulls: 21
+  Types: {'float': 468, 'None': 21}
+  Examples: [2.9, 3.4, 2.1, 2.4, 5.4]
+
+key: pathology_m_stage
+  Count: 489
+  Nulls: 15
+  Types: {'str': 474, 'None': 15}
+  Examples: ['1', 'x', '0', 'na']
+
+key: pathology_n_stage
+  Count: 489
+  Nulls: 14
+  Types: {'str': 475, 'None': 14}
+  Examples: ['1', 'x', '0', 'na']
+
+key: pathology_t_stage
+  Count: 489
+  Nulls: 13
+  Types: {'str': 476, 'None': 13}
+  Examples: ['1b', '2b', 'na', '1a', '3']
+
+key: positive_resection_margins
+  Count: 489
+  Nulls: 22
+  Types: {'bool': 467, 'None': 22}
+  Examples: [False, True]
+
+key: radiographic_size
+  Count: 489
+  Nulls: 7
+  Types: {'float': 482, 'None': 7}
+  Examples: [2.4, 3.0, 2.2, 4.5, 4.9]
+
+key: readmission
+  Count: 489
+  Nulls: 2
+  Types: {'bool': 487, 'None': 2}
+  Examples: [False, True]
+
+key: rhabdoid_features
+  Count: 489
+  Nulls: 13
+  Types: {'bool': 476, 'None': 13}
+  Examples: [False, True]
+
+key: sarcomatoid_features
+  Count: 489
+  Nulls: 13
+  Types: {'bool': 476, 'None': 13}
+  Examples: [False, True]
+
+key: smoking_history
+  Count: 489
+  Nulls: 0
+  Types: {'str': 489}
+  Examples: ['previous_smoker', 'never_smoked', 'current_smoker', 'not_found_in_emr']
+
+key: surgery_type
+  Count: 489
+  Nulls: 0
+  Types: {'str': 489}
+  Examples: ['robotic', 'percutaneous', 'laparoscopic', 'open']
+
+key: surgical_approach
+  Count: 489
+  Nulls: 1
+  Types: {'str': 488, 'None': 1}
+  Examples: ['retroperitoneal', 'transperitoneal', 'trans_to_retro']
+
+key: surgical_procedure
+  Count: 489
+  Nulls: 0
+  Types: {'str': 489}
+  Examples: ['nephroureterectomy', 'cryoablation', 'partial_nephrectomy', 'radical_nephrectomy']
+
+key: tumor_histologic_subtype
+  Count: 489
+  Nulls: 6
+  Types: {'str': 483, 'None': 6}
+  Examples: ['chromophobe_rcc', 'angiomyolipoma', 'papillary_rcc', 'rcc_unclassified', 'clear_cell_rcc']
+
+key: tumor_isup_grade
+  Count: 489
+  Nulls: 9
+  Types: {'str': 480, 'None': 9}
+  Examples: ['na', '3', '1', '4', '2']
+
+key: tumor_necrosis
+  Count: 489
+  Nulls: 13
+  Types: {'bool': 476, 'None': 13}
+  Examples: [False, True]
+
+key: vital_days_after_surgery
+  Count: 489
+  Nulls: 0
+  Types: {'int': 489}
+  Examples: [1669, 1958, 114, 500, 1694]
+
+key: vital_status
+  Count: 489
+  Nulls: 0
+  Types: {'str': 489}
+  Examples: ['dead', 'censored']
