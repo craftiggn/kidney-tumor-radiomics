@@ -1,24 +1,38 @@
-#NOTE check these values are correct, they are system-specific.
-#-------------------------------------------------
-dataset_filepath = "/home/marcel/Repos/Data/kits23"
-#-------------------------------------------------
-
-import sys
-sys.path.append("./modules")
-
-from modules import data_preprocessing as dataPrep
-from modules import plotting_functions as plf
+import pandas as pd
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import json
 
+def display_3d_from_json(json_path):
+    # 1. Load the data
+    with open(json_path, 'r') as f:
+        data = json.load(f)
+    
+    df = pd.DataFrame(data)
 
-instance_path = "/home/marcel/Repos/Data/kits23/case_00000/"
-img_filename = "imaging.nii.gz"
-seg_filename = "segmentation.nii.gz"
+    # 2. Initialize the 3D Plot
+    fig = plt.figure(figsize=(12, 10))
+    ax3d = fig.add_subplot(1, 1, 1, projection='3d')
+    
+    # 3. Recreate the scatter plot
+    # Using the same keys from your JSON: 'tumor_x', 'tumor_y', 'tumor_z'
+    scatter = ax3d.scatter(df['tumor_x'], df['tumor_y'], df['tumor_z'], 
+                           c=df['tumor_z'], cmap='viridis', s=60, alpha=0.8)
+    
+    # 4. Re-add labels
+    for i, row in df.iterrows():
+        # Ensure we handle the case_id logic
+        short_label = str(row['case_id']).replace("case_", "") 
+        ax3d.text(row['tumor_x'], row['tumor_y'], row['tumor_z'], short_label, size=8)
 
-data_seg = dataPrep.get_instance_numpy(instance_path+seg_filename)
-# data_img = dataPrep.get_instance_numpy(instance_path+img_filename)
+    # 5. Formatting
+    ax3d.set_title("3D Tumor Dimensions (Restored from JSON)")
+    ax3d.set_xlabel("X Size")
+    ax3d.set_ylabel("Y Size")
+    ax3d.set_zlabel("Z Size")
+    fig.colorbar(scatter, ax=ax3d, label='Height (Z)', shrink=0.5)
 
+    plt.show()
 
-
-
-plf.show_value_counts(data_seg)
+# Usage
+display_3d_from_json("figures/3d_plot_data.json")

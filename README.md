@@ -26,3 +26,31 @@ Label the data using 3d slicer,
 
 # Notes
 sparse matrix architecture - rejected due to poor implemenation/availability in tf.keras
+
+# Implementation
+
+
+
+## Data preprocessing
+Comparing the different labeled samples in the Z - axis, 95% of tumors occupy under 0.4 of the Z axis - we can use this as the initial croppig of the data.\
+It would be prefferable to implement a function that works as such:
+1. the function should take as input # parameters
+    - max_tumor_z_size (or percentage) - tumors over this size will be rejected
+    - tumor_z_size_rescale - all tumors will be scaled to an apropriate size \ (maybe not all, maybe just the ones above a given threshold)
+    - padding - how many slices over / under the tumor do we allow
+2. read the [text](data/tumor_instance_data.json) and [text](<data/kits23 JSON table - JSON.csv>)
+3. from these 2 datasets find the intersection -> case_id + labels
+4. rescale the tumors if needed and crop or expand the data
+5. cast the data to tf.Record and save it
+
+This function should have certain additional settings which describe:
+- do we only scale down tumors or do we scale them up to -> tumors all of the same size or all under some size
+
+Additional functionality:
+- add an option to save the files to the original format 'nibabel_images', such that they can be reviewed in 3d Slicer
+- make the function print messages if there is a mismatch between .csv files
+
+### later adition to this function 
+- create synthetic data
+- split test - train set taking into account the probablilty of all properties
+- 
