@@ -50,7 +50,41 @@ Additional functionality:
 - add an option to save the files to the original format 'nibabel_images', such that they can be reviewed in 3d Slicer
 - make the function print messages if there is a mismatch between .csv files
 
+### Helpfull tensorflow functions
+use one-hot encoding for input? - https://www.tensorflow.org/api_docs/python/tf/one_hot
+resize the input image? - https://www.tensorflow.org/api_docs/python/tf/image/resize
+use TFRecord for data representation - https://www.tensorflow.org/tutorials/load_data/tfrecord
+use tf.data to read TFRecord 
+
+
 ### later adition to this function 
 - create synthetic data
 - split test - train set taking into account the probablilty of all properties
 - 
+
+# Questions
+- jak powinny być przygotowane dane do uczenia maszynowego na icm, w jakiej strukturze je zapisać?
+- TFRecord, generator vs. preloaded zrobić benchmark generatora, może nie ma sensu jeśli się wczytuje w ciągu sekund to nie ma co się pocić
+dataset.save
+
+- jakieś rady co do uruchamiania uczenia na rysach aby była dobra wydajność (nvm. batch size większy może?), jak to ocenić czy dorze działa?
+32 lub mniej
+
+- one hot na inpucie? to dane wtedy będą 4 wymiarowe + batch
+nie
+
+- jakie biblioteki wykorzystywać do tworzenia syntetycznych danych: keras.layers jak na ćwiczeniach, czy własne funkcje tf?
+keras.layers będzie lepiej/ławiej - może własną warstwę zaprojektować 
+
+- jak zrobić dobry pipeline?
+czasami można na żywo jak będzie szybkie
+
+- da się wizualizować dane zapisane w ten sposób w miarę bez-problematyczny sposób?
+tak
+
+- czy są jakieś sposoby na automatyczny tuning hyperparametrów, coś w kerasie? czy muszę to ręcznie robić?
+sklearn - pakiet do optymalizacj
+
+- jakieś inne rady przy tworzeniu modeli które mają później być użyte w aplikacji (format zapisu lub coś)
+tf.keras.save
+
