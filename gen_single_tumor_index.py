@@ -1,4 +1,4 @@
-#NOTE check these values are correct, they are system-specific.
+# NOTE check these values are correct, they are system-specific.
 #-------------------------------------------------
 dataset_filepath = "/home/marcel/Repos/Data/kits23"
 seg_filename = "segmentation.nii.gz"
@@ -95,5 +95,5 @@ cases = list(df_singleTumor_noCyst["case"])
 print(len(cases) / len(df))
 
 import json
-with open("single_tumor_cases.json", "w") as f:
+with open("data/single_tumor_cases.json", "w") as f:
     json.dump(cases, f)

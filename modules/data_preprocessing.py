@@ -88,8 +88,8 @@ def preprocess_data(kits_dir, output_dir, annotation_path, valid_cases_path, ver
     
     print("Validating cases against CSV...")
 
-    metadata = []
-    df = pd.read_csv(annotation_path)
+    labels = []
+    df = pd.read_excel(annotation_path)
 
     required_columns = ['case_id', 'position of tumor', 'Invasion of the renal sinus', 'radius']
     missing_cols = [col for col in required_columns if col not in df.columns]
@@ -143,49 +143,70 @@ def preprocess_data(kits_dir, output_dir, annotation_path, valid_cases_path, ver
         diameter_mm = calculate_max_diameter(segmentation_array, zooms)
 
         # Handle the radius points
-        radius_annotation = row['radius'] if not pd.isna(row['radius']) else np.nan
+        radius_annotation = int(row['radius']) if not pd.isna(row['radius']) else np.nan
 
         # Save the mask as a numpy array
         npy_filename = f"{case_id}.npy"
         np.save(out_path / npy_filename, segmentation_array)
         if verbose: print(f"\t-> Saved mask to {npy_filename}")
 
-        # append metadata
-        metadata.append({
+        # append labels
+        labels.append({
             'case_id': case_id,
             'position_of_tumor': str(position).strip(),
             'invasion_of_renal_sinus': str(invasion).strip(),
-            'original_csv_radius': radius_annotation,
+            'radius_annotation': radius_annotation,
             'calculated_diameter_mm': diameter_mm,
             'spacing_z': float(zooms[0]),
             'spacing_y': float(zooms[1]),
             'spacing_x': float(zooms[2])
         })
-        if verbose: print(f"\t-> Metadata appended")
+        if verbose: print(f"\t-> labels appended")
 
-    # save metadata
-    metadata_df = pd.DataFrame(metadata)
-    metadata_df.to_csv(out_path/"metadata.csv", index=False)
+    # save labels
+    labels_df = pd.DataFrame(labels)
+    labels_df.to_csv(out_path/"labels.csv", index=False)
 
     print(colored("\n--- Data Consistency Summary ---", "cyan", attrs=['bold']))
-    for col in ['position_of_tumor', 'invasion_of_renal_sinus', 'original_csv_radius']:
-        unique_vals = metadata_df[col].unique()
+    for col in ['position_of_tumor', 'invasion_of_renal_sinus', 'radius_annotation']:
+        unique_vals = labels_df[col].unique()
         print(f"Unique categories in '{col}': {unique_vals}")
 
     # Check for radius distribution
-    print(f"Number of cases with NaN original radius: {metadata_df['original_csv_radius'].isna().sum()}")
+    print(f"Number of cases with NaN original radius: {labels_df['radius_annotation'].isna().sum()}")
 
-    print(colored(f"\nProcessing Complete!", "green", attrs=['bold']), f"Metadata and segmentations for {len(metadata_df)} cases saved to {out_path}")
+    print(colored(f"\nProcessing Complete!", "green", attrs=['bold']), f"labels and segmentations for {len(labels_df)} cases saved to {out_path}")
     return
 
 def get_case_path(dataset_filepath: str, instance: int):
     return str(dataset_filepath) + "/case_" +str(instance).zfill(5)
 
+def compute_radius_from_diameter(df):
+    """
+    Computes the radius points, based on the calculated diameter within the labels.
+    """
+    bins = [0, 25, 50, np.inf]
+    labels = [0, 1, 2]
+
+    # calculate the points
+    df['computed_radius_points'] = pd.cut(
+        df['calculated_diameter_mm'],
+        bins = bins,
+        labels = labels,
+        include_lowest = True, # Ensures 0 is included
+        right = True # Ensures ranges are right-closed 
+    )
+
+    # convert to int
+    df['computed_radius_points'] = df['computed_radius_points'].astype(int)
+
+
+
 # use keras layers api 
 # https://keras.io/api/layers/preprocessing_layers/
 
 # NOTE
-# add a function to analyze the metadata and separate it into train/ split
+# add a function to analyze the labels and separate it into train/ split
 # when loading the dataset use np.load(f"{output_dir}/{case_id}.npy", mmap_mode='r')
 # for the fastest possible data reading
 

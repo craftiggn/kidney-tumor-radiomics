@@ -25,10 +25,22 @@ Label the data using 3d slicer,
 - message kits23 winners for annotation model access
 
 # Notes
-sparse matrix architecture - rejected due to poor implemenation/availability in tf.keras
+WARNING: 5 cases are annotated but missing from valid_cases: ['case_00001', 'case_00002', 'case_00006', 'case_00008', 'case_00015']
+- 01 - 2 masses
+- 02 - 3 masses
+- 06 - 3 masses
+- 08 - many masses
+- 15 - 3 masses
+
+Maybe we can use tumors with multiple cases, why not?
+- Need to figure out how masks work in more detail
 
 # Implementation
 
+## Launching
+after geting the repo, kits23 and the raw annotation from google drive (.xlsx) ready run:
+1. `gen_single_tumor_index.py` - to genereate `data/single_tumor_cases.json`
+2. `convert_kits_dataset.py` - to generate `/home/marcel/Repos/Data/kits23_converted/` directory and fill it with data prepared for training i.e. segmentations as .npy arrays and labels.csv.
 
 
 ## Data preprocessing
