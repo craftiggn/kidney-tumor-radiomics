@@ -23,6 +23,8 @@ Label the data using 3d slicer,
 
 # ToDo
 - message kits23 winners for annotation model access
+- 458 - to nie guz nerki a miedniczki czyli zupełnie inny nowotwór
+- 466 - to samo  - inny nowotwór
 
 # Notes
 WARNING: 5 cases are annotated but missing from valid_cases: ['case_00001', 'case_00002', 'case_00006', 'case_00008', 'case_00015']
@@ -43,24 +45,8 @@ after geting the repo, kits23 and the raw annotation from google drive (.xlsx) r
 2. `convert_kits_dataset.py` - to generate `/home/marcel/Repos/Data/kits23_converted/` directory and fill it with data prepared for training i.e. segmentations as .npy arrays and labels.csv.
 
 
-## Data preprocessing
-Comparing the different labeled samples in the Z - axis, 95% of tumors occupy under 0.4 of the Z axis - we can use this as the initial croppig of the data.\
-It would be prefferable to implement a function that works as such:
-1. the function should take as input # parameters
-    - max_tumor_z_size (or percentage) - tumors over this size will be rejected
-    - tumor_z_size_rescale - all tumors will be scaled to an apropriate size \ (maybe not all, maybe just the ones above a given threshold)
-    - padding - how many slices over / under the tumor do we allow
-2. read the [text](data/tumor_instance_data.json) and [text](<data/kits23 JSON table - JSON.csv>)
-3. from these 2 datasets find the intersection -> case_id + labels
-4. rescale the tumors if needed and crop or expand the data
-5. cast the data to tf.Record and save it
-
-This function should have certain additional settings which describe:
-- do we only scale down tumors or do we scale them up to -> tumors all of the same size or all under some size
-
-Additional functionality:
-- add an option to save the files to the original format 'nibabel_images', such that they can be reviewed in 3d Slicer
-- make the function print messages if there is a mismatch between .csv files
+## Input standardisation ideas
+create a bounding box for the kidney-tumor system, 
 
 ### Helpfull tensorflow functions
 use one-hot encoding for input? - https://www.tensorflow.org/api_docs/python/tf/one_hot

@@ -86,7 +86,7 @@ def preprocess_data(kits_dir, output_dir, annotation_path, valid_cases_path, ver
     with open(valid_cases_path, 'r') as f:
         valid_cases = set(json.load(f))
     
-    print("Validating cases against CSV...")
+    print("Validating cases against xlsx...")
 
     labels = []
     df = pd.read_excel(annotation_path)
