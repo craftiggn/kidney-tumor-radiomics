@@ -37,6 +37,8 @@ WARNING: 5 cases are annotated but missing from valid_cases: ['case_00001', 'cas
 Maybe we can use tumors with multiple cases, why not?
 - Need to figure out how masks work in more detail
 
+Tumours may be noninvasive, semi-invasive, or invasive. Noninvasive tumours are partly or predominantly exophytic peripheral tumours and have a clear rim of normal parenchyma between the tumour and the renal sinus. Semi-invasive tumours include three distinct types: (1) peripheral tumours touching the renal sinus; (2) completely endophytic tumours confined within the renal parenchyma; and (3) hilar tumours that are superficial and not invading the renal sinus. Invasive tumours are those that extend into the renal sinus. Thus, peripheral tumours can be noninvasive, semi-invasive, or invasive. Hilar tumours can be semi-invasive or invasive, and all central tumours are exclusively invasive (Fig. 1).
+
 # Implementation
 
 ## Launching

@@ -97,3 +97,19 @@ print(len(cases) / len(df))
 import json
 with open("data/single_tumor_cases.json", "w") as f:
     json.dump(cases, f)
+
+from termcolor import colored
+# generate a list of cases with 2 tumors or
+two_tumor_cases = df[df["tumor_instance-2"]]['case']
+
+print(colored("two tumor cases:", "green", ['bold']))
+for case in two_tumor_cases:
+    print(case)
+
+one_tumor_cysts = df[
+    df["tumor_instance-1"] & df["cyst_instance-1"]
+]
+
+print(colored("Tumor cases with cysts:", "green", ['bold']))
+for case in one_tumor_cysts:
+    print(case)

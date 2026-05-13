@@ -6,6 +6,10 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from termcolor import colored
 from tqdm import tqdm
+from scipy.ndimage import label, center_of_mass
+from sklearn.model_selection import train_test_split
+import tensorflow as tf
+import keras # NOTE use this instead of tf.keras, for the annoying warnings, try later
 
 # for tumor diameter calculation
 from scipy.spatial import ConvexHull
@@ -200,6 +204,10 @@ def compute_radius_from_diameter(df):
     # convert to int
     df['computed_radius_points'] = df['computed_radius_points'].astype(int)
 
+class StandardizeVolume3D(keras.layers.Layer):
+    def __init__(self, target_dims, **kwargs):
+        super().__innit__(**kwargs)
+        self.target_z, self.target_y, self.target_x = target_dims
 
 
 # use keras layers api 
