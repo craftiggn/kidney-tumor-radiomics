@@ -46,6 +46,9 @@ after geting the repo, kits23 and the raw annotation from google drive (.xlsx) r
 1. `gen_single_tumor_index.py` - to genereate `data/single_tumor_cases.json`
 2. `convert_kits_dataset.py` - to generate `/home/marcel/Repos/Data/kits23_converted/` directory and fill it with data prepared for training i.e. segmentations as .npy arrays and labels.csv.
 
+### Updated
+after geting the repo, kits23 and the raw annotation from google drive (.xlsx) ready run:
+1. 
 
 ## Input standardisation ideas
 create a bounding box for the kidney-tumor system, 

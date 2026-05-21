@@ -1,4 +1,5 @@
 import json
+import os
 import nibabel as nib
 import numpy as np
 import pandas as pd
@@ -33,12 +34,12 @@ def get_instance_numpy(filepath):
     print(f"The data is converted into an numpy array of shape {image_data.shape}")
     return image_data
 
-def calculate_max_diameter(mask, zooms):
+def calculate_max_diameter(mask, zooms, mask_value=2):
     """
-    Caslculates the maximum 3D diameter of a segmentation mask (val = 2) in millimeters.
+    Caslculates the maximum 3D diameter of a segmentation mask (val = mask_value) in millimeters.
     """
     # Find all coordinates where val = 2
-    coords = np.argwhere(mask==2)
+    coords = np.argwhere(mask==mask_value)
 
     if len(coords) == 0: 
         return 0.0
@@ -209,6 +210,61 @@ class StandardizeVolume3D(keras.layers.Layer):
         super().__innit__(**kwargs)
         self.target_z, self.target_y, self.target_x = target_dims
 
+def extract_tumor_instances(kits_dir):
+    """
+    Iterates through all kits23 cases, isolates every tumor instance (first annotation only),
+    calculates their physical diameter, and returns a DataFrame.
+    """
+    kits_path = Path(kits_dir)
+    data = []
+
+    case_dirs = sorted([d for d in kits_path.iterdir() if d.is_dir() and d.name.startswith("case_")])
+
+    pbar = tqdm(case_dirs, desc="Extracting tumor instance data")
+
+    for case_dir in pbar:
+        case_id = case_dir.name
+        instance_path = case_dir / 'instances'
+
+        # skip if instance path doesnt exist
+        if not instance_path.exists():
+            print(colored(f"WARNING: instance directory doesn't exist in {case_id}", 'red'))
+            continue
+
+        # iterate over the tumor instances
+        for filename in os.listdir(instance_path):
+
+            # filter for tummor instances being the first annotation
+            if filename.startswith('tumor_instance-') and filename.endswith("_annotation-1.nii.gz"):
+                file_path = instance_path / filename
+
+                try:
+                    img = nib.load(str(file_path))
+
+                    mask = img.get_fdata().astype(np.int8)
+                    zooms = img.header.get_zooms()
+
+                    if mask.max() != 1:
+                        pbar.write(colored(f"Skipped {case_id}/{filename}: max val in mask not equall 1", 'yellow'))
+                        continue
+
+                    diameter_mm = calculate_max_diameter(mask, zooms, mask_value=1)
+
+                    data.append({
+                        'case_id': case_id,
+                        'tumor_instance': filename,
+                        'calculated_diameter_mm': diameter_mm,
+                        'spacing_z': float(zooms[0]),
+                        'spacing_y': float(zooms[1]),
+                        'spacing_x': float(zooms[2]),
+                    })
+
+                except Exception as e:
+                    pbar.write(colored(f"ERROR: unknown error processing {case_id}/{filename}: {e}", 'red'))
+
+    df = pd.DataFrame(data)
+    return df
+    
 
 # use keras layers api 
 # https://keras.io/api/layers/preprocessing_layers/
