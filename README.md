@@ -24,7 +24,7 @@ Tumours may be noninvasive, semi-invasive, or invasive. Noninvasive tumours are 
 ## Launching
 after geting the repo, kits23 and the raw annotation from google drive (.xlsx) ready run:
 1. `analyse_kits23_tumor_instances.py` - to genereate `tumor_instance_data.json`
-
+2. 
 
 <!-- 2. `convert_kits_dataset.py` - to generate `/home/marcel/Repos/Data/kits23_converted/` directory and fill it with data prepared for training i.e. segmentations as .npy arrays and labels.csv. -->
 
