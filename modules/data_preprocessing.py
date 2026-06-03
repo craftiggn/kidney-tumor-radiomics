@@ -228,39 +228,88 @@ def extract_tumor_instances(kits_dir):
 
         # skip if instance path doesnt exist
         if not instance_path.exists():
-            print(colored(f"WARNING: instance directory doesn't exist in {case_id}", 'red'))
+            pbar.write(colored(f"WARNING: instance directory doesn't exist in {case_id}", 'red'))
             continue
 
+        all_files = os.listdir(instance_path)
+        kidney_files = [f for f in all_files if f.startswith('kidney_instance-') and f.endswith('_annotation-1.nii.gz')]
+        tumor_files = [f for f in all_files if f.startswith('tumor_instance-') and f.endswith('_annotation-1.nii.gz')]
+
+        # if there are no tumors , move on to the next case
+        if not tumor_files:
+            pbar.write(colored(f'WARNING: no tumor instances in {instance_path}', 'yellow'))
+            continue
+
+        # Process kidney instances cache filename, center of mass
+        kidneys_data = []
+        for k_file in kidney_files:
+            try:
+                k_path = instance_path / k_file
+                k_img = nib.load(str(k_path))
+                k_mask = k_img.get_fdata().astype(np.int8)
+                k_zooms = k_img.header.get_zooms()
+
+                # Calculate center of mass for the kidney (where mask == 1)
+                k_com_voxel = center_of_mass(k_mask == 1)
+
+                # Check for empty masks which return NaN
+                if pd.isna(k_com_voxel[0]):
+                    pbar.write(colored(f"WARNING: Empty mask found for {case_id}/{k_file}", "yellow"))
+                    continue
+
+                # COnvert voxel coordinates to physical coordinates (millimeters)
+                k_com_physical = np.array(k_com_voxel) * np.array(k_zooms)
+
+                kidneys_data.append({
+                    'filename': k_file,
+                    'com_physical': k_com_physical
+                })
+
+            except Exception as e:
+                pbar.write(colored(f"ERROR: processing kidney {case_id}/{k_file}: {e}", "red"))
+
+        for t_file in tumor_files:
+            try:
+                t_path = instance_path / t_file
+                t_img = nib.load(str(t_path))
+                t_mask = t_img.get_fdata().astype(np.int8)
+                t_zooms = t_img.header.get_zooms()
+
+                if t_mask.max() != 1:
+                    pbar.write(colored(f"Skipped {case_id}/{t_file}: max val in the mask not equal 1", "yellow"))
+                    continue
+
+                # cal
         # iterate over the tumor instances
-        for filename in os.listdir(instance_path):
+        # for filename in os.listdir(instance_path):
 
-            # filter for tummor instances being the first annotation
-            if filename.startswith('tumor_instance-') and filename.endswith("_annotation-1.nii.gz"):
-                file_path = instance_path / filename
+        #     # filter for tummor instances being the first annotation
+        #     if filename.startswith('tumor_instance-') and filename.endswith("_annotation-1.nii.gz"):
+        #         file_path = instance_path / filename
 
-                try:
-                    img = nib.load(str(file_path))
+        #         try:
+        #             img = nib.load(str(file_path))
 
-                    mask = img.get_fdata().astype(np.int8)
-                    zooms = img.header.get_zooms()
+        #             mask = img.get_fdata().astype(np.int8)
+        #             zooms = img.header.get_zooms()
 
-                    if mask.max() != 1:
-                        pbar.write(colored(f"Skipped {case_id}/{filename}: max val in mask not equall 1", 'yellow'))
-                        continue
+        #             if mask.max() != 1:
+        #                 pbar.write(colored(f"Skipped {case_id}/{filename}: max val in mask not equall 1", 'yellow'))
+        #                 continue
 
-                    diameter_mm = calculate_max_diameter(mask, zooms, mask_value=1)
+        #             diameter_mm = calculate_max_diameter(mask, zooms, mask_value=1)
 
-                    data.append({
-                        'case_id': case_id,
-                        'tumor_instance': filename,
-                        'calculated_diameter_mm': diameter_mm,
-                        'spacing_z': float(zooms[0]),
-                        'spacing_y': float(zooms[1]),
-                        'spacing_x': float(zooms[2]),
-                    })
+        #             data.append({
+        #                 'case_id': case_id,
+        #                 'tumor_instance': filename,
+        #                 'calculated_diameter_mm': diameter_mm,
+        #                 'spacing_z': float(zooms[0]),
+        #                 'spacing_y': float(zooms[1]),
+        #                 'spacing_x': float(zooms[2]),
+        #             })
 
-                except Exception as e:
-                    pbar.write(colored(f"ERROR: unknown error processing {case_id}/{filename}: {e}", 'red'))
+        #         except Exception as e:
+        #             pbar.write(colored(f"ERROR: unknown error processing {case_id}/{filename}: {e}", 'red'))
 
     df = pd.DataFrame(data)
     return df
