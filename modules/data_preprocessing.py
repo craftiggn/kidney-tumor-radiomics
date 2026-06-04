@@ -1,5 +1,6 @@
 import json
 import os
+import re # refgular expressions
 import nibabel as nib
 import numpy as np
 import pandas as pd
@@ -77,6 +78,7 @@ def calculate_max_diameter(mask, zooms, mask_value=2):
             max_diameter = np.max(pdist(coords_mm))
 
     return round(max_diameter, 2)
+
 
 def preprocess_data(kits_dir, output_dir, annotation_path, valid_cases_path, verbose=False):
     """
@@ -210,6 +212,30 @@ class StandardizeVolume3D(keras.layers.Layer):
         super().__innit__(**kwargs)
         self.target_z, self.target_y, self.target_x = target_dims
 
+def get_best_annotation_files(files, prefix):
+    pattern = re.compile(rf"{prefix}_instance-(\d+)_annotation-(\d+)\.nii\.gz")
+    grouped_instances = {}
+
+    for f in files:
+        match = pattern.match(f)
+        if match:
+            inst_id = int(match.group(1))
+            ann_id = int(match.group(2))
+
+            if inst_id not in grouped_instances:
+                grouped_instances[inst_id] = []
+
+            grouped_instances[inst_id].append((ann_id, f))
+
+    # for each insance, sort by annotation ID and return the lowest one
+    # for consistency
+    best_files = []
+    for inst_id, anns in grouped_instances.items():
+        anns.sort(key=lambda x: x[0])
+        best_files.append(anns[0][1])
+
+    return best_files
+
 def extract_tumor_instances(kits_dir):
     """
     Iterates through all kits23 cases, isolates every tumor instance (first annotation only),
@@ -232,8 +258,8 @@ def extract_tumor_instances(kits_dir):
             continue
 
         all_files = os.listdir(instance_path)
-        kidney_files = [f for f in all_files if f.startswith('kidney_instance-') and f.endswith('_annotation-1.nii.gz')]
-        tumor_files = [f for f in all_files if f.startswith('tumor_instance-') and f.endswith('_annotation-1.nii.gz')]
+        kidney_files = get_best_annotation_files(all_files, "kidney")
+        tumor_files = get_best_annotation_files(all_files, "tumor")
 
         # if there are no tumors , move on to the next case
         if not tumor_files:
@@ -249,15 +275,15 @@ def extract_tumor_instances(kits_dir):
                 k_mask = k_img.get_fdata().astype(np.int8)
                 k_zooms = k_img.header.get_zooms()
 
-                # Calculate center of mass for the kidney (where mask == 1)
+                # Calculate center of mass for the kidney
                 k_com_voxel = center_of_mass(k_mask == 1)
 
-                # Check for empty masks which return NaN
-                if pd.isna(k_com_voxel[0]):
-                    pbar.write(colored(f"WARNING: Empty mask found for {case_id}/{k_file}", "yellow"))
+                # If mask is completely empty, center_of_mass returns nan or a tuple containing nans
+                if k_com_voxel is None or np.isnan(k_com_voxel).any():
+                    pbar.write(colored(f"WARNING: Empty mask found for {case_id}/{k_file}", 'yellow'))
                     continue
 
-                # COnvert voxel coordinates to physical coordinates (millimeters)
+                # convert voxel coordinates to physical coordinates
                 k_com_physical = np.array(k_com_voxel) * np.array(k_zooms)
 
                 kidneys_data.append({
@@ -268,6 +294,7 @@ def extract_tumor_instances(kits_dir):
             except Exception as e:
                 pbar.write(colored(f"ERROR: processing kidney {case_id}/{k_file}: {e}", "red"))
 
+        # process tumors
         for t_file in tumor_files:
             try:
                 t_path = instance_path / t_file
@@ -279,37 +306,47 @@ def extract_tumor_instances(kits_dir):
                     pbar.write(colored(f"Skipped {case_id}/{t_file}: max val in the mask not equal 1", "yellow"))
                     continue
 
-                # cal
-        # iterate over the tumor instances
-        # for filename in os.listdir(instance_path):
+                # Calculate center of mass for the tumor
+                t_com_voxel = center_of_mass(t_mask == 1)
 
-        #     # filter for tummor instances being the first annotation
-        #     if filename.startswith('tumor_instance-') and filename.endswith("_annotation-1.nii.gz"):
-        #         file_path = instance_path / filename
+                # If mask is completely empty, center_of_mass returns nan or a tuple containing nans
+                if t_com_voxel is None or np.isnan(t_com_voxel).any():
+                    pbar.write(colored(f"WARNING: Empty mask found for {case_id}/{t_file}", 'yellow'))
+                    continue
 
-        #         try:
-        #             img = nib.load(str(file_path))
+                t_com_physical = np.array(t_com_voxel) * np.array(t_zooms)
 
-        #             mask = img.get_fdata().astype(np.int8)
-        #             zooms = img.header.get_zooms()
+                # Find the closest kidney
+                closest_kidney = None
+                min_distance = float('inf')
 
-        #             if mask.max() != 1:
-        #                 pbar.write(colored(f"Skipped {case_id}/{filename}: max val in mask not equall 1", 'yellow'))
-        #                 continue
+                for k_data in kidneys_data:
+                    # calculate Euclidian distance between centers of mass
+                    distance = np.linalg.norm(t_com_physical - k_data['com_physical'])
+                    if distance < min_distance:
+                        min_distance = distance
+                        closest_kidney = k_data['filename']
 
-        #             diameter_mm = calculate_max_diameter(mask, zooms, mask_value=1)
+                # calculate diameter
+                diameter_mm = calculate_max_diameter(t_mask, t_zooms, mask_value=1)
 
-        #             data.append({
-        #                 'case_id': case_id,
-        #                 'tumor_instance': filename,
-        #                 'calculated_diameter_mm': diameter_mm,
-        #                 'spacing_z': float(zooms[0]),
-        #                 'spacing_y': float(zooms[1]),
-        #                 'spacing_x': float(zooms[2]),
-        #             })
+                # get the instance number
+                instance_num = re.search(r"_instance-(\d+)", t_file).group(1)
 
-        #         except Exception as e:
-        #             pbar.write(colored(f"ERROR: unknown error processing {case_id}/{filename}: {e}", 'red'))
+                # save relevant data
+                data.append({
+                    'tumor_id': f"{case_id}_t{instance_num}",
+                    'case_id': case_id,
+                    'tumor_instance': t_file,
+                    'kidney_instance': closest_kidney,
+                    'calculated_diameter_mm': diameter_mm,
+                    'spacing_z': float(t_zooms[0]),
+                    'spacing_y': float(t_zooms[1]),
+                    'spacing_x': float(t_zooms[2]),
+                })
+
+            except Exception as e:
+                pbar.write(colored(f"ERROR: unknown error processing {case_id}/{t_file}: {e}", "red"))
 
     df = pd.DataFrame(data)
     return df
