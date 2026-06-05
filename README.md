@@ -27,6 +27,12 @@ after geting the repo, kits23 and the raw annotation from google drive (.xlsx) r
 2. `apply_original_annotation.py` - self esplanatory
 3. `apply_tumor_size_limit.py` - remove tumors that are too large from the dataframe
 
+Now the .csv is shared with annotation specialists (medical professionals specialising in Urology)
+
+After getting the .csv with annotations, to prepare the training data run:
+1. - train / test split
+2. `compile_training_data.py` - run to produce a drectory - with standardized input data and labels
+
 <!-- 2. `convert_kits_dataset.py` - to generate `/home/marcel/Repos/Data/kits23_converted/` directory and fill it with data prepared for training i.e. segmentations as .npy arrays and labels.csv. -->
 
 ### Updated

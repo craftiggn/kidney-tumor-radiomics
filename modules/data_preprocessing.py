@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from termcolor import colored
 from tqdm import tqdm
+from scipy import ndimage
 from scipy.ndimage import label, center_of_mass
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
@@ -424,7 +425,115 @@ def extract_tumor_kidney_bounding_boxes(csv_path, kits_dir):
 
 ### IMAGE PROCESSING
 
+def process_kidney_tumor_masks(kidney_mask, tumor_mask, target_shape, preserve_geometry=True):
+    """
+    Combines, crops, resizes, and pads kidney-tumor masks.
+    Returns a one-hot encoded array of shape (Z, Y, X, 3).
+    Dimensions are: background, kidney, tumor.
+    """
 
+    # combine masks
+    combined = np.zeros_like(kidney_mask, dtype=np.int8)
+    combined[kidney_mask == 1] = 1
+    combined[tumor_mask == 1] = 2
+
+    # extract the bounding box of the combined system
+    z_coords, y_coords, x_coords = np.where(combined > 0)
+    if len(z_coords) == 0:
+        return np.zeros(target_shape + (3,), dtype=np.int8) # Empty output as fallback
+    
+    cropped = combined[
+        z_coords.min():z_coords.max()+1,
+        y_coords.min():y_coords.max()+1,
+        x_coords.min():x_coords.max()+1
+    ]
+
+    # Calculate zoom factors
+    current_shape = cropped.shape
+    zoom_factors = [t / c for t, c in zip(target_shape, current_shape)]
+
+    if preserve_geometry:
+        # Scale all aaxes by the most constraining facor, such that the geometry is preserved
+        min_zoom = min(zoom_factors)
+        zoom_factors = (min_zoom, min_zoom, min_zoom)
+
+    # Resize the array
+    resized = ndimage.zoom(cropped, zoom_factors, order=0, mode='constant', cval=0)
+
+    # slice away any accidental extra voxels (floating point overshoot)
+    resized = resized[:target_shape[0], :target_shape[1], :target_shape[2]]
+
+    # Pad to target shape (this should only go into play if geometry is preserved)
+    pad_z = max(0, target_shape[0] - resized.shape[0])
+    pad_y = max(0, target_shape[1] - resized.shape[1])
+    pad_x = max(0, target_shape[2] - resized.shape[2])
+
+    # use symmetric padding
+    pads = (
+        (pad_z // 2, pad_z - pad_z //2),
+        (pad_y // 2, pad_y - pad_y //2),
+        (pad_x // 2, pad_x - pad_x //2)
+    )
+
+    padded = np.pad(resized, pads, mode='constant', constant_values=0)
+
+    if padded.shape != target_shape:
+        raise ValueError(f"Unexpected output shape. ", f"Expected {target_shape}, got {padded.shape}")
+
+    # apply one-hot encoding
+    one_hot_mask = keras.utils.to_categorical(padded, num_classes=3, dtype='int8')
+        
+    return one_hot_mask
+
+def prepare_cnn_data(df_path, kits_dir, out_dir, target_shape, preserve_geometry=True):
+    df = pd.read_csv(df_path)
+    kits_path = Path(kits_dir)
+    out_path = Path(out_dir)
+    out_path.mkdir(parents=True, exist_ok=True) # ensures the directory exists
+
+    # drop NA, shouldn't happen, but just in case
+    df = df.dropna(subset=['case_id', 'tumor_instance', 'kidney_instance'])
+
+    # one hot encode the tabular labels
+    df = pd.get_dummies(df, columns=['position', 'invasion'])
+
+    pbar = tqdm(df.iterrows(), total=len(df), desc="Preparing CNN data")
+
+    for idx, row in pbar:
+        tumor_id = row['tumor_id']
+        case_id = row['case_id']
+
+        if pd.isna(row['tumor_instance']) or pd.isna(row['kidney_instance']):
+            # skip null values
+            continue
+
+        # Load masks
+        instance_path = kits_path / case_id / 'instances'
+        k_path = instance_path / row['kidney_instance']
+        t_path = instance_path / row['tumor_instance']
+
+        if not k_path.exists() or not t_path.exists():
+            continue
+
+        # get the masks
+        k_mask = nib.load(str(k_path)).get_fdata()
+        t_mask = nib.load(str(t_path)).get_fdata()
+
+        # process the masks
+        final_mask = process_kidney_tumor_masks(k_mask, t_mask, target_shape, preserve_geometry)
+
+        # drop the string columns, we dont't need for the CNN input
+        drop_cols = ['tumor_id', 'case_id', 'tumor_instance', 'kidney_instance']
+        tabular_features = row.drop(labels=drop_cols).astype(np.float32).values # float because it is a neural net
+
+        # save the .npy files (masks)
+        case_out_dir = out_path / tumor_id
+        case_out_dir.mkdir(exist_ok=True)
+
+        np.save(case_out_dir / "mask.npy", final_mask)
+        np.save(case_out_dir / "tabular.npy", tabular_features)
+        # NOTE big issue, this will keep overwriting itself, right? shouldn't the tabular be shred amongst al rows? or not?
+        # if they will not overwrite each other shuldn't we  number them? how will the files be read by the training algorithm?
 
 # use keras layers api 
 # https://keras.io/api/layers/preprocessing_layers/
