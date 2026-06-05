@@ -17,13 +17,14 @@ import keras # NOTE use this instead of tf.keras, for the annoying warnings, try
 from scipy.spatial import ConvexHull
 from scipy.spatial.distance import pdist
 
-def get_instance_numpy(filepath):
+def get_instance_numpy(filepath, verbose=False):
     """
     Returns the .nii file as a numpy nd array.
     """
     # https://nipy.org/nibabel/nibabel_images.html
 
-    print(f"getting file from {filepath}.")
+    if verbose:
+        print(f"getting file from {filepath}.")
 
     # We load the file to create a nibabel image object:
     img = nib.load(filepath)
@@ -32,7 +33,8 @@ def get_instance_numpy(filepath):
     image_data = img.get_fdata()
     # <class 'numpy.ndarray'>
     # the data is of schape (slice, x, y)
-    print(f"The data is converted into an numpy array of shape {image_data.shape}")
+    if verbose:
+        print(f"The data is converted into an numpy array of shape {image_data.shape}")
     return image_data
 
 def calculate_max_diameter(mask, zooms, mask_value=2):
@@ -350,7 +352,79 @@ def extract_tumor_instances(kits_dir):
 
     df = pd.DataFrame(data)
     return df
-    
+
+def extract_tumor_kidney_bounding_boxes(csv_path, kits_dir):
+    """
+    Reads the tumor instances from the csv.
+    For each one, calculates teh bounding boxes of the kidney-tumor system.
+    """
+    df = pd.read_csv(csv_path)
+    kist_path = Path(kits_dir)
+
+    # make sure tumor id is used correctly
+    df = df.set_index('tumor_id')
+
+    bbox_data = []
+
+    pbar = tqdm(df.iterrows(), total=len(df), desc="Calculating bounding boxes")
+
+    for tumor_id, row in pbar:
+        case_id = row['case_id']
+        tumor_file = row['tumor_instance']
+        kidney_file = row['kidney_instance']
+
+        # check if all the data exist in the dataFrame
+        if pd.isna(kidney_file) or pd.isna(tumor_file) or pd.isna(case_id):
+            pbar.write(colored(f"ERROR: missing data in {tumor_id}. Skipping.", "yellow"))
+            continue
+
+        # calculate paths
+        instance_path = kist_path / case_id / 'instances'
+        k_path = instance_path / kidney_file
+        t_path = instance_path / tumor_file
+
+        # make sure the files exist
+        if not k_path.exists() or not t_path.exists():
+            pbar.write(colored(f"ERROR: Missing files for {tumor_id}:\n{k_path} or\n{t_path}. Skipping.", "yellow"))
+            continue
+
+        try:
+            k_mask = get_instance_numpy(k_path).astype(np.int8)
+            t_mask = get_instance_numpy(t_path).astype(np.int8)
+
+            k_coords = np.where(k_mask == 1)
+            t_coords = np.where(t_mask == 1)
+
+            # combine the coordinates
+            z_coords = np.concatenate([k_coords[0], t_coords[0]])
+            y_coords = np.concatenate([k_coords[1], t_coords[1]])
+            x_coords = np.concatenate([k_coords[2], t_coords[2]])
+
+            # make sure masks are not empyt
+
+            if len(z_coords) == 0:
+                pbar.write(colored(f"ERROR: Both masks are empty for {tumor_id}. Skipping", "yellow")) 
+
+            # get the min and max values for the bounding box
+
+            bbox_data.append({
+                'tumor_id': tumor_id,
+                'size_z': z_coords.max() - z_coords.min(),
+                'size_y': y_coords.max() - y_coords.min(),
+                'size_x': x_coords.max() - x_coords.min()
+            })
+
+        except Exception as e:
+            pbar.write(colored(f"ERROR: Failed processing {tumor_id}: {e}", "red"))
+
+    bbox_df = pd.DataFrame(bbox_data)
+    # bbox_df.set_index('tumor_id', inplace=True)
+
+    return bbox_df
+
+### IMAGE PROCESSING
+
+
 
 # use keras layers api 
 # https://keras.io/api/layers/preprocessing_layers/
