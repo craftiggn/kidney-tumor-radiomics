@@ -31,7 +31,8 @@ Now the .csv is shared with annotation specialists (medical professionals specia
 
 After getting the .csv with annotations, to prepare the training data run:
 1. - train / test split
-2. `compile_training_data.py` - run to produce a drectory - with standardized input data and labels
+2. `compile_dataset.py` - run to produce a drectory - with standardized input data and labels
+3. `make_compiled_data_gifs.py` - to review the generated dataset
 
 <!-- 2. `convert_kits_dataset.py` - to generate `/home/marcel/Repos/Data/kits23_converted/` directory and fill it with data prepared for training i.e. segmentations as .npy arrays and labels.csv. -->
 

@@ -5,6 +5,10 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 import matplotlib.patches as mpatches
 from matplotlib.colors import ListedColormap
+import matplotlib.colors as mcolors
+from matplotlib.animation import FuncAnimation
+from pathlib import Path
+from tqdm import tqdm
 
 def browse_volume(vol: np.ndarray, axis: int = 0, cmap: str = "gray", figsize=(6, 6)) -> None:
     """
@@ -124,3 +128,74 @@ def show_value_counts(arr):
     
     for v, c in zip(values, counts):
         print(f"{v}: {c}")
+
+
+def generate_compiled_data_gifs(compiled_dir, output_dir, fps=10):
+    """
+    Iterates through the compiled data directory and creates gifs (moving through z-axis) for each tumor
+    for each tumor_id, showing the kidney/tumor mask and annotations.
+    """
+    in_path = Path(compiled_dir)
+    out_path = Path(output_dir)
+    out_path.mkdir(parents=True, exist_ok=True)
+
+    # get all subdirectories (which correspond to your tumor_ids)
+    tumor_dirs = [d for d in in_path.iterdir() if d.is_dir()]
+
+    # color map
+    cmap = mcolors.ListedColormap(['black', 'blue', 'red'])
+    bounds = [-0.5, 0.5, 1.5, 2.5] # NOTE what is this for?
+    norm = mcolors.BoundaryNorm(bounds, cmap.N)
+    
+    pbar = tqdm(tumor_dirs, desc="Generating GIFs")
+    
+    for t_dir in pbar:
+        tumor_id = t_dir.name
+        mask_path = t_dir / "mask.npy"
+        tab_path = t_dir / "tabular.npy"
+        
+        # Skip if missing files
+        if not mask_path.exists() or not tab_path.exists():
+            continue
+            
+        # Load the saved tensors
+        one_hot_mask = np.load(mask_path)
+        tabular_data = np.load(tab_path)
+        
+        # 1. Reverse the one-hot encoding
+        # This collapses (Z, Y, X, 3) back into (Z, Y, X) with values 0, 1, or 2
+        mask_3d = np.argmax(one_hot_mask, axis=-1)
+        z_slices = mask_3d.shape[0]
+        
+        # 2. Format the tabular array for the title
+        # Since we dropped the column names earlier, this will just print the raw values
+        tab_str = ", ".join([str(round(val, 2)) for val in tabular_data])
+        title_text = f"ID: {tumor_id}\nFeatures: [{tab_str}]"
+        
+        # 3. Setup Matplotlib figure
+        fig, ax = plt.subplots(figsize=(6, 6))
+        ax.axis('off')
+        ax.set_title(title_text, fontsize=10, pad=15)
+        
+        # Initialize the plot with the very first slice
+        img_plot = ax.imshow(mask_3d[0], cmap=cmap, norm=norm, animated=True)
+        
+        # 4. The animation update function
+        def update(frame_idx):
+            # Update the data in the plot for the current Z-slice
+            img_plot.set_data(mask_3d[frame_idx])
+            return [img_plot]
+        
+        # 5. Compile and save the animation
+        anim = FuncAnimation(fig, update, frames=z_slices, blit=True)
+        
+        gif_path = out_path / f"{tumor_id}.gif"
+        
+        try:
+            # Pillow is built into matplotlib's writers and handles GIFs natively
+            anim.save(gif_path, writer='pillow', fps=fps)
+        except Exception as e:
+            pbar.write(f"Failed to save GIF for {tumor_id}: {e}")
+            
+        # Clear the figure to prevent massive RAM memory leaks across the loop
+        plt.close(fig)
