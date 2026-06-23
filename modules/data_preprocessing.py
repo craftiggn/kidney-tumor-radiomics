@@ -82,6 +82,7 @@ def calculate_max_diameter(mask, zooms, mask_value=2):
 
     return round(max_diameter, 2)
 
+# DEPRECATED - used previously with the much smaller dataset
 def preprocess_data(kits_dir, output_dir, annotation_path, valid_cases_path, verbose=False):
     """
     Preprocesses kits23 data, with the additional annotation provided by Medical professionals
@@ -209,12 +210,11 @@ def compute_radius_from_diameter(df):
     # convert to int
     df['computed_radius_points'] = df['computed_radius_points'].astype(int)
 
-class StandardizeVolume3D(keras.layers.Layer):
-    def __init__(self, target_dims, **kwargs):
-        super().__innit__(**kwargs)
-        self.target_z, self.target_y, self.target_x = target_dims
-
 def get_best_annotation_files(files, prefix):
+    """
+    Finds annotations for all cases with a given prefix.
+    Can be used to find path to segmentations, like kidneys and/or tumors.        
+    """
     pattern = re.compile(rf"{prefix}_instance-(\d+)_annotation-(\d+)\.nii\.gz")
     grouped_instances = {}
 
@@ -240,8 +240,9 @@ def get_best_annotation_files(files, prefix):
 
 def extract_tumor_instances(kits_dir):
     """
-    Iterates through all kits23 cases, isolates every tumor instance (first annotation only),
+    Iterates through all kits23 cases, isolates every tumor instance (lowwest existing annotation number),
     calculates their physical diameter, and returns a DataFrame.
+    This function is ran to create the dataFrame with all the tumor instances, to create a Google sheet for annotation.
     """
     kits_path = Path(kits_dir)
     data = []
@@ -356,7 +357,7 @@ def extract_tumor_instances(kits_dir):
 def extract_tumor_kidney_bounding_boxes(csv_path, kits_dir):
     """
     Reads the tumor instances from the csv.
-    For each one, calculates teh bounding boxes of the kidney-tumor system.
+    For each one (in the csv file), calculates the bounding boxes of the kidney-tumor system.
     """
     df = pd.read_csv(csv_path)
     kist_path = Path(kits_dir)
@@ -428,7 +429,7 @@ def process_kidney_tumor_masks(kidney_mask, tumor_mask, target_shape, preserve_g
     """
     Combines, crops, resizes, and pads kidney-tumor masks.
     Returns a one-hot encoded array of shape (Z, Y, X, 3).
-    Dimensions are: background, kidney, tumor.
+    The third dimesnion represents (per layer): background, kidney, tumor.
     """
 
     # combine masks
@@ -485,6 +486,9 @@ def process_kidney_tumor_masks(kidney_mask, tumor_mask, target_shape, preserve_g
     return one_hot_mask
 
 def prepare_cnn_data(df_path, kits_dir, out_dir, target_shape, preserve_geometry=True):
+    """
+    Prepares the dataset for ML, and places it within the specified directory.
+    """
     df = pd.read_csv(df_path)
     kits_path = Path(kits_dir)
     out_path = Path(out_dir)
@@ -531,8 +535,9 @@ def prepare_cnn_data(df_path, kits_dir, out_dir, target_shape, preserve_geometry
 
         np.save(case_out_dir / "mask.npy", final_mask)
         np.save(case_out_dir / "tabular.npy", tabular_features)
-        # NOTE big issue, this will keep overwriting itself, right? shouldn't the tabular be shred amongst al rows? or not?
-        # if they will not overwrite each other shuldn't we  number them? how will the files be read by the training algorithm?
+
+
+
 
 # use keras layers api 
 # https://keras.io/api/layers/preprocessing_layers/

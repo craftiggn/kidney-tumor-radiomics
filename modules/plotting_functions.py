@@ -9,6 +9,8 @@ import matplotlib.colors as mcolors
 from matplotlib.animation import FuncAnimation
 from pathlib import Path
 from tqdm import tqdm
+from termcolor import colored
+import matplotlib.animation as animation
 
 def browse_volume(vol: np.ndarray, axis: int = 0, cmap: str = "gray", figsize=(6, 6)) -> None:
     """
@@ -129,7 +131,6 @@ def show_value_counts(arr):
     for v, c in zip(values, counts):
         print(f"{v}: {c}")
 
-
 def generate_compiled_data_gifs(compiled_dir, output_dir, fps=10):
     """
     Iterates through the compiled data directory and creates gifs (moving through z-axis) for each tumor
@@ -199,3 +200,68 @@ def generate_compiled_data_gifs(compiled_dir, output_dir, fps=10):
             
         # Clear the figure to prevent massive RAM memory leaks across the loop
         plt.close(fig)
+
+### DATASET VISUALISATION
+def generate_tumor_video_from_npy(tumor_dir, out_dir, fps=15):
+    """
+    Reads a processed .npy mask and tabular file, and generates a video of the mask with propper annotations.
+    """
+    tumor_path = Path(tumor_dir)
+    out_path = Path(out_dir)
+    out_path.mkdir(parents=True, exist_ok=True)
+
+    tumor_id = tumor_path.name
+    mask_file = tumor_path / "mask.npy"
+    tabular_file = tumor_path / "tabular.npy"
+
+    if not mask_file.exists() or not tabular_file.exists():
+        print(colored(f"ERROR: Could not find mask.npy or tabular.npy in {tumor_dir}", "yellow"))
+        return
+    
+    # load the data
+    mask = np.load(mask_file)
+    tabular = np.load(tabular_file)
+
+    # convert one-hot back to categorical
+    categorical_mask = np.argmax(mask, axis=-1)
+
+    # create the figure
+    fig, ax = plt.subplots(figsize=(9, 9))
+
+    # custom color map
+    # 0 - Black - background
+    # 1 - Blue - kidney
+    # 2 - Red - tumor
+    cmap = ListedColormap(['black', 'royalblue', 'crimson'])
+
+    # initialize the plot with the first slice
+    im = ax.imshow(categorical_mask[0, :, :], cmap=cmap, vmin=0, vmax=2, animated=True)
+    ax.axis('off')
+
+    def update_frame(z_index):
+        im.set_array(categorical_mask[z_index, :, :])
+
+        # format tabular data for the title
+        tab_str = np.array2string(tabular, precision=2, separator=', ', suppress_small=True)
+        
+        ax.set_title(
+            f"{tumor_id}: Z-Slice: {z_index}/{mask.shape[0]-1}\n"
+            f"Tabular: {tab_str}",
+            fontsize=10
+        )
+        return [im]
+    
+    # create animation
+    num_frames = mask.shape[0]
+    ani = animation.FuncAnimation(
+        fig, update_frame, frames=num_frames, blit=True, interval=1000/fps
+    )
+
+    # save video
+    video_path = out_path / f"{tumor_id}.mp4"
+    print(f"Saving video to {video_path}...")
+
+    writer = animation.FFMpegWriter(fps=fps, metadata=dict(artist="KITS_Preprocessing"), bitrate=1800)
+    ani.save(str(video_path), writer=writer)
+    plt.close(fig)
+    print("Video generation complete.")
