@@ -1,6 +1,6 @@
 import json
 import os
-import re # refgular expressions
+import re # regular expressions
 import nibabel as nib
 import numpy as np
 import pandas as pd
@@ -10,9 +10,10 @@ from termcolor import colored
 from tqdm import tqdm
 from scipy import ndimage
 from scipy.ndimage import label, center_of_mass
-from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import keras # NOTE use this instead of tf.keras, for the annoying warnings, try later
+from sklearn.model_selection import StratifiedGroupKFold
+from sklearn.utils.class_weight import compute_class_weight
 
 # for tumor diameter calculation
 from scipy.spatial import ConvexHull
@@ -485,6 +486,9 @@ def process_kidney_tumor_masks(kidney_mask, tumor_mask, target_shape, preserve_g
         
     return one_hot_mask
 
+def process_kidney_centered_masks():
+    pass
+
 def prepare_cnn_data(df, kits_dir, out_dir, target_shape, preserve_geometry=True):
     """
     Prepares the dataset for ML, verifies class limits, and documents column orders.
@@ -551,6 +555,59 @@ def prepare_cnn_data(df, kits_dir, out_dir, target_shape, preserve_geometry=True
         np.save(case_out_dir / "mask.npy", final_mask)
         np.save(case_out_dir / "tabular.npy", tabular_features)
 
+def generate_train_validation_split(df, data_dir, n_splits=5): # note i dont understand how this works
+    """
+    Splits the dataset into K-folds, ensuring no patient leakage (grouped by case_id)
+    and preserving the target distribution (Stratified by position).
+    Returns a list of dicts containing train and validation paths for each fold. 
+    """
+
+    data_path = Path(data_dir)
+
+    # make sure that all empty cases have been dropped
+
+    # targets for stratification 
+    y = df['position'].values
+
+    # group by case_id to prevent leakage
+    groups = df['case_id'].values
+
+    paths = [str(data_path / tumor_id) for tumor_id in df['tumor_id']]
+    paths = np.array(paths)
+
+    SGKF = StratifiedGroupKFold(n_splits=n_splits)
+    # How it works:
+    # - guarantees all images belonging to the same group i.e. case_id are kept together
+    # - stratification -> makes sure values of 'position' have equal distribution between folds
+
+    folded_datasets = []
+
+    for fold, (train_idx, val_idx) in enumerate(SGKF.split(paths, y, groups)):
+        fold_data = {
+            'fold_id': fold,
+            'train_paths': paths[train_idx].tolist(),
+            'val_paths': paths[val_idx].tolist(),
+            'train_labels': y[train_idx].tolist()
+        }
+
+        folded_datasets.append(fold_data)
+
+        # Print fold data
+        print(colored("--- Fold {fold} Created ---", "blue"))
+        print(f"\tTrain samples: {len(train_idx)} | Validation samples: {len(val_idx)}")
+        print(f"\tVal Class Dist: {pd.Series(y[val_idx]).value_counts(normalize=True).to_dict()}")
+
+    return folded_datasets
+
+def get_keras_class_weights(train_labels): # NOTE i dont understand how this works
+    """
+    Compute class weights inversly proportional to class frequencies.
+    To combat overfitting to more common cases.
+    """
+    classes = np.unique(train_labels)
+    weights = compute_class_weight(class_weight='balanced', classes=classes, y=train_labels)
+
+    class_weight_dict = {i: float(w) for i, w in enumerate(weights)}
 
 
 
