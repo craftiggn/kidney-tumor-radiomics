@@ -82,7 +82,6 @@ def calculate_max_diameter(mask, zooms, mask_value=2):
 
     return round(max_diameter, 2)
 
-
 def preprocess_data(kits_dir, output_dir, annotation_path, valid_cases_path, verbose=False):
     """
     Preprocesses kits23 data, with the additional annotation provided by Medical professionals
