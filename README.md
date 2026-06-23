@@ -6,14 +6,8 @@ The grading of the tumor will be done using RPN (Radius, Position of tumour, iNv
 ![alt text](figures/RPN_chatrt.jpg)
 
 ## Data annotation
-Read the data with "nibabel"
-
-Label the data using 3d slicer, 
-
-# ToDo
-- message kits23 winners for annotation model access
-- 458 - to nie guz nerki a miedniczki czyli zupełnie inny nowotwór
-- 466 - to samo  - inny nowotwór
+- Label the data viewing it with 3D Slicer app. 
+- Share the csv file for annotation via Google Sheets, download it after it is completed
 
 # Notes
 
@@ -24,24 +18,26 @@ Tumours may be noninvasive, semi-invasive, or invasive. Noninvasive tumours are 
 ## Launching
 after geting the repo, kits23 and the raw annotation from google drive (.xlsx) ready run:
 1. `analyse_kits23_tumor_instances.py` - to genereate `tumor_instance_data.json`
-2. `apply_original_annotation.py` - self esplanatory
+2. `apply_original_annotation.py` - self explanatory
 3. `apply_tumor_size_limit.py` - remove tumors that are too large from the dataframe
 
 Now the .csv is shared with annotation specialists (medical professionals specialising in Urology)
 
 After getting the .csv with annotations, to prepare the training data run:
-1. - train / test split
-2. `compile_dataset.py` - run to produce a drectory - with standardized input data and labels
-3. `make_compiled_data_gifs.py` - to review the generated dataset
+1. `analyze_annotated_data.ipynb` - self explanatory
+2. `compile_dataset.py` - run to produce a drectory - with standardized input data and labels, and visualisation for the data distribution in this dataset
 
 <!-- 2. `convert_kits_dataset.py` - to generate `/home/marcel/Repos/Data/kits23_converted/` directory and fill it with data prepared for training i.e. segmentations as .npy arrays and labels.csv. -->
 
-### Updated
-after geting the repo, kits23 and the raw annotation from google drive (.xlsx) ready run:
-1. 
-
 ## Input standardisation ideas
-create a bounding box for the kidney-tumor system, 
+- [x] create a bounding-box for the kidney-tumor system
+- [ ] analyze the annotated data
+- [ ] stratified group k-fold validation
+- [ ] keras class weights - to make the model pay more attention to rare cases
+- [ ] make the bounding-box work around just the kidney, not the kidney-tumor (since RPN revolves around the position within the kidney, external data should be irrelevant)
+- [ ] make a generator function with synthetic data generation
+- [ ] visualize the training data
+- [ ] visualize the validation data
 
 ### Helpfull tensorflow functions
 use one-hot encoding for input? - https://www.tensorflow.org/api_docs/python/tf/one_hot

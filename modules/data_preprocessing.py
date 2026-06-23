@@ -481,24 +481,41 @@ def process_kidney_tumor_masks(kidney_mask, tumor_mask, target_shape, preserve_g
         raise ValueError(f"Unexpected output shape. ", f"Expected {target_shape}, got {padded.shape}")
 
     # apply one-hot encoding
-    one_hot_mask = keras.utils.to_categorical(padded, num_classes=3, dtype='int8')
+    one_hot_mask = keras.utils.to_categorical(padded, num_classes=3)
         
     return one_hot_mask
 
-def prepare_cnn_data(df_path, kits_dir, out_dir, target_shape, preserve_geometry=True):
+def prepare_cnn_data(df, kits_dir, out_dir, target_shape, preserve_geometry=True):
     """
-    Prepares the dataset for ML, and places it within the specified directory.
+    Prepares the dataset for ML, verifies class limits, and documents column orders.
     """
-    df = pd.read_csv(df_path)
     kits_path = Path(kits_dir)
     out_path = Path(out_dir)
-    out_path.mkdir(parents=True, exist_ok=True) # ensures the directory exists
+    out_path.mkdir(parents=True, exist_ok=True)
 
-    # drop NA, shouldn't happen, but just in case
+    # drop NA
     df = df.dropna(subset=['case_id', 'tumor_instance', 'kidney_instance'])
+
+    # explicit class check
+    unique_positions = df['position'].dropna().unique()
+    unique_invasions = df['invasion'].dropna().unique()
+
+    if len(unique_positions) > 3:
+        raise ValueError(f"Data constraint violation! Expected max 3 unique positions, found {len(unique_positions)}: {unique_positions}")
+    if len(unique_invasions) > 3:
+        raise ValueError(f"Data constraint violation! Expected max 3 unique invasions, found {len(unique_invasions)}: {unique_invasions}")
 
     # one hot encode the tabular labels
     df = pd.get_dummies(df, columns=['position', 'invasion'])
+
+    # Lock in strict alphabetical order
+    pos_cols = sorted([col for col in df.columns if col.startswith('position_')])
+    inv_cols = sorted([col for col in df.columns if col.startswith('invasion_')])
+    tabular_cols = pos_cols + inv_cols 
+
+    # Export column structure map alongside data arrays
+    with open(out_path / "tabular_columns.txt", "w") as f:
+        f.write("\n".join(tabular_cols))
 
     pbar = tqdm(df.iterrows(), total=len(df), desc="Preparing CNN data")
 
@@ -507,7 +524,6 @@ def prepare_cnn_data(df_path, kits_dir, out_dir, target_shape, preserve_geometry
         case_id = row['case_id']
 
         if pd.isna(row['tumor_instance']) or pd.isna(row['kidney_instance']):
-            # skip null values
             continue
 
         # Load masks
@@ -525,9 +541,8 @@ def prepare_cnn_data(df_path, kits_dir, out_dir, target_shape, preserve_geometry
         # process the masks
         final_mask = process_kidney_tumor_masks(k_mask, t_mask, target_shape, preserve_geometry)
 
-        # drop the string columns, we dont't need for the CNN input
-        drop_cols = ['tumor_id', 'case_id', 'tumor_instance', 'kidney_instance']
-        tabular_features = row.drop(labels=drop_cols).astype(np.float32).values # float because it is a neural net
+        # Isolate target numerical arrays
+        tabular_features = row[tabular_cols].astype(np.float32).values
 
         # save the .npy files (masks)
         case_out_dir = out_path / tumor_id
