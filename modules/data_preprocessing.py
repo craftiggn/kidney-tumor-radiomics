@@ -11,9 +11,11 @@ from tqdm import tqdm
 from scipy import ndimage
 from scipy.ndimage import label, center_of_mass
 import tensorflow as tf
+from keras.utils import Sequence
 import keras # NOTE use this instead of tf.keras, for the annoying warnings, try later
 from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.utils.class_weight import compute_class_weight
+import random
 
 # for tumor diameter calculation
 from scipy.spatial import ConvexHull
@@ -609,6 +611,116 @@ def get_keras_class_weights(train_labels): # NOTE i dont understand how this wor
 
     class_weight_dict = {i: float(w) for i, w in enumerate(weights)}
 
+### GENERATOR
+
+class KITSDataGenerator(Sequence):
+    def __init__(self, paths, batch_size=4,
+                 augment=False, flip_enable=True,
+                 translation_enable=False, max_translation = [0,0,0],
+                 zoom_enable=False, zoom_range=[0.9,1.1],
+                 shuffle=True):
+        """
+        paths: List of strings to the tumor directories
+        batch_size: Number of instances per batch
+        augment: Boolean, wheteher to create synthetic data
+        shuffle: whether to shuffle data at the end of every epoch 
+        """
+        self.paths = np.array(paths)
+        self.batch_size = int(batch_size)
+        self.augment = augment
+        self.shuffle = shuffle
+        self.indexes = np.arange(len(self.paths))
+        self.on_epoch_end() # shuffle initially
+
+        # augmentation hyperparameters
+        self.flip_enable = flip_enable
+        self.translation_enable = translation_enable
+        self.max_translation = max_translation
+        self.zoom_enable = zoom_enable
+        self.zoom_range = zoom_range
+
+    def __len__(self):
+        """Denotes the number of batches per epoch."""
+        return int(np.ceil(len(self.paths) / self.batch_size))
+    
+    def __getitem__(self, index):
+        """Generate one batch."""
+        # select indices for this batch
+        batch_indexes = self.indexes[index * self.batch_size : (index + 1) self.batch_size]
+
+        # get the paths for this batch
+        batch_paths = self.paths[batch_indexes]
+
+        # load and process the arrays
+        X, y = self.__data_generation(batch_paths)
+        return X, y
+    
+    def on_epoch_end(self):
+        """Updates indexes after each epoch"""
+        self.indexes = np.arange(len(self.paths))
+        if self.shuffle:
+            np.random.shuffle(self.indexes)
+
+    def __data_generation(self, batch_paths):
+        """Loads files and applies augmentation"""
+        X = []
+        y = []
+
+        for path_str in batch_paths:
+            path = Path(path_str)
+            mask = np.load(path / "mask.npy")
+            tabular = np.load(path / "tabular.npy")
+
+            if self.augment:
+                mask = self._augment_3d_volume(mask)
+
+            X.append(mask)
+            y.append(tabular)
+
+        return np.array(X), np.array(y)
+    
+    def _augment_3d_volume(self, volume):
+        """
+        Generates synthetic data via augmentation.
+        Data shape is (Z, Y, X, 3).
+        """
+        # Random flips
+        if self.flip_enable:
+            if random.random() > 0.5:
+                volume = np.flip(volume, axis=0) # Flip Z
+            if random.random() > 0.5:
+                volume = np.flip(volume, axis=1) # Flip Y
+            if random.random() > 0.5:
+                volume = np.flip(volume, axis=2) # Flip X
+
+        # Translations
+        if self.translation_enable and random.random() > 0.5:
+            shift_z = random.randint(-self.max_translation[0], self.max_translation[0])
+            shift_y = random.randint(-self.max_translation[1], self.max_translation[1])
+            shift_x = random.randint(-self.max_translation[2], self.max_translation[2])
+
+            volume = ndimage.shift(volume, shift=(shift_z, shift_y, shift_x, 0),
+                                   order=0, mode='constant', cval=0.0)
+            # NOTE explain this
+        
+        # Random Zoom (scaling)
+        if self.zoom_enable and random.random() > 0.5:
+            scale = random.uniform(self.zoom_range[0], self.zoom_range[1])
+
+            # scale everything apart from the channels
+            zoomed = ndimage.zoom(volume, zoom=(scale, scale, scale, 1),
+                                  order=0, mode='constant', cval=0.0)
+            
+            volume = self._crop_or_pad_to_shape(zoomed, target_shape=volume.shape)
+
+        return volume
+    
+    def _crop_or_pad_to_shape(self, volume, target_shape):
+        pass
+        # NOTE finish in the morning
+
+
+        
 
 
 # use keras layers api 

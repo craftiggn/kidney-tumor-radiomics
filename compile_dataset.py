@@ -6,7 +6,7 @@ from pathlib import Path
 ANNOTATION_PATH = 'data/annotations_RPN_75mm_final.csv'
 KITS23_DATASET_PATH = '/home/marcel/Repos/Data/kits23'
 
-TARGET_SHAPE =  (123, 123, 116)
+TARGET_SHAPE =  (123, 123, 116) # can make a list of these and just loop the set
 
 dir_name_default = "kits_dataset_"
 dir_name_default += "_".join(str(n) for n in TARGET_SHAPE)
