@@ -12,6 +12,7 @@ from tqdm import tqdm
 from termcolor import colored
 import matplotlib.animation as animation
 from matplotlib.patches import Patch
+import json
 
 def browse_volume(vol: np.ndarray, axis: int = 0, cmap: str = "gray", figsize=(6, 6)) -> None:
     """
@@ -256,7 +257,7 @@ def generate_tumor_video_from_npy(tumor_dir, out_dir, fps=15):
         im.set_array(categorical_mask[z_index, :, :])
         
         # Parse arrays safely using dynamic text maps
-        decoded_strings = decode_tabular_rpn(tabular, tabular_cols)
+        decoded_strings = decode_labels_rpn(tabular, tabular_cols)
         
         ax.set_title(
             f"{tumor_id}: Z-Slice: {z_index}/{mask.shape[0]-1}, Shape: {mask.shape}\n"
@@ -278,16 +279,106 @@ def generate_tumor_video_from_npy(tumor_dir, out_dir, fps=15):
     plt.close(fig)
     # print("Video generation complete.")
 
-def decode_tabular_rpn(tabular_array, tabular_cols):
+def decode_labels_rpn(label_array, label_cols):
     """
     Translates a saved binary tabular array back into raw strings using 
     the active columns tracked during preprocessing.
     """
     active_labels = []
-    for value, col_name in zip(tabular_array, tabular_cols):
+    for value, col_name in zip(label_array, label_cols):
         if value == 1:
             # Strip prefixes like 'position_' or 'invasion_'
             clean_label = col_name.split('_')[-1]
             active_labels.append(clean_label)
             
     return tuple(active_labels)
+
+### BATCH VISUALISATION
+# contains synthetic data
+
+def visualize_generator_batch(batch_X, batch_y, experiment_dir, out_dir, fps=15, batch_name_prefix="synthetic_batch"):
+    """
+    Takes a generated batch (X, y) and exports an annotated video for every item.
+    Automatically handles layout and parsing using infrastructure files located at experiment_dir.
+    
+    batch_X: Volumetric matrix from generator of shape (Batch, Z, Y, X, 3)
+    batch_y: Categorical target label array of shape (Batch, Num_Classes)
+    experiment_dir: Path to the active experiment folder (e.g., .../kits_dataset_110_60_40_kidney)
+    out_dir: Output directory where debug MP4 files will be generated
+    """
+    exp_path = Path(experiment_dir)
+    out_path = Path(out_dir)
+    out_path.mkdir(parents=True, exist_ok=True)
+    
+    # Target existing root infrastructure files
+    metadata_file = exp_path / "dataset_metadata.json"
+    columns_file = exp_path / "tabular_columns.txt"
+    
+    if not metadata_file.exists() or not columns_file.exists():
+        raise FileNotFoundError(
+            f"Infrastructure configuration missing in {experiment_dir}. "
+            f"Ensure dataset_metadata.json and tabular_columns.txt are present."
+        )
+        
+    # Read experiment metadata for precise title tracking
+    with open(metadata_file, "r") as f:
+        metadata = json.load(f)
+        
+    bbox_strategy = metadata.get("bbox", "unknown")
+    margin_val = metadata.get("margin", "None")
+    
+    # Read active column orders mapping to batch_y indexes
+    with open(columns_file, "r") as f:
+        tabular_cols = [line.strip() for line in f.read().splitlines() if line.strip()]
+
+    batch_size = batch_X.shape[0]
+    print(f"Visualizing batch of {batch_size} items for experiment variation: {exp_path.name}")
+
+    for i in range(batch_size):
+        mask = batch_X[i]
+        labels = batch_y[i]  # Represents the parsed data from 'labels.npy'
+        
+        # Collapse one-hot channels back to categorical integer map
+        categorical_mask = np.argmax(mask, axis=-1)
+
+        fig, ax = plt.subplots(figsize=(6, 6))
+        cmap = ListedColormap(['black', 'royalblue', 'crimson'])
+
+        im = ax.imshow(categorical_mask[0, :, :], cmap=cmap, vmin=0, vmax=2, animated=True)
+        ax.axis('off')
+
+        # Unified Legend
+        legend_elements = [
+            Patch(facecolor='black', edgecolor='dimgray', label='Background'),
+            Patch(facecolor='royalblue', label='Kidney'),
+            Patch(facecolor='crimson', label='Tumor')
+        ]
+        ax.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, 0.0),
+                  ncol=3, fontsize=8, frameon=False)
+        fig.subplots_adjust(bottom=0.15)  # Extended bottom cushion to fit multi-line titles securely
+
+        def update_frame(z_index):
+            im.set_array(categorical_mask[z_index, :, :])
+            
+            # Decode the target classifications dynamically using locked column index orders
+            decoded_strings = decode_labels_rpn(labels, tabular_cols)
+            
+            ax.set_title(
+                f"Batch Item: {i} | Z-Slice: {z_index}/{mask.shape[0]-1}\n"
+                f"Strategy: {bbox_strategy} (Margin: {margin_val}) | Volume Shape: {mask.shape[:-1]}\n"
+                f"Targets: {decoded_strings}",
+                fontsize=9
+            )
+            return [im]
+        
+        num_frames = mask.shape[0]
+        ani = animation.FuncAnimation(
+            fig, update_frame, frames=num_frames, blit=True, interval=1000/fps
+        )
+
+        video_path = out_path / f"{batch_name_prefix}_item_{i}.mp4"
+        writer = animation.FFMpegWriter(fps=fps, metadata=dict(artist="KITS_Generator_Debug"), bitrate=1800)
+        ani.save(str(video_path), writer=writer)
+        plt.close(fig)
+        
+        print(f"Saved: {video_path}")

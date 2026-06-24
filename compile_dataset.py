@@ -17,13 +17,13 @@ TARGET_SHAPES = [(123, 123, 116)]
 TARGET_SHAPES.append((110, 60, 40))
 TARGET_SHAPES.append((85, 45, 30))
 TARGET_SHAPES.append((55, 30, 20))
-BBOX_STRATEGIES = ['kidney', 'kidney-tumor']
+BBOX_STRATEGIES = ['kidney']
 N_SPLITS = 5
 
 # --- LOAD & CLEAN DATA ---
 df = pd.read_csv(ANNOTATION_PATH)
 df = df[df['approved_for_training']]  # remove rejected cases
-df = df.iloc[:10] # for prototyping
+# df = df.iloc[:10] # for prototyping
 df = df.dropna(subset=['case_id', 'tumor_instance', 'kidney_instance', 'position', 'invasion', 'radius_pts'])
 
 # --- GENERATE DETERMINISTIC K-FOLD SPLITS ---
@@ -63,9 +63,9 @@ for target_shape in TARGET_SHAPES:
         df_master_splits.to_csv(compiled_dataset_dir / "dataset_splits.csv", index=False)
         
         # --- GENERATE DIAGNOSTIC VIDEOS ---
-        print(f"Generating videos...")
-        dirs = [p for p in compiled_dataset_dir.iterdir() if p.is_dir()]
-        for d in dirs:
-            plf.generate_tumor_video_from_npy(d, dataset_figures_dir)
+        # print(f"Generating videos...")
+        # dirs = [p for p in compiled_dataset_dir.iterdir() if p.is_dir()]
+        # for d in dirs:
+        #     plf.generate_tumor_video_from_npy(d, dataset_figures_dir)
 
 print(colored("\nDataset generation complete.", "blue", attrs=["bold"]))

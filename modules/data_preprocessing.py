@@ -707,7 +707,7 @@ def prepare_cnn_data(df, kits_dir, out_dir, target_shape, bbox:str, preserve_geo
         case_out_dir.mkdir(exist_ok=True)
 
         np.save(case_out_dir / "mask.npy", final_mask)
-        np.save(case_out_dir / "tabular.npy", tabular_features)
+        np.save(case_out_dir / "labels.npy", tabular_features)
 
 def generate_train_validation_split(df, n_splits=5): 
     """
@@ -736,16 +736,6 @@ def generate_train_validation_split(df, n_splits=5):
 
     # Return only the necessary mapping columns
     return df_splits[['tumor_id', 'case_id', 'fold']]
-
-def get_keras_class_weights(train_labels): # NOTE i dont understand how this works
-    """
-    Compute class weights inversly proportional to class frequencies.
-    To combat overfitting to more common cases.
-    """
-    classes = np.unique(train_labels)
-    weights = compute_class_weight(class_weight='balanced', classes=classes, y=train_labels)
-
-    class_weight_dict = {i: float(w) for i, w in enumerate(weights)}
 
 ### GENERATOR
 
@@ -882,15 +872,40 @@ class KITSDataGenerator(Sequence):
             start_v[2]:start_v[2]+lengths[2],
             :
         ] 
-        # NOTE explain in detail how this function works
 
         return out_volume
 
-# use keras layers api 
-# https://keras.io/api/layers/preprocessing_layers/
+def get_keras_class_weights(train_labels): # NOTE i dont understand how this works
+    """
+    Compute class weights inversly proportional to class frequencies.
+    To combat overfitting to more common cases.
+    """
+    classes = np.unique(train_labels)
+    weights = compute_class_weight(class_weight='balanced', classes=classes, y=train_labels)
 
-# NOTE
-# add a function to analyze the labels and separate it into train/ split
-# when loading the dataset use np.load(f"{output_dir}/{case_id}.npy", mmap_mode='r')
-# for the fastest possible data reading
+    class_weight_dict = {i: float(w) for i, w in enumerate(weights)}
 
+def get_train_validation_paths(dataset_dir, fold_no):
+    """
+    Parses the local dataset_splits.csv to extract absolute folder paths
+    for training and validation instances for a specific fold.
+    """
+    dataset_path = Path(dataset_dir)
+    splits_csv_path = dataset_path / "dataset_splits.csv"
+
+    if not splits_csv_path.exists():
+        raise FileNotFoundError(f"Could not find splits mapping at {splits_csv_path}")
+    
+    df_splits = pd.read_csv(splits_csv_path)
+
+    # separate into train and validation based on the chosen fold integers
+    df_val = df_splits[df_splits['fold'] == fold_no]
+    df_train = df_splits[df_splits['fold'] != fold_no]
+
+    # Map the tumor_ids to exact folder paths on disk
+    train_paths = [str(dataset_path / tumor_id) for tumor_id in df_train['tumor_id']]
+    val_paths = [str(dataset_path / tumor_id) for tumor_id in df_val['tumor_id']]
+
+    print(f"Loaded paths for Fold {fold_no} from {str(dataset_path)}")
+
+    return train_paths, val_paths
