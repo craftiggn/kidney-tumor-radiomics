@@ -426,6 +426,70 @@ def extract_tumor_kidney_bounding_boxes(csv_path, kits_dir):
 
     return bbox_df
 
+def extract_kidney_bounding_boxes(csv_path, kits_dir):
+    """
+    Reads the tumor instances from the csv.
+    For each one (in the csv file), calculates the bounding boxes of the kidney only.
+    """
+    df = pd.read_csv(csv_path)
+    kits_path = Path(kits_dir)
+
+    # make sure tumor id is used correctly
+    df = df.set_index('tumor_id')
+
+    bbox_data = []
+
+    pbar = tqdm(df.iterrows(), total=len(df), desc="Calculating kidney bounding boxes")
+
+    for tumor_id, row in pbar:
+        case_id = row['case_id']
+        tumor_file = row['tumor_instance'] 
+        kidney_file = row['kidney_instance']
+
+        # check if all the data exist in the dataFrame
+        if pd.isna(kidney_file) or pd.isna(tumor_file) or pd.isna(case_id):
+            pbar.write(colored(f"ERROR: missing data in {tumor_id}. Skipping.", "yellow"))
+            continue
+
+        # calculate paths
+        instance_path = kits_path / case_id / 'instances'
+        k_path = instance_path / kidney_file
+
+        # make sure the file exists (removed tumor path check since it's not loaded)
+        if not k_path.exists():
+            pbar.write(colored(f"ERROR: Missing kidney file for {tumor_id}:\n{k_path}. Skipping.", "yellow"))
+            continue
+
+        try:
+            # Load only the kidney mask
+            k_mask = get_instance_numpy(k_path).astype(np.int8)
+
+            k_coords = np.where(k_mask == 1)
+
+            z_coords = k_coords[0]
+            y_coords = k_coords[1]
+            x_coords = k_coords[2]
+
+            # make sure mask is not empty
+            if len(z_coords) == 0:
+                pbar.write(colored(f"ERROR: Kidney mask is empty for {tumor_id}. Skipping.", "yellow")) 
+                continue # Added missing continue to prevent max/min crash below
+
+            # get the sizes for the bounding box
+            bbox_data.append({
+                'tumor_id': tumor_id,
+                'size_z': z_coords.max() - z_coords.min(),
+                'size_y': y_coords.max() - y_coords.min(),
+                'size_x': x_coords.max() - x_coords.min()
+            })
+
+        except Exception as e:
+            pbar.write(colored(f"ERROR: Failed processing {tumor_id}: {e}", "red"))
+
+    bbox_df = pd.DataFrame(bbox_data)
+
+    return bbox_df
+
 ### IMAGE PROCESSING
 
 def process_kidney_tumor_masks(kidney_mask, tumor_mask, target_shape, preserve_geometry):

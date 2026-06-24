@@ -16,11 +16,11 @@ N_SPLITS = 5
 # --- LOAD & CLEAN DATA ---
 df = pd.read_csv(ANNOTATION_PATH)
 df = df[df['approved_for_training']]  # remove rejected cases
+df = df.iloc[:10]
 df = df.dropna(subset=['case_id', 'tumor_instance', 'kidney_instance', 'position', 'invasion', 'radius_pts'])
 
 
 # --- GENERATE DETERMINISTIC K-FOLD SPLITS ---
-# Calls our refactored function to generate the master split map
 print("Generating Stratified Group K-Fold Splits...")
 df_master_splits = dataPrep.generate_train_validation_split(df, n_splits=N_SPLITS)
 
@@ -37,7 +37,7 @@ for target_shape in TARGET_SHAPES:
         dir_name = f"kits_dataset_{shape_str}_{bbox_strat}"
         
         compiled_dataset_dir = BASE_OUTPUT_DIR / dir_name
-        dataset_figures_dir = BASE_OUTPUT_DIR / f"{dir_name}_figures"
+        dataset_figures_dir = BASE_OUTPUT_DIR / f"figures_{dir_name}"
         
         print(f"\nProcessing: {dir_name}")
         
