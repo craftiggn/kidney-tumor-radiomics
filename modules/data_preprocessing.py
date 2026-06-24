@@ -428,9 +428,10 @@ def extract_tumor_kidney_bounding_boxes(csv_path, kits_dir):
 
 ### IMAGE PROCESSING
 
-def process_kidney_tumor_masks(kidney_mask, tumor_mask, target_shape, preserve_geometry=True):
+def process_kidney_tumor_masks(kidney_mask, tumor_mask, target_shape, preserve_geometry):
     """
     Combines, crops, resizes, and pads kidney-tumor masks.
+    Centers the mask around a kidney-tumor bbox.
     Returns a one-hot encoded array of shape (Z, Y, X, 3).
     The third dimesnion represents (per layer): background, kidney, tumor.
     """
@@ -456,7 +457,7 @@ def process_kidney_tumor_masks(kidney_mask, tumor_mask, target_shape, preserve_g
     zoom_factors = [t / c for t, c in zip(target_shape, current_shape)]
 
     if preserve_geometry:
-        # Scale all aaxes by the most constraining facor, such that the geometry is preserved
+        # Scale all axes by the most constraining facor, such that the geometry is preserved
         min_zoom = min(zoom_factors)
         zoom_factors = (min_zoom, min_zoom, min_zoom)
 
@@ -488,16 +489,94 @@ def process_kidney_tumor_masks(kidney_mask, tumor_mask, target_shape, preserve_g
         
     return one_hot_mask
 
-def process_kidney_centered_masks():
-    pass
+def process_kidney_centered_masks(kidney_mask, tumor_mask, target_shape, preserve_geometry, margin=0.1):
+    """
+    Combines, crops, resizes, and pads kidney-tumor masks.
+    Centers the crop window strictly around the kidney bbox, expanded by a margin.
+    """
+    # Combine the masks
+    combined = np.zeros_like(kidney_mask, dtype=np.int8)
+    combined[kidney_mask == 1] = 1
+    combined[tumor_mask == 1] = 2
 
-def prepare_cnn_data(df, kits_dir, out_dir, target_shape, preserve_geometry=True):
+    # Extract kidney bounding box
+    z_coords, y_coords, x_coords = np.where(kidney_mask == 1)
+    if len(z_coords) == 0:
+        return np.zeros(target_shape + (3,), dtype=np.int8) # Fallback if no kidney found
+    
+    # Calculate raw kidney dimensions
+    len_z = z_coords.max() - z_coords.min() + 1
+    len_y = y_coords.max() - y_coords.min() + 1
+    len_x = x_coords.max() - x_coords.min() + 1
+
+    # Compute margins
+    margin_z = int(np.floor(len_z * margin))
+    margin_y = int(np.floor(len_y * margin))
+    margin_x = int(np.floor(len_x * margin))
+
+    # Expand bounding box and clip to ensure we stay within physical image boundaries
+    z_start = max(0, z_coords.min() - margin_z)
+    z_end = min(combined.shape[0], z_coords.max() + 1 + margin_z)
+
+    y_start = max(0, y_coords.min() - margin_y)
+    y_end = min(combined.shape[1], y_coords.max() + 1 + margin_y)
+
+    x_start = max(0, x_coords.min() - margin_x)
+    x_end = min(combined.shape[2], x_coords.max() + 1 + margin_x)
+
+    # Crop the combined matrix
+    cropped = combined[z_start:z_end, y_start:y_end, x_start:x_end]
+
+    # Calculate zoom factors
+    current_shape=cropped.shape
+    zoom_factors = [t / c for t, c in zip(target_shape, current_shape)]
+
+    if preserve_geometry:
+        min_zoom = min(zoom_factors)
+        zoom_factors = (min_zoom, min_zoom, min_zoom)
+
+    # Resize the array
+    resized = ndimage.zoom(cropped, zoom_factors, order=0, mode='constant', cval=0)
+    resized = resized[:target_shape[0], :target_shape[1], :target_shape[2]]
+
+    # Symmetric padding (active if preserve_geometry is True)
+    pad_z = max(0, target_shape[0] - resized.shape[0])
+    pad_y = max(0, target_shape[1] - resized.shape[1])
+    pad_x = max(0, target_shape[2] - resized.shape[2])
+
+    pads = (
+        (pad_z // 2, pad_z - pad_z // 2),
+        (pad_y // 2, pad_y - pad_y // 2),
+        (pad_x // 2, pad_x - pad_x // 2)
+    )
+
+    padded = np.pad(resized, pads, mode='constant', constant_values=0)
+
+    if padded.shape != target_shape:
+        raise ValueError(f"Unexpected output shape. Expected {target_shape}, got {padded.shape}")
+    
+    # One-hot encoding
+    one_hot_mask = keras.utils.to_categorical(padded, num_classes=3)
+    return one_hot_mask
+
+def prepare_cnn_data(df, kits_dir, out_dir, target_shape, bbox:str, preserve_geometry, margin=0.1):
     """
     Prepares the dataset for ML, verifies class limits, and documents column orders.
     """
     kits_path = Path(kits_dir)
     out_path = Path(out_dir)
     out_path.mkdir(parents=True, exist_ok=True)
+
+    # Export dataset metadata
+    dataset_metadata = {
+        "target_shape": list(target_shape),  # Convert tuple to list for proper JSON formatting
+        "bbox": bbox,
+        "preserve_geometry": bool(preserve_geometry),
+        "margin": float(margin) if bbox == 'kidney' else None
+    }
+
+    with open(out_path / "dataset_metadata.json", "w") as f:
+        json.dump(dataset_metadata, f, indent=4)
 
     # drop NA
     df = df.dropna(subset=['case_id', 'tumor_instance', 'kidney_instance'])
@@ -545,7 +624,16 @@ def prepare_cnn_data(df, kits_dir, out_dir, target_shape, preserve_geometry=True
         t_mask = nib.load(str(t_path)).get_fdata()
 
         # process the masks
-        final_mask = process_kidney_tumor_masks(k_mask, t_mask, target_shape, preserve_geometry)
+        if bbox == 'kidney-tumor':
+            final_mask = process_kidney_tumor_masks(k_mask, t_mask, target_shape, preserve_geometry)
+        elif bbox == 'kidney':
+            final_mask = process_kidney_centered_masks(k_mask, t_mask, target_shape, preserve_geometry, margin)
+            # NOTE remember to copy the margin value for translation range in the generator
+        else:
+            raise ValueError(
+                f"Invalid configuration for argument 'bbox'. "
+                f"Received '{bbox}', but expected either 'kidney-tumor' or 'kidney'."
+                )
 
         # Isolate target numerical arrays
         tabular_features = row[tabular_cols].astype(np.float32).values
@@ -557,49 +645,33 @@ def prepare_cnn_data(df, kits_dir, out_dir, target_shape, preserve_geometry=True
         np.save(case_out_dir / "mask.npy", final_mask)
         np.save(case_out_dir / "tabular.npy", tabular_features)
 
-def generate_train_validation_split(df, data_dir, n_splits=5): # note i dont understand how this works
+def generate_train_validation_split(df, n_splits=5): 
     """
     Splits the dataset into K-folds, ensuring no patient leakage (grouped by case_id)
     and preserving the target distribution (Stratified by position).
-    Returns a list of dicts containing train and validation paths for each fold. 
+    Returns a dataframe containing the split mapping (tumor_id, case_id, fold). 
     """
+    # Create a copy and initialize our blank canvas column
+    df_splits = df.copy()
+    df_splits['fold'] = -1
 
-    data_path = Path(data_dir)
-
-    # make sure that all empty cases have been dropped
-
-    # targets for stratification 
-    y = df['position'].values
-
-    # group by case_id to prevent leakage
-    groups = df['case_id'].values
-
-    paths = [str(data_path / tumor_id) for tumor_id in df['tumor_id']]
-    paths = np.array(paths)
+    # Targets for stratification and groups for leakage prevention
+    y = df_splits['position'].values
+    groups = df_splits['case_id'].values
 
     SGKF = StratifiedGroupKFold(n_splits=n_splits)
-    # How it works:
-    # - guarantees all images belonging to the same group i.e. case_id are kept together
-    # - stratification -> makes sure values of 'position' have equal distribution between folds
 
-    folded_datasets = []
+    for fold, (train_idx, val_idx) in enumerate(SGKF.split(df_splits, y, groups)):
+        # Assign the current fold number to the validation indices
+        df_splits.iloc[val_idx, df_splits.columns.get_loc('fold')] = fold
 
-    for fold, (train_idx, val_idx) in enumerate(SGKF.split(paths, y, groups)):
-        fold_data = {
-            'fold_id': fold,
-            'train_paths': paths[train_idx].tolist(),
-            'val_paths': paths[val_idx].tolist(),
-            'train_labels': y[train_idx].tolist()
-        }
-
-        folded_datasets.append(fold_data)
-
-        # Print fold data
-        print(colored("--- Fold {fold} Created ---", "blue"))
+        # Print diagnostic fold data
+        print(f"--- Fold {fold} Created ---")
         print(f"\tTrain samples: {len(train_idx)} | Validation samples: {len(val_idx)}")
         print(f"\tVal Class Dist: {pd.Series(y[val_idx]).value_counts(normalize=True).to_dict()}")
 
-    return folded_datasets
+    # Return only the necessary mapping columns
+    return df_splits[['tumor_id', 'case_id', 'fold']]
 
 def get_keras_class_weights(train_labels): # NOTE i dont understand how this works
     """
@@ -684,8 +756,8 @@ class KITSDataGenerator(Sequence):
         """
         # Random flips
         if 'flip' in self.augment_enable:
-            if random.random() > 0.5:
-                volume = np.flip(volume, axis=0) # Flip Z
+            # if random.random() > 0.5: # this might damage the data
+            #     volume = np.flip(volume, axis=0) # Flip Z
             if random.random() > 0.5:
                 volume = np.flip(volume, axis=1) # Flip Y
             if random.random() > 0.5:

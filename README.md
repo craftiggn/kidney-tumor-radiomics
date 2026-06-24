@@ -32,6 +32,7 @@ After getting the .csv with annotations, to prepare the training data run:
 ## Input standardisation ideas
 - [x] create a bounding-box for the kidney-tumor system
 - [ ] analyze the annotated data
+- [ ] make sure processed masks do not delete the tumor, print a warning, maybe throw an error
 - [ ] stratified group k-fold validation
 - [ ] keras class weights - to make the model pay more attention to rare cases
 - [ ] make the bounding-box work around just the kidney, not the kidney-tumor (since RPN revolves around the position within the kidney, external data should be irrelevant)
