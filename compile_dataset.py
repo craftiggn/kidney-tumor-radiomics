@@ -22,7 +22,7 @@ df = pd.read_csv(ANNOTATION_PATH)
 df = df[df['approved_for_training']] # remove rejected cases
 df = df.dropna(subset=['case_id', 'tumor_instance', 'kidney_instance', 'position', 'invasion', 'radius_pts']) # remove empty cases
 
-df = df.iloc[:50] # temporary 
+df = df.iloc[:50] # temporary
 print(df) # temporary
 dataPrep.prepare_cnn_data(df, KITS23_DATASET_PATH, COMPILED_DATASET_DIR, TARGET_SHAPE)
 # SPLIT THE DATA INTO A TRAINING AND VALIDATION DATASETS USING K-FOLD SPLIT

@@ -615,9 +615,9 @@ def get_keras_class_weights(train_labels): # NOTE i dont understand how this wor
 
 class KITSDataGenerator(Sequence):
     def __init__(self, paths, batch_size=4,
-                 augment=False, flip_enable=True,
-                 translation_enable=False, max_translation = [0,0,0],
-                 zoom_enable=False, zoom_range=[0.9,1.1],
+                 augment=False, augment_enable=['flip','translate','zoom'],
+                 max_translation = [0,0,0],
+                 zoom_range=[0.9,1.1],
                  shuffle=True):
         """
         paths: List of strings to the tumor directories
@@ -633,10 +633,8 @@ class KITSDataGenerator(Sequence):
         self.on_epoch_end() # shuffle initially
 
         # augmentation hyperparameters
-        self.flip_enable = flip_enable
-        self.translation_enable = translation_enable
+        self.augment_enable = set(augment_enable) # set for fast lookup
         self.max_translation = max_translation
-        self.zoom_enable = zoom_enable
         self.zoom_range = zoom_range
 
     def __len__(self):
@@ -646,7 +644,7 @@ class KITSDataGenerator(Sequence):
     def __getitem__(self, index):
         """Generate one batch."""
         # select indices for this batch
-        batch_indexes = self.indexes[index * self.batch_size : (index + 1) self.batch_size]
+        batch_indexes = self.indexes[index * self.batch_size : (index + 1) * self.batch_size]
 
         # get the paths for this batch
         batch_paths = self.paths[batch_indexes]
@@ -685,7 +683,7 @@ class KITSDataGenerator(Sequence):
         Data shape is (Z, Y, X, 3).
         """
         # Random flips
-        if self.flip_enable:
+        if 'flip' in self.augment_enable:
             if random.random() > 0.5:
                 volume = np.flip(volume, axis=0) # Flip Z
             if random.random() > 0.5:
@@ -694,17 +692,19 @@ class KITSDataGenerator(Sequence):
                 volume = np.flip(volume, axis=2) # Flip X
 
         # Translations
-        if self.translation_enable and random.random() > 0.5:
+        if 'translate' in self.augment_enable and random.random() > 0.5:
             shift_z = random.randint(-self.max_translation[0], self.max_translation[0])
             shift_y = random.randint(-self.max_translation[1], self.max_translation[1])
             shift_x = random.randint(-self.max_translation[2], self.max_translation[2])
 
             volume = ndimage.shift(volume, shift=(shift_z, shift_y, shift_x, 0),
                                    order=0, mode='constant', cval=0.0)
-            # NOTE explain this
+            # order: interpolation order, 0 preservs integer values exactly
+            # mode: controls what happens to empty pixels exposed when a mask is pulled away
+            # cval: numerical value injected into empty border regions
         
         # Random Zoom (scaling)
-        if self.zoom_enable and random.random() > 0.5:
+        if 'zoom' in self.augment_enable and random.random() > 0.5:
             scale = random.uniform(self.zoom_range[0], self.zoom_range[1])
 
             # scale everything apart from the channels
@@ -713,15 +713,42 @@ class KITSDataGenerator(Sequence):
             
             volume = self._crop_or_pad_to_shape(zoomed, target_shape=volume.shape)
 
+        # fixing new pixels, with [0, 0, 0] to [1, 0, 0] i.e. background set to 1
+        missing_background = np.all(volume == 0, axis=-1)
+        volume[missing_background, 0] = 1.0
+
         return volume
     
     def _crop_or_pad_to_shape(self, volume, target_shape):
-        pass
-        # NOTE finish in the morning
+        """
+        Helper to maintain exact tensor dimension after zooming. 
+        """
+        out_volume = np.zeros(target_shape, dtype=volume.dtype) # blank for output
 
+        # original and target shapes, excluding channel dimension
+        v_shape = volume.shape[:-1]
+        t_shape = target_shape[:-1]
 
+        # calculate start indices for centering
+        start_v = [max(0, (v - t) // 2) for v, t in zip(v_shape, t_shape)]
+        start_t = [max(0, (t - v) // 2) for v, t in zip(v_shape, t_shape)]
+        lengths = [min(v, t) for v, t in zip(v_shape, t_shape)]
         
+        # map the cropped volume into the padded output tensor
+        out_volume[
+            start_t[0]:start_t[0]+lengths[0],
+            start_t[1]:start_t[1]+lengths[1],
+            start_t[2]:start_t[2]+lengths[2],
+            :
+        ] = volume[
+            start_v[0]:start_v[0]+lengths[0],
+            start_v[1]:start_v[1]+lengths[1],
+            start_v[2]:start_v[2]+lengths[2],
+            :
+        ] 
+        # NOTE explain in detail how this function works
 
+        return out_volume
 
 # use keras layers api 
 # https://keras.io/api/layers/preprocessing_layers/
