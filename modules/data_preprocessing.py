@@ -730,7 +730,7 @@ def generate_train_validation_split(df, n_splits=5):
         df_splits.iloc[val_idx, df_splits.columns.get_loc('fold')] = fold
 
         # Print diagnostic fold data
-        print(f"--- Fold {fold} Created ---")
+        print(f"\n--- Fold {fold} Created ---")
         print(f"\tTrain samples: {len(train_idx)} | Validation samples: {len(val_idx)}")
         print(f"\tVal Class Dist: {pd.Series(y[val_idx]).value_counts(normalize=True).to_dict()}")
 

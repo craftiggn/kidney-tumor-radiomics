@@ -271,12 +271,12 @@ def generate_tumor_video_from_npy(tumor_dir, out_dir, fps=15):
     )
 
     video_path = out_path / f"{tumor_id}.mp4"
-    print(f"Saving video to {video_path}...")
+    # print(f"Saving video to {video_path}...")
 
     writer = animation.FFMpegWriter(fps=fps, metadata=dict(artist="KITS_Preprocessing"), bitrate=1800)
     ani.save(str(video_path), writer=writer)
     plt.close(fig)
-    print("Video generation complete.")
+    # print("Video generation complete.")
 
 def decode_tabular_rpn(tabular_array, tabular_cols):
     """
