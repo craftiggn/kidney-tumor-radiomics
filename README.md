@@ -17,7 +17,7 @@ Tumours may be noninvasive, semi-invasive, or invasive. Noninvasive tumours are 
 
 ## Launching
 after geting the repo, kits23 and the raw annotation from google drive (.xlsx) ready run:
-1. `analyse_kits23_tumor_instances.py` - to genereate `tumor_instance_data.json`
+1. `analyze_kits23_tumor_instances.py` - to genereate `tumor_instance_data.json`
 2. `apply_original_annotation.py` - self explanatory
 3. `apply_tumor_size_limit.py` - remove tumors that are too large from the dataframe
 
