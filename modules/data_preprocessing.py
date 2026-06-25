@@ -875,7 +875,7 @@ class KITSDataGenerator(Sequence):
 
         return out_volume
 
-def get_keras_class_weights(train_labels): # NOTE i dont understand how this works
+def get_keras_class_weights(train_labels):
     """
     Compute class weights inversly proportional to class frequencies.
     To combat overfitting to more common cases.

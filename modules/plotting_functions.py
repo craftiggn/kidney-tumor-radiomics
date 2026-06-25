@@ -13,6 +13,7 @@ from termcolor import colored
 import matplotlib.animation as animation
 from matplotlib.patches import Patch
 import json
+import pandas as pd
 
 def browse_volume(vol: np.ndarray, axis: int = 0, cmap: str = "gray", figsize=(6, 6)) -> None:
     """
@@ -382,3 +383,37 @@ def visualize_generator_batch(batch_X, batch_y, experiment_dir, out_dir, fps=15,
         plt.close(fig)
         
         print(f"Saved: {video_path}")
+
+
+### MODEL FIGURES
+
+def plot_and_evaluate(fold_out_dir: Path, fold_no):
+    """
+    Parsers the CSV log and creates a training graph.
+    """
+    log_path = fold_out_dir / f"training_log_fold_{fold_no}.csv"
+    if not log_path.exists():
+        return
+    
+    df_log = pd.read_csv(log_path)
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+
+    # Plot Loss
+    ax1.plot(df_log['epoch'], df_log['loss'], label='Train Loss')
+    ax1.plot(df_log['epoch'], df_log['val_loss'], label='Val Loss')
+    ax1.set_title(f'Loss - Fold {fold_no}')
+    ax1.set_xlabel('Epoch')
+    ax1.legend()
+    
+    # Plot Accuracy
+    ax2.plot(df_log['epoch'], df_log['accuracy'], label='Train Accuracy')
+    ax2.plot(df_log['epoch'], df_log['val_accuracy'], label='Val Accuracy')
+    ax2.set_title(f'Accuracy - Fold {fold_no}')
+    ax2.set_xlabel('Epoch')
+    ax2.legend()
+    
+    plot_path = fold_out_dir / f"training_curves_fold_{fold_no}.png"
+    plt.savefig(plot_path)
+    plt.close(fig)
+    print(f"Saved training graph to {plot_path}")
