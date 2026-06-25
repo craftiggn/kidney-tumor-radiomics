@@ -417,3 +417,87 @@ def plot_and_evaluate(fold_out_dir: Path, fold_no):
     plt.savefig(plot_path)
     plt.close(fig)
     print(f"Saved training graph to {plot_path}")
+
+import os
+import re
+import pandas as pd
+import matplotlib.pyplot as plt
+from pathlib import Path
+
+def plot_and_evaluate_all_folds(out_dir):
+    """
+    Scrapes CSV metrics files across all fold subdirectories and builds a 
+    consolidated 4-panel comparison grid plot.
+    """
+    out_dir = Path(out_dir)
+    
+    # 1. Dynamically locate and sort all fold directories (handles 5-fold, 10-fold etc.)
+    fold_dirs = sorted(
+        [d for d in out_dir.iterdir() if d.is_dir() and re.match(r'^fold_\d+$', d.name)],
+        key=lambda x: int(re.search(r'\d+', x.name).group())
+    )
+    
+    if not fold_dirs:
+        print(f"[Warning] No fold directories found inside {out_dir}")
+        return
+
+    # 2. Initialize a 2x2 grid plot
+    fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+    ((ax_train_acc, ax_val_acc), (ax_train_loss, ax_val_loss)) = axes
+
+    # Configure structural titles and tags
+    ax_train_acc.set_title("Training Accuracy per Fold", fontsize=14, fontweight='bold', pad=10)
+    ax_train_acc.set_xlabel("Epochs")
+    ax_train_acc.set_ylabel("Accuracy")
+
+    ax_val_acc.set_title("Validation Accuracy per Fold", fontsize=14, fontweight='bold', pad=10)
+    ax_val_acc.set_xlabel("Epochs")
+    ax_val_acc.set_ylabel("Accuracy")
+
+    ax_train_loss.set_title("Training Loss per Fold", fontsize=14, fontweight='bold', pad=10)
+    ax_train_loss.set_xlabel("Epochs")
+    ax_train_loss.set_ylabel("Loss (Binary Crossentropy)")
+
+    ax_val_loss.set_title("Validation Loss per Fold", fontsize=14, fontweight='bold', pad=10)
+    ax_val_loss.set_xlabel("Epochs")
+    ax_val_loss.set_ylabel("Loss (Binary Crossentropy)")
+
+    # 3. Iterate through directories and overlay curves onto the grid
+    for fold_dir in fold_dirs:
+        fold_idx = re.search(r'\d+', fold_dir.name).group()
+        csv_path = fold_dir / f"training_log_fold_{fold_idx}.csv"
+        
+        if not csv_path.exists():
+            print(f"[Skip] Log file missing at: {csv_path}")
+            continue
+            
+        # Parse CSV history file
+        df = pd.read_csv(csv_path)
+        epochs = df['epoch'] + 1  # 1-index conversion for readable plots
+        fold_label = f"Fold {int(fold_idx) + 1}"
+        
+        # Distribute logs safely into subplots
+        if 'accuracy' in df.columns:
+            ax_train_acc.plot(epochs, df['accuracy'], marker='o', markersize=4, linewidth=2, label=fold_label)
+        if 'val_accuracy' in df.columns:
+            ax_val_acc.plot(epochs, df['val_accuracy'], marker='o', markersize=4, linewidth=2, label=fold_label)
+        if 'loss' in df.columns:
+            ax_train_loss.plot(epochs, df['loss'], marker='o', markersize=4, linewidth=2, label=fold_label)
+        if 'val_loss' in df.columns:
+            ax_val_loss.plot(epochs, df['val_loss'], marker='o', markersize=4, linewidth=2, label=fold_label)
+
+    # 4. Final layout design and grid rendering
+    for ax in axes.flat:
+        ax.legend(loc='best', frameon=True, shadow=False)
+        ax.grid(True, linestyle='--', alpha=0.6)
+        # Ensure integer ticks for clean epoch intervals
+        ax.xaxis.get_major_locator().set_params(integer=True)
+
+    plt.tight_layout()
+    
+    # 5. Export output file directly to output directory root
+    save_path = out_dir / "all_folds_performance_matrix.png"
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print(f"\n[Success] Consolidated multi-fold evaluation graph saved to: {save_path}")

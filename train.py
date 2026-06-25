@@ -1,4 +1,8 @@
 import os
+# Suppress standard TensorFlow INFO and WARNING logs (set to '3' to mute errors too, '2' filters info/warnings)
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+
 import argparse
 import numpy as np
 import pandas as pd
@@ -54,7 +58,7 @@ def main():
     for fold_no in range(args.n_folds):
         print(f"\n{'='*40}")
         print(colored(f"\tProcessing fold {fold_no}")) 
-        print(f"\n{'='*40}")
+        print(f"{'='*40}\n")
 
         fold_out_dir = out_dir / f"fold_{fold_no}"
         fold_out_dir.mkdir(exist_ok=True)
@@ -88,12 +92,16 @@ def main():
 
         mod.train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir)
 
+        plf.plot_and_evaluate(fold_out_dir, fold_no)
+
         # HPC safety precautions
         del model
         del train_generator
         del val_generator
         keras.backend.clear_session()
         gc.collect()
+
+    plf.plot_and_evaluate_all_folds(args.out_dir)
 
 if __name__ == "__main__":
     main()
