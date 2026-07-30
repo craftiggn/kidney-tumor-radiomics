@@ -1,8 +1,6 @@
 import os
 # Suppress standard TensorFlow INFO and WARNING logs (set to '3' to mute errors too, '2' filters info/warnings)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
-
 import argparse
 import numpy as np
 import pandas as pd
@@ -21,6 +19,7 @@ from modules import model_functions as mod
 
 # sample run command:
 # python3 train.py --data_dir /home/marcel/Repos/Data/kits23_processed/kits_dataset_123_123_116_kidney --epochs 10 --n_folds 1
+# 
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Train 3D CNN on KiTS23 Preprocessed Dataset")

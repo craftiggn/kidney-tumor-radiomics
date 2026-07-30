@@ -10,13 +10,19 @@ KITS23_DATASET_PATH = '/home/marcel/Repos/Data/kits23'
 BASE_OUTPUT_DIR = Path('/home/marcel/Repos/Data/kits23_processed')
 
 # Define target experiments to generate
-TARGET_SHAPES = [(123, 123, 116)] 
+TARGET_SHAPES = [(64, 123, 116)]
 # https://www.ncbi.nlm.nih.gov/books/NBK482385/?utm_source=chatgpt.com
 # "Typical dimensions include a length of 10 to 12 cm, a width of 5 to 7 cm, and a thickness of 3 to 5 cm, comparable in size to a closed fist."
 # So proportion should be ~11:6:4
-TARGET_SHAPES.append((110, 60, 40))
-TARGET_SHAPES.append((85, 45, 30))
-TARGET_SHAPES.append((55, 30, 20))
+
+# TARGET_SHAPES.append((110, 60, 40))
+# TARGET_SHAPES.append((85, 45, 30))
+# TARGET_SHAPES.append((55, 30, 20))
+
+# given the often very low resolution in the Z-axis lets try generating datasets with a low Z-axis resolution
+TARGET_SHAPES.append((32, 103, 116))
+TARGET_SHAPES.append((36, 60, 60))
+TARGET_SHAPES.append((16, 30, 30))
 BBOX_STRATEGIES = ['kidney']
 N_SPLITS = 5
 

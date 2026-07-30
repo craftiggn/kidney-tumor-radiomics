@@ -37,19 +37,26 @@ def build_model(input_shape):
     model = keras.Sequential([
         keras.layers.Input(shape=input_shape),
         
-        keras.layers.Conv3D(32, kernel_size=(3,3,3), activation='relu', padding='same'),
+        # --- LAYER 1: Anisotropic Processing ---
+        # kernel_size=(1,3,3) forces the network to learn 2D spatial features first
+        # pool_size=(1,2,2) shrinks X/Y but preserves the shallow Z-axis resolution
+        keras.layers.Conv3D(32, kernel_size=(1, 3, 3), activation='relu', padding='same'),
         keras.layers.BatchNormalization(), 
-        keras.layers.MaxPooling3D(pool_size=(2,2,2)), 
+        keras.layers.MaxPooling3D(pool_size=(1, 2, 2)), 
         
+        # --- LAYER 2: Transition to Isotropic ---
+        # Now that X/Y are halved, the feature map proportions are closer to cubic.
+        # We can start aggregating 3D context safely.
         keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='relu', padding='same'),
         keras.layers.BatchNormalization(),
-        keras.layers.MaxPooling3D(pool_size=(2,2,2)),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
 
+        # --- LAYER 3: Fully Isotropic ---
         keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='relu', padding='same'),
         keras.layers.BatchNormalization(),
-        keras.layers.MaxPooling3D(pool_size=(2,2,2)),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
 
-        # Replaced Flatten() to lower the parameter footprint from 103M to ~30K
+        # Global Average Pooling flattens the remaining spatial dimensions beautifully
         keras.layers.GlobalAveragePooling3D(),
 
         keras.layers.Dense(256, activation='relu'),
@@ -59,7 +66,7 @@ def build_model(input_shape):
         keras.layers.Dropout(0.4),
 
         keras.layers.Dense(6, activation='sigmoid')
-    ], name='RPN_classification_model')
+    ], name='RPN_classification_model_anisotropic')
 
     model.compile(
         optimizer=keras.optimizers.Adam(learning_rate=1e-4), 
