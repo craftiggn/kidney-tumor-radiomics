@@ -4,6 +4,7 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping, CSVLogger
 from pathlib import Path
 import numpy as np
 from termcolor import colored
+from modules import plotting_functions as plf
 
 def get_keras_class_weights(train_paths):
     """
@@ -73,9 +74,16 @@ def train_model(model, train_generator, val_generator, class_weights, args, fold
     Trains the Sequential model.
     """
     callbacks = [
-        CSVLogger(fold_out_dir / f"training_log_fold_{fold_no}.csv", append=False),
-        EarlyStopping(monitor='val_loss', patience=8, restore_best_weights=True, verbose=1)
-    ] 
+        CSVLogger(fold_out_dir / f"training_log_fold_{fold_no}.csv", append=False)
+    ]
+
+    EARLY_STOPPING = False
+    if EARLY_STOPPING:
+        patience = 8
+        callbacks.append(EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True, verbose=1))
+        print(colored(f"Early stopping ENABLED (patience={patience}).", "green"))
+    else:
+        print(colored(f"Early stopping DISABLED.", "yellow"))
 
     if args.save_model:
         model_path = fold_out_dir / f"best_model_fold_{fold_no}.keras"
@@ -96,6 +104,42 @@ def train_model(model, train_generator, val_generator, class_weights, args, fold
         epochs=args.epochs,
         class_weight=class_weights,
         callbacks=callbacks
+    )
+
+    # --- ROC and PR curves --- 
+    # Extract true labels from the val_generator
+    print(colored("Generating validation predictions for ROC and PR curves...", "blue"))
+
+    y_true_list = []
+    y_pred_list = []
+
+    # Iterate through the val dataset
+    for i in range(len(val_generator)):
+        X_batch, y_batch = val_generator[i]
+        preds = model.predict(X_batch, verbose=0)
+
+        y_true_list.append(y_batch)
+        y_pred_list.append(preds)
+
+    # Concat into arrays
+    y_true = np.concatenate(y_true_list, axis=0)
+    y_pred = np.concatenate(y_pred_list, axis=0)
+
+    # plot ROC, PR
+    plf.plot_multilabel_roc_and_pr_curves(
+        y_true=y_true,
+        y_pred=y_pred,
+        fold_no=fold_no,
+        out_dir=fold_out_dir,
+        class_names=val_generator.tabular_cols
+    )
+
+    plf.plot_feature_confusion_matrix(
+        y_true=y_true,
+        y_pred=y_pred,
+        fold_no=fold_no,
+        out_dir=fold_out_dir,
+        tabula_cols=val_generator.tabular_cols
     )
 
     return history

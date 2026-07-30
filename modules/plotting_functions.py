@@ -14,6 +14,8 @@ import matplotlib.animation as animation
 from matplotlib.patches import Patch
 import json
 import pandas as pd
+import re
+import seaborn
 
 def browse_volume(vol: np.ndarray, axis: int = 0, cmap: str = "gray", figsize=(6, 6)) -> None:
     """
@@ -418,20 +420,13 @@ def plot_and_evaluate(fold_out_dir: Path, fold_no):
     plt.close(fig)
     print(f"Saved training graph to {plot_path}")
 
-import os
-import re
-import pandas as pd
-import matplotlib.pyplot as plt
-from pathlib import Path
-
 def plot_and_evaluate_all_folds(out_dir):
     """
     Scrapes CSV metrics files across all fold subdirectories and builds a 
-    consolidated 4-panel comparison grid plot.
+    consolidated 4-panel comparison grid plot (Loss and AUC).
     """
     out_dir = Path(out_dir)
     
-    # 1. Dynamically locate and sort all fold directories (handles 5-fold, 10-fold etc.)
     fold_dirs = sorted(
         [d for d in out_dir.iterdir() if d.is_dir() and re.match(r'^fold_\d+$', d.name)],
         key=lambda x: int(re.search(r'\d+', x.name).group())
@@ -441,18 +436,18 @@ def plot_and_evaluate_all_folds(out_dir):
         print(f"[Warning] No fold directories found inside {out_dir}")
         return
 
-    # 2. Initialize a 2x2 grid plot
+    # Initialize a 2x2 grid plot
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-    ((ax_train_acc, ax_val_acc), (ax_train_loss, ax_val_loss)) = axes
+    ((ax_train_auc, ax_val_auc), (ax_train_loss, ax_val_loss)) = axes
 
-    # Configure structural titles and tags
-    ax_train_acc.set_title("Training Accuracy per Fold", fontsize=14, fontweight='bold', pad=10)
-    ax_train_acc.set_xlabel("Epochs")
-    ax_train_acc.set_ylabel("Accuracy")
+    # Configure structural titles and tags for AUC instead of Accuracy
+    ax_train_auc.set_title("Training AUC per Fold", fontsize=14, fontweight='bold', pad=10)
+    ax_train_auc.set_xlabel("Epochs")
+    ax_train_auc.set_ylabel("AUC")
 
-    ax_val_acc.set_title("Validation Accuracy per Fold", fontsize=14, fontweight='bold', pad=10)
-    ax_val_acc.set_xlabel("Epochs")
-    ax_val_acc.set_ylabel("Accuracy")
+    ax_val_auc.set_title("Validation AUC per Fold", fontsize=14, fontweight='bold', pad=10)
+    ax_val_auc.set_xlabel("Epochs")
+    ax_val_auc.set_ylabel("AUC")
 
     ax_train_loss.set_title("Training Loss per Fold", fontsize=14, fontweight='bold', pad=10)
     ax_train_loss.set_xlabel("Epochs")
@@ -462,7 +457,7 @@ def plot_and_evaluate_all_folds(out_dir):
     ax_val_loss.set_xlabel("Epochs")
     ax_val_loss.set_ylabel("Loss (Binary Crossentropy)")
 
-    # 3. Iterate through directories and overlay curves onto the grid
+    # Iterate through directories and overlay curves onto the grid
     for fold_dir in fold_dirs:
         fold_idx = re.search(r'\d+', fold_dir.name).group()
         csv_path = fold_dir / f"training_log_fold_{fold_idx}.csv"
@@ -471,33 +466,143 @@ def plot_and_evaluate_all_folds(out_dir):
             print(f"[Skip] Log file missing at: {csv_path}")
             continue
             
-        # Parse CSV history file
         df = pd.read_csv(csv_path)
-        epochs = df['epoch'] + 1  # 1-index conversion for readable plots
+        epochs = df['epoch'] + 1 
         fold_label = f"Fold {int(fold_idx) + 1}"
         
-        # Distribute logs safely into subplots
-        if 'accuracy' in df.columns:
-            ax_train_acc.plot(epochs, df['accuracy'], marker='o', markersize=4, linewidth=2, label=fold_label)
-        if 'val_accuracy' in df.columns:
-            ax_val_acc.plot(epochs, df['val_accuracy'], marker='o', markersize=4, linewidth=2, label=fold_label)
+        # Locate the AUC column name dynamically (Keras sometimes names it 'auc', 'auc_1', etc.)
+        auc_col = [col for col in df.columns if 'auc' in col.lower() and 'val' not in col.lower()]
+        val_auc_col = [col for col in df.columns if 'val_auc' in col.lower()]
+        
+        if auc_col:
+            ax_train_auc.plot(epochs, df[auc_col[0]], marker='o', markersize=4, linewidth=2, label=fold_label)
+        if val_auc_col:
+            ax_val_auc.plot(epochs, df[val_auc_col[0]], marker='o', markersize=4, linewidth=2, label=fold_label)
         if 'loss' in df.columns:
             ax_train_loss.plot(epochs, df['loss'], marker='o', markersize=4, linewidth=2, label=fold_label)
         if 'val_loss' in df.columns:
             ax_val_loss.plot(epochs, df['val_loss'], marker='o', markersize=4, linewidth=2, label=fold_label)
 
-    # 4. Final layout design and grid rendering
+    # Final layout design and grid rendering
     for ax in axes.flat:
         ax.legend(loc='best', frameon=True, shadow=False)
         ax.grid(True, linestyle='--', alpha=0.6)
-        # Ensure integer ticks for clean epoch intervals
         ax.xaxis.get_major_locator().set_params(integer=True)
 
     plt.tight_layout()
-    
-    # 5. Export output file directly to output directory root
     save_path = out_dir / "all_folds_performance_matrix.png"
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
     
     print(f"\n[Success] Consolidated multi-fold evaluation graph saved to: {save_path}")
+
+from sklearn.metrics import roc_curve, auc, precision_recall_curve, average_precision_score, confusion_matrix
+
+def plot_multilabel_roc_and_pr_curves(y_true, y_pred, fold_no, out_dir, class_names=None):
+    """
+    Plots per-class ROC and Precision-Recall curves for a multi-label output.
+    y_true: numpy array of shape (n_samples, n_classes)
+    y_pred: numpy array of shape (n_samples, n_classes) (probabilities from sigmoid)
+    Precision - (correct detection / all detections)
+    Recall - (correct detections / all valid samples)
+    """
+    n_classes = y_true.shape[1]
+    if class_names is None:
+        class_names = [f"Class {i}" for i in range(n_classes)]
+
+    fig, axes = plt.subplots(1, 2, figsize=(18, 8))
+    ax_roc, ax_pr = axes
+
+    # Formatting setup
+    ax_roc.set_title(f"ROC Curve (Fold {fold_no})", fontsize=14, fontweight='bold', pad=10)
+    ax_roc.set_xlabel("False Positive Rate")
+    ax_roc.set_ylabel("True Positive Rate")
+    ax_roc.plot([0, 1], [0, 1], 'k--', lw=2, label="Random Chance")
+
+    ax_pr.set_title(f"Precision-Recall Curve (Fold {fold_no})", fontsize=14, fontweight='bold', pad=10)
+    ax_pr.set_xlabel("Recall")
+    ax_pr.set_ylabel("Precision")
+
+    # Generate curves for each class
+    for i in range(n_classes):
+        # --- ROC ---
+        fpr, tpr, _ = roc_curve(y_true[:, i], y_pred[:, i])
+        roc_auc = auc(fpr, tpr)
+        ax_roc.plot(fpr, tpr, lw=2, label=f"{class_names[i]} (AUC = {roc_auc:.3f})")
+
+        # --- Precision-Recall ---
+        precision, recall, _ = precision_recall_curve(y_true[:, i], y_pred[:, i])
+        pr_auc = average_precision_score(y_true[:, i], y_pred[:, i])
+        ax_pr.plot(recall, precision, lw=2, label=f"{class_names[i]} (AP = {pr_auc:.3f})")
+
+    ax_roc.legend(loc='lower right', frameon=True)
+    ax_roc.grid(True, linestyle='--', alpha=0.6)
+
+    ax_pr.legend(loc='lower left', frameon=True)
+    ax_pr.grid(True, linestyle='--', alpha=0.6)
+
+    plt.tight_layout()
+    save_path = Path(out_dir) / f"roc_pr_curves_fold_{fold_no}.png"
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print(f"[Success] ROC and PR curves saved to: {save_path}")
+
+
+def plot_feature_confusion_matrix(y_true, y_pred, tabula_cols, fold_no, out_dir):
+    """
+    Splits the 6 node output into position (0,1,2) and invasion (3,4,5).
+    Calculates the argmax for each group to generate two distinct 3x3 confusion matrices.     
+    """
+
+    if not tabula_cols:
+        print(colored("[Skip] No tabular cols provided. Cannot plot confusion matrix.", "yellow"))
+
+    # parse and group columns by prefix
+    features = {}
+    for i, col_name in enumerate(tabula_cols):
+        feat_name, class_name = col_name.split('_', 1)
+
+        if feat_name not in features:
+            features[feat_name] = {'indices': [], 'labels': []}
+
+        features[feat_name]['indices'].append(i)
+        features[feat_name]['labels'].append(class_name)
+
+    # setup the figure
+    n_features = len(features)
+    fig, axes = plt.subplots(1, n_features, figsize=(7 * n_features, 6))
+
+    # ensure axes is iterable
+    if n_features == 1:
+        axes = [axes]
+
+    # generate a matrix for each discrete feature
+    for ax, (feat_name, feat_data) in zip(axes, features.items()):
+        indices = feat_data['indices']
+        labels = feat_data['labels']
+
+        # slice the true and pred arrays for just these feature indices
+        y_true_sub = y_true[:, indices]
+        y_pred_sub = y_pred[:, indices]
+
+        # convert probablies to discrete class indices via argmax
+        y_true_cls = np.argmax(y_true_sub, axis=1)
+        y_pred_cls = np.argmax(y_pred_sub, axis=1)
+
+        # compute and plot
+        cm = confusion_matrix(y_true_cls, y_pred_cls)
+        seaborn.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax,
+                        xticklabels=labels, yticklabels=labels,
+                        cbar_kws={'label': 'Sample Count'})
+
+        ax.set_title(f"{feat_name.capitalize()} Confusion Matrix (Fold {fold_no})")
+        ax.set_ylabel(f"True Label")
+        ax.set_xlabel(f"Predicted Label")
+
+    plt.tight_layout()
+    save_path = Path(out_dir) / f"confusion_matrix_fold_{fold_no}.png"
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.close()
+
+    print(f"[Success] Dynamic confusion matrices saved to: {save_path}")

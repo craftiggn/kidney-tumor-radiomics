@@ -19,6 +19,9 @@ from modules import plotting_functions as plf
 from modules import data_preprocessing as dataPrep
 from modules import model_functions as mod
 
+# sample run command:
+# python3 train.py --data_dir /home/marcel/Repos/Data/kits23_processed/kits_dataset_123_123_116_kidney --epochs 10 --n_folds 1
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Train 3D CNN on KiTS23 Preprocessed Dataset")
     parser.add_argument('--data_dir', type=str, required=True, help="Path to the compiled training dataset directory")
@@ -49,22 +52,24 @@ def main():
     with open(metadata_path, 'r') as f:
         metadata = json.load(f)
 
-    # extract the shape
+    # extract the input shape
     target_shape = metadata["target_shape"]
     input_shape = (target_shape[0], target_shape[1], target_shape[2], 3)
     print(f"Loaded target shape from metadata {metadata_path}")
 
-    # NOTE need to add a print saying how many out of all folds are being processed
+    print(f"Processing {args.n_folds} folds")
     for fold_no in range(args.n_folds):
         print(f"\n{'='*40}")
         print(colored(f"\tProcessing fold {fold_no}")) 
         print(f"{'='*40}\n")
 
+        # training result output directory
         fold_out_dir = out_dir / f"fold_{fold_no}"
         fold_out_dir.mkdir(exist_ok=True)
 
         # Get paths
         train_paths, val_paths = dataPrep.get_train_validation_paths(args.data_dir, fold_no)
+        # This function splits the dataset into 
 
         # Extract class weights
         class_weights = dataPrep.get_keras_class_weights(train_paths)

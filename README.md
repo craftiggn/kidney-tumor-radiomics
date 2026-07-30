@@ -23,22 +23,35 @@ after geting the repo, kits23 and the raw annotation from google drive (.xlsx) r
 
 Now the .csv is shared with annotation specialists (medical professionals specialising in Urology)
 
-After getting the .csv with annotations, to prepare the training data run:
+After getting the .csv with annotations, to prepare the training data, run:
 1. `analyze_annotated_data.ipynb` - self explanatory
 2. `compile_dataset.py` - run to produce a drectory - with standardized input data and labels, and visualisation for the data distribution in this dataset
+
+To train a model on a given dataset:
+1. `train.py` - a single python script handeling the whole model training and evaluation
+    - the script is designed to be ran from the CLI, with several attributes to specify how it is supposed to be trained
+    
 
 <!-- 2. `convert_kits_dataset.py` - to generate `/home/marcel/Repos/Data/kits23_converted/` directory and fill it with data prepared for training i.e. segmentations as .npy arrays and labels.csv. -->
 
 ## Input standardisation ideas
 - [x] create a bounding-box for the kidney-tumor system
-- [ ] analyze the annotated data
+- [x] analyze the annotated data
 - [ ] make sure processed masks do not delete the tumor, print a warning, maybe throw an error
-- [ ] stratified group k-fold validation
-- [ ] keras class weights - to make the model pay more attention to rare cases
-- [ ] make the bounding-box work around just the kidney, not the kidney-tumor (since RPN revolves around the position within the kidney, external data should be irrelevant)
-- [ ] make a generator function with synthetic data generation
-- [ ] visualize the training data
-- [ ] visualize the validation data
+- [x] stratified group k-fold validation
+- [x] keras class weights - to make the model pay more attention to rare cases
+- [x] make the bounding-box work around just the kidney, not the kidney-tumor (since RPN revolves around the position within the kidney, external data should be irrelevant)
+- [x] make a generator function with synthetic data generation
+- [x] visualize the training data
+- [x] visualize the validation data
+- [x] add ROC, precision, recall
+- [ ] visualize the generated model (weights, etc.)
+- [ ] check how well utilized the system's resourcess are
+- [x] modify `generate_train_validation_split`, such that it confirms there is no cross-contamination between cases
+- [ ] add a descriptor to fold out directories
+- [x] add a confusion matrix (2 separate ones, I think)
+- [ ] save the model
+- [ ] should we add argmax to the model? 
 
 ### Helpfull tensorflow functions
 use one-hot encoding for input? - https://www.tensorflow.org/api_docs/python/tf/one_hot

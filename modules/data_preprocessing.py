@@ -724,6 +724,11 @@ def generate_train_validation_split(df, n_splits=5):
     groups = df_splits['case_id'].values
 
     SGKF = StratifiedGroupKFold(n_splits=n_splits)
+    # This class attempts to return stratified folds with non-overlapping groups.
+    # The folds are made by preserving the percentage of samples for each class.
+    # This doesn't address the issue caused by unbalanced classes, but it does make sure that they are
+    # uniformly represented.
+    # To address the unbalanced classes, we will use class weights (in training).
 
     for fold, (train_idx, val_idx) in enumerate(SGKF.split(df_splits, y, groups)):
         # Assign the current fold number to the validation indices
@@ -734,8 +739,30 @@ def generate_train_validation_split(df, n_splits=5):
         print(f"\tTrain samples: {len(train_idx)} | Validation samples: {len(val_idx)}")
         print(f"\tVal Class Dist: {pd.Series(y[val_idx]).value_counts(normalize=True).to_dict()}")
 
+    # validate the spits
+    validate_no_group_leakage(df_splits)
+
     # Return only the necessary mapping columns
     return df_splits[['tumor_id', 'case_id', 'fold']]
+
+def validate_no_group_leakage(df_splits: pd.DataFrame):
+    """
+    Validates that no group (case_id) spans accross multiple folds.
+    Raises a ValueError if cross-contamination is detected.
+    """
+
+    print("Running KFold case_id cross-contamination validation...")
+
+    # count the number of unique folds for each case_id
+    fold_counts_per_case = df_splits.groupby('case_id')['fold'].nunique()
+
+    # chceck if any case_id has been assigned more than one fold
+    leaking_cases = fold_counts_per_case[fold_counts_per_case > 1].index.tolist()
+
+    if leaking_cases:
+        raise ValueError(colored((f"Data leakage detected!", "red")), f"the follwing case_ids appear in multiple folds: {leaking_cases}")
+
+    print(f"\tValidation passed: No case_id leakage detected")
 
 ### GENERATOR
 
@@ -745,7 +772,7 @@ class KITSDataGenerator(PyDataset):
                  augment=False, augment_enable=['flip','translate','zoom'],
                  max_translation=[0,0,0],
                  zoom_range=[0.9,1.1],
-                 shuffle=True, workers=1, use_multiprocessing=False):
+                 shuffle=True, workers=1, use_multiprocessing=True):
         
         self.paths = np.array(paths)
         self.batch_size = int(batch_size)
@@ -762,6 +789,12 @@ class KITSDataGenerator(PyDataset):
         self.augment_enable = set(augment_enable) 
         self.max_translation = max_translation
         self.zoom_range = zoom_range
+
+        self.dataset_dir = Path(self.paths[0]).parent
+        columns_file = self.dataset_dir / "tabular_columns.txt"
+        with open(columns_file, "r") as f:
+            self.tabular_cols = [line.strip() for line in f.read().splitlines() if line.strip()]
+
 
     def __len__(self):
         return int(np.ceil(len(self.paths) / self.batch_size))
