@@ -13,7 +13,7 @@ BASE_OUTPUT_DIR = Path('/home/marcel42/Data/kits23_processed')
 
 # Define target experiments to generate
 TARGET_SHAPES = [(64, 123, 116)]
-# https://www.ncbi.nlm.nih.gov/books/NBK482385/?utm_source=chatgpt.com
+# https://www.ncbi.nlm.nih.gov/books/NBK482385/
 # "Typical dimensions include a length of 10 to 12 cm, a width of 5 to 7 cm, and a thickness of 3 to 5 cm, comparable in size to a closed fist."
 # So proportion should be ~11:6:4
 
