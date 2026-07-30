@@ -11,6 +11,7 @@ import keras
 from termcolor import colored
 import json
 import gc
+from datetime import datetime
 
 # import custom modules
 from modules import plotting_functions as plf
@@ -18,7 +19,7 @@ from modules import data_preprocessing as dataPrep
 from modules import model_functions as mod
 
 # sample run command:
-# python3 train.py --data_dir /home/marcel/Repos/Data/kits23_processed/kits_dataset_123_123_116_kidney --epochs 10 --n_folds 1
+# python3 train.py --data_dir /home/marcel/Repos/Data/kits23_processed/ --epochs 10 --n_folds 1 --save_model
 # 
 
 def parse_arguments():
@@ -37,6 +38,8 @@ def main():
     args = parse_arguments()
 
     out_dir = Path(args.out_dir)
+    timestamp = datetime.now().strftime(r"%Y-%m-%d_%H-%M") # to help keep trac of trainings
+    out_dir = out_dir / timestamp
     out_dir.mkdir(parents=True, exist_ok=True)
 
     print(colored(f"--- KiTS23 Processed Data Model Training ---", "blue", attrs=["bold"]))
@@ -55,6 +58,15 @@ def main():
     target_shape = metadata["target_shape"]
     input_shape = (target_shape[0], target_shape[1], target_shape[2], 3)
     print(f"Loaded target shape from metadata {metadata_path}")
+
+    # save the run information
+    config_dict = vars(args).copy()
+    config_dict["input_shape"] = input_shape
+    config_dict["run_timestamp"] = timestamp
+    config_path = out_dir / "run_config.json"
+    with open(config_path, 'w') as f:
+        json.dump(config_dict, f, indent=4)
+    print(f"Saved the run configuration to {config_path}")
 
     print(f"Processing {args.n_folds} folds")
     for fold_no in range(args.n_folds):
@@ -79,7 +91,7 @@ def main():
             batch_size=args.batch_size,
             augment=True,
             shuffle=True,
-            max_translation=[10,10,10]
+            max_translation=[3, 8, 8]
         )
 
         val_generator = dataPrep.KITSDataGenerator(
@@ -105,7 +117,7 @@ def main():
         keras.backend.clear_session()
         gc.collect()
 
-    plf.plot_and_evaluate_all_folds(args.out_dir)
+    plf.plot_and_evaluate_all_folds(out_dir)
 
 if __name__ == "__main__":
     main()
