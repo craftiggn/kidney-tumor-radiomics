@@ -6,8 +6,10 @@ from termcolor import colored
 
 # --- CONFIGURATIONS ---
 ANNOTATION_PATH = 'data/annotations_RPN_75mm_final.csv'
-KITS23_DATASET_PATH = '/home/marcel/Repos/Data/kits23'
-BASE_OUTPUT_DIR = Path('/home/marcel/Repos/Data/kits23_processed')
+# KITS23_DATASET_PATH = '/home/marcel/Repos/Data/kits23'
+KITS23_DATASET_PATH = '/home/marcel42/Data/kits23'
+# BASE_OUTPUT_DIR = Path('/home/marcel/Repos/Data/kits23_processed')
+BASE_OUTPUT_DIR = Path('/home/marcel42/Data/kits23_processed')
 
 # Define target experiments to generate
 TARGET_SHAPES = [(64, 123, 116)]
