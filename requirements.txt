@@ -24,8 +24,8 @@ certifi
 cffi
 charset-normalizer
 colored
-comm
-contourpy
+#comm
+#contourpy
 cycler
 debugpy
 decorator
@@ -49,9 +49,9 @@ ImageIO
 ipykernel
 ipympl
 ipython
-ipython_pygments_lexers
+#ipython_pygments_lexers
 ipywidgets
-isoduration
+#isoduration
 jedi
 Jinja2
 joblib

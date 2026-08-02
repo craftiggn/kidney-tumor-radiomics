@@ -1,0 +1,10 @@
+Job started on rysy-n4.icm.edu.pl at Sat  1 Aug 02:32:16 CEST 2026
+INFO:    underlay of /etc/localtime required more than 50 (100) bind mounts
+INFO:    underlay of /usr/bin/nvidia-smi required more than 50 (538) bind mounts
+Traceback (most recent call last):
+  File "/home/marcel42/kidney-tumor-radiomics/compile_dataset.py", line 3, in <module>
+    from modules import data_preprocessing as dataPrep
+  File "/home/marcel42/kidney-tumor-radiomics/modules/data_preprocessing.py", line 4, in <module>
+    import nibabel as nib
+ModuleNotFoundError: No module named 'nibabel'
+Job finished at Sat  1 Aug 02:32:27 CEST 2026
