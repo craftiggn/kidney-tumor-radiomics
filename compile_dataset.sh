@@ -20,8 +20,10 @@ echo "Job started on $(hostname) at $(date)"
 # cd into the project folder
 cd /home/marcel42/kidney-tumor-radiomics
 
+# ensure all libries are present within the container
+
 # run python script within container
-apptainer exec --nv /lu/tetyda/projects/center4ml/Containers/tensorflow-gpu.sif python3 compile_dataset.py
+apptainer exec --nv container.sif python3 compile_dataset.py
 
 # 4. Print completion status
 echo "Job finished at $(date)"

@@ -1,0 +1,18 @@
+# Use the ICM's pre-configured, working image as the foundation
+Bootstrap: localimage
+From: /lu/tetyda/projects/center4ml/Containers/tensorflow-gpu.sif
+
+# Copy requirements file from the host into the container (optional/ -> opt/)
+%files
+    requirements.txt /opt/requirements.txt
+
+# Run installation commands inside the container during the build
+%post
+    echo "Installing custom Python libraries..."
+    # pip usually needs an upgrade to avoid errors with complex libraries
+    pip3 install --upgrade pip
+    pip3 install -r /opt/requirements.txt
+
+%environment
+    # Ensure standard paths are set (optional but good practice)
+    export LC_ALL=C
