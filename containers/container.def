@@ -1,0 +1,14 @@
+Bootstrap: localimage
+From: tensorflow-gpu.sif
+
+%files
+    requirements.txt /opt/requirements.txt
+
+%post
+    echo "Installing custom Python libraries..."
+    # Install pip requirements safely
+    pip3 install --upgrade pip
+    pip3 install -r /opt/requirements.txt
+
+%environment
+    export LC_ALL=C
