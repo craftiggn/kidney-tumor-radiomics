@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib
-matplotlib.use("TkAgg") 
+matplotlib.use("Agg") # Agg, because TkAgg was causing issues on the HPC
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 import matplotlib.patches as mpatches
