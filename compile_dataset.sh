@@ -23,6 +23,7 @@ cd /home/marcel42/kidney-tumor-radiomics
 # ensure all libries are present within the container
 
 # run python script within container
+module load apptainer
 apptainer exec --nv container.sif python3 compile_dataset.py
 
 # 4. Print completion status
