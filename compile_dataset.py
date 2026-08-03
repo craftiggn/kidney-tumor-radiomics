@@ -23,7 +23,7 @@ TARGET_SHAPES = [(64, 123, 116)]
 
 # given the often very low resolution in the Z-axis lets try generating datasets with a low Z-axis resolution
 TARGET_SHAPES.append((32, 103, 116))
-TARGET_SHAPES.append((36, 60, 60))
+TARGET_SHAPES.append((32, 60, 60))
 TARGET_SHAPES.append((16, 30, 30))
 BBOX_STRATEGIES = ['kidney']
 N_SPLITS = 5

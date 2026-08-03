@@ -1,4 +1,5 @@
 */__pycache__
-training_outputs
+training_outputs/
 venv
 *.sif
+env_libs/
