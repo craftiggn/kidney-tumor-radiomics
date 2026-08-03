@@ -815,7 +815,7 @@ class KITSDataGenerator(PyDataset):
         for path_str in batch_paths:
             path = Path(path_str)
             mask = np.load(path / "mask.npy")
-            tabular = np.load(path / "tabular.npy")
+            tabular = np.load(path / "labels.npy")
 
             if self.augment:
                 mask = self._augment_3d_volume(mask)
