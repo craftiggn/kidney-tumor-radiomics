@@ -1,0 +1,11 @@
+Job started on rysy-n9.icm.edu.pl at Mon  3 Aug 09:49:18 CEST 2026
+ERROR: Unable to locate a modulefile for 'apptainer'
+INFO:    User not listed in /etc/subuid, trying root-mapped namespace
+INFO:    The %post section will be run under fakeroot
+INFO:    Starting build...
+INFO:    Verifying bootstrap image /lu/tetyda/projects/center4ml/Containers/tensorflow-gpu.sif
+INFO:    Copying requirements.txt to /opt/requirements.txt
+INFO:    Running post scriptlet
+FATAL:   stat /bin/sh: no such file or directory
+FATAL:   While performing build: while running engine: exit status 255
+Container build successfully
