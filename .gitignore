@@ -2,4 +2,5 @@
 training_outputs/
 venv
 *.sif
+*.keras
 env_libs/
