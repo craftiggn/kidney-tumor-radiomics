@@ -6,6 +6,50 @@ import numpy as np
 from termcolor import colored
 from modules import plotting_functions as plf
 
+# --- MODEL DEFINITIONS ---
+
+def model_anisotropic_0(input_shape):
+    """Initial 3D CNN anisotropic model."""
+    return keras.Sequential([
+        keras.layers.Input(shape=input_shape),
+
+        # --- LAYER 1: Anisotropic Processing ---
+        # kernel_size=(1,3,3) forces the network to learn 2D spatial features first
+        # pool_size=(1,2,2) shrinks X/Y but preserves the shallow Z-axis resolution
+        keras.layers.Conv3D(32, kernel_size=(1, 3, 3), activation='relu', padding='same'),
+        keras.layers.BatchNormalization(), 
+        keras.layers.MaxPooling3D(pool_size=(1, 2, 2)), 
+
+        # --- LAYER 2: Transition to Isotropic ---
+        # Now that X/Y are halved, the feature map proportions are closer to cubic.
+        # We can start aggregating 3D context safely.
+        keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='relu', padding='same'),
+        keras.layers.BatchNormalization(),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        # --- LAYER 3: Fully Isotropic ---
+        keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='relu', padding='same'),
+        keras.layers.BatchNormalization(),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        # Global Average Pooling flattens the remaining spatial dimensions beautifully
+        keras.layers.GlobalAveragePooling3D(),
+
+        keras.layers.Dense(256, activation='relu'),
+        keras.layers.Dropout(0.4),
+
+        keras.layers.Dense(64, activation='relu'),
+        keras.layers.Dropout(0.4),
+
+        keras.layers.Dense(6, activation='sigmoid')
+        ], name='RPN_classification_model_anisotropic')
+
+MODEL_DICT = {
+    'anisotropic_0': model_anisotropic_0,
+}
+
+# --- FUNCTIONS ---
+
 def get_keras_class_weights(train_paths):
     """
     Extracts the labels directly from disk and calculates balanced class weights.
@@ -30,43 +74,16 @@ def get_keras_class_weights(train_paths):
     print(f"Calculated node weights: {class_weights}")
     return class_weights
 
-def build_model(input_shape):
+def build_model(input_shape, model_key):
     """
-    Constructs and compiles the 3D CNN architecture using keras.Sequential.
+    Constructs and compiles the 3D CNN architecture using keras.Sequential, based on a given key.
     """
-    model = keras.Sequential([
-        keras.layers.Input(shape=input_shape),
-        
-        # --- LAYER 1: Anisotropic Processing ---
-        # kernel_size=(1,3,3) forces the network to learn 2D spatial features first
-        # pool_size=(1,2,2) shrinks X/Y but preserves the shallow Z-axis resolution
-        keras.layers.Conv3D(32, kernel_size=(1, 3, 3), activation='relu', padding='same'),
-        keras.layers.BatchNormalization(), 
-        keras.layers.MaxPooling3D(pool_size=(1, 2, 2)), 
-        
-        # --- LAYER 2: Transition to Isotropic ---
-        # Now that X/Y are halved, the feature map proportions are closer to cubic.
-        # We can start aggregating 3D context safely.
-        keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='relu', padding='same'),
-        keras.layers.BatchNormalization(),
-        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
 
-        # --- LAYER 3: Fully Isotropic ---
-        keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='relu', padding='same'),
-        keras.layers.BatchNormalization(),
-        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+    if model_key not in MODEL_DICT:
+        raise ValueError(colored(f"Model key '{model_key}' not found in MODEL_DICT.\nAvailable keys:{list(MODEL_DICT.keys())}", "red"))
 
-        # Global Average Pooling flattens the remaining spatial dimensions beautifully
-        keras.layers.GlobalAveragePooling3D(),
-
-        keras.layers.Dense(256, activation='relu'),
-        keras.layers.Dropout(0.4),
-
-        keras.layers.Dense(64, activation='relu'),
-        keras.layers.Dropout(0.4),
-
-        keras.layers.Dense(6, activation='sigmoid')
-    ], name='RPN_classification_model_anisotropic')
+    print(f"Building model using architecture: {model_key}")
+    model = MODEL_DICT[model_key](input_shape)
 
     model.compile(
         optimizer=keras.optimizers.Adam(learning_rate=1e-4), 
@@ -76,7 +93,7 @@ def build_model(input_shape):
 
     return model
 
-def train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir):
+def train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir, learning_rate=1e-4 ):
     """
     Trains the Sequential model.
     """
@@ -91,6 +108,10 @@ def train_model(model, train_generator, val_generator, class_weights, args, fold
         print(colored(f"Early stopping ENABLED (patience={patience}).", "green"))
     else:
         print(colored(f"Early stopping DISABLED.", "yellow"))
+
+    # Dynamic vs Static Learning
+    if isinstance(learning_rate, keras.callbacks.Callback):
+        
 
     if args.save_model:
         model_path = fold_out_dir / f"best_model_fold_{fold_no}.keras"

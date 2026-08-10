@@ -51,7 +51,10 @@ To train a model on a given dataset:
 - [ ] add a descriptor to fold out directories
 - [x] add a confusion matrix (2 separate ones, I think)
 - [ ] save the model
-- [ ] should we add argmax to the model? 
+- [ ] should we add argmax to the model?
+- [ ] add a model visualization to the figures
+- [ ] add a parameter to the learning rate
+- [ ] add some "score" value that can grade the different models
 
 ### Helpfull tensorflow functions
 use one-hot encoding for input? - https://www.tensorflow.org/api_docs/python/tf/one_hot
