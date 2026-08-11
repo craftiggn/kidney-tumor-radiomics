@@ -85,15 +85,9 @@ def build_model(input_shape, model_key):
     print(f"Building model using architecture: {model_key}")
     model = MODEL_DICT[model_key](input_shape)
 
-    model.compile(
-        optimizer=keras.optimizers.Adam(learning_rate=1e-4), 
-        loss='binary_crossentropy',
-        metrics=['accuracy', keras.metrics.AUC(multi_label=True)]
-    )
-
     return model
 
-def train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir, learning_rate=1e-4 ):
+def train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir, learning_rate=1e-4):
     """
     Trains the Sequential model.
     """
@@ -101,18 +95,35 @@ def train_model(model, train_generator, val_generator, class_weights, args, fold
         CSVLogger(fold_out_dir / f"training_log_fold_{fold_no}.csv", append=False)
     ]
 
+
+    # Dynamic vs Static Learning
+    if isinstance(learning_rate, keras.callbacks.Callback):
+        # callbacks like ReduceLROnPlateau, append it
+        print(colored("Using dynamic learning rate via callback.", "blue"))
+        callbacks.append(learning_rate)
+        optimizer = keras.optimizers.Adam()
+    elif isinstance(learning_rate, float):
+        print(colored(f"Using static learning rate: {learning_rate}", "blue"))
+        optimizer = keras.optimizers.Adam(learning_rate=learning_rate)
+    else:
+        print(colored("Using dynamic learning rate via Schedule.", "blue"))
+        optimizer = keras.optimizers.Adam(learning_rate=learning_rate)
+
+    # compile model before training
+    model.compile(
+        optimizer=optimizer,
+        loss='binary_crossentropy',
+        metrics=['accuracy', keras.metrics.AUC(multi_label=True)]
+    )
+
     EARLY_STOPPING = False
     if EARLY_STOPPING:
         patience = 8
         callbacks.append(EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True, verbose=1))
-        print(colored(f"Early stopping ENABLED (patience={patience}).", "green"))
+        print(colored(f"Early stopping ENABLED (patience={patience}).", "blue"))
     else:
         print(colored(f"Early stopping DISABLED.", "yellow"))
-
-    # Dynamic vs Static Learning
-    if isinstance(learning_rate, keras.callbacks.Callback):
-        
-
+    
     if args.save_model:
         model_path = fold_out_dir / f"best_model_fold_{fold_no}.keras"
         checkpoint = ModelCheckpoint(
@@ -123,7 +134,7 @@ def train_model(model, train_generator, val_generator, class_weights, args, fold
         )
         callbacks.append(checkpoint)
 
-    print(colored(f"Starting training for fold {fold_no}", "blue"))
+    print(colored(f"Starting training for fold {fold_no}", "green"))
     
     # Removed workers, use_multiprocessing, and max_queue_size to resolve the TypeError
     history = model.fit(

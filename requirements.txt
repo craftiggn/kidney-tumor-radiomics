@@ -9,3 +9,5 @@ keras
 nibabel
 tqdm
 termcolor
+visualkeras
+pillow

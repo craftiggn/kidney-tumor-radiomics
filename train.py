@@ -19,7 +19,7 @@ from modules import data_preprocessing as dataPrep
 from modules import model_functions as mod
 
 # sample run command:
-# python3 train.py --data_dir /home/marcel/Repos/Data/kits23_processed/ --epochs 10 --n_folds 1 --save_model
+# python3 train.py --data_dir /home/marcel/Repos/Data/kits23_processed/ --epochs 10 --n_folds 1 --save_model --architecture anisotropic_0
 # 
 
 def parse_arguments():
@@ -28,9 +28,11 @@ def parse_arguments():
     parser.add_argument('--out_dir', type=str, default="./training_outputs", help="Directory to saved models and figures")
     parser.add_argument('--epochs', type=int, default=50)
     parser.add_argument('--batch_size', type=int, default=4)
+    parser.add_argument('--learning_rate', '--lr', type=float, default=1e-4, help="Learning rate for model optimizer")
     parser.add_argument('--n_folds', type=int, default=5, help="Total number of cross-validation folds")
     parser.add_argument('--save_model', action='store_true', help="Flag to save the best model")
     parser.add_argument('--workers', type=int, default=4, help="Number of CPU workers for data generation")
+    parser.add_argument('--architecture', type=str, default='anisotropic_0' ,help="Model architecture key as seen in MODEL_DICT")
 
     return parser.parse_args()
 
@@ -58,15 +60,6 @@ def main():
     target_shape = metadata["target_shape"]
     input_shape = (target_shape[0], target_shape[1], target_shape[2], 3)
     print(f"Loaded target shape from metadata {metadata_path}")
-
-    # save the run information
-    config_dict = vars(args).copy()
-    config_dict["input_shape"] = input_shape
-    config_dict["run_timestamp"] = timestamp
-    config_path = out_dir / "run_config.json"
-    with open(config_path, 'w') as f:
-        json.dump(config_dict, f, indent=4)
-    print(f"Saved the run configuration to {config_path}")
 
     print(f"Processing {args.n_folds} folds")
     for fold_no in range(args.n_folds):
@@ -102,11 +95,26 @@ def main():
         )
 
         # Build and compile model
-        model = mod.build_model(input_shape=input_shape)
-        if fold_no == 0:
-            model.summary() # print summary only once
+        model = mod.build_model(input_shape=input_shape, model_key=args.architecture)
 
-        mod.train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir)
+        # print sumary and save run config
+        if fold_no == 0:
+            model.summary()
+            plf.plot_model_architecture(model, out_dir / "model_architecture.png")
+
+            # Store complete run configuration with all metadata
+            config_dict = vars(args).copy()
+            config_dict["input_shape"] = list(input_shape)
+            config_dict["keras_model_name"] = model.name
+            config_dict["total_parameters"] = int(model.count_params())
+            config_dict["run_timestamp"] = timestamp
+
+            config_path = out_dir / "run_config.json"
+            with open(config_path, 'w') as f:
+                json.dump(config_dict, f, indent=4)
+            print(colored(f"Saved run configuration to {config_path}", "green"))
+
+        mod.train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir, learning_rate=args.learning_rate)
 
         plf.plot_and_evaluate(fold_out_dir, fold_no)
 

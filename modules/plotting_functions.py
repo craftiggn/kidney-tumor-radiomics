@@ -16,6 +16,7 @@ import json
 import pandas as pd
 import re
 import seaborn
+import visualkeras
 
 def browse_volume(vol: np.ndarray, axis: int = 0, cmap: str = "gray", figsize=(6, 6)) -> None:
     """
@@ -386,44 +387,63 @@ def visualize_generator_batch(batch_X, batch_y, experiment_dir, out_dir, fps=15,
         
         print(f"Saved: {video_path}")
 
-
 ### MODEL FIGURES
+from sklearn.metrics import roc_curve, auc, precision_recall_curve, average_precision_score, confusion_matrix
 
-def plot_and_evaluate(fold_out_dir: Path, fold_no):
+def plot_and_evaluate(fold_out_dir, fold_no):
     """
-    Parsers the CSV log and creates a training graph.
+    Plots single-fold Loss on a logarithmic scale and AUC with a fixed [0.5, 1.02] range.
     """
-    log_path = fold_out_dir / f"training_log_fold_{fold_no}.csv"
-    if not log_path.exists():
+    fold_out_dir = Path(fold_out_dir)
+    csv_path = fold_out_dir / f"training_log_fold_{fold_no}.csv"
+    
+    if not csv_path.exists():
+        print(f"[Warning] No log file found at {csv_path}")
         return
-    
-    df_log = pd.read_csv(log_path)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+    df = pd.read_csv(csv_path)
+    epochs = df['epoch'] + 1
 
-    # Plot Loss
-    ax1.plot(df_log['epoch'], df_log['loss'], label='Train Loss')
-    ax1.plot(df_log['epoch'], df_log['val_loss'], label='Val Loss')
-    ax1.set_title(f'Loss - Fold {fold_no}')
-    ax1.set_xlabel('Epoch')
-    ax1.legend()
+    fig, (ax_loss, ax_auc) = plt.subplots(1, 2, figsize=(16, 6))
+
+    # --- Loss Plot (Logarithmic Scale) ---
+    ax_loss.set_title(f"Loss Curves (Fold {fold_no})", fontsize=14, fontweight='bold', pad=10)
+    ax_loss.set_xlabel("Epochs")
+    ax_loss.set_ylabel("Loss (Binary Crossentropy)")
+    ax_loss.set_yscale('log')
+    if 'loss' in df.columns:
+        ax_loss.plot(epochs, df['loss'], label='Train Loss', lw=2)
+    if 'val_loss' in df.columns:
+        ax_loss.plot(epochs, df['val_loss'], label='Val Loss', lw=2)
+    ax_loss.legend(loc='best', frameon=True)
+    ax_loss.grid(True, which="both", linestyle='--', alpha=0.5)
+
+    # --- AUC Plot (Fixed [0.5, 1.02]) ---
+    ax_auc.set_title(f"AUC Curves (Fold {fold_no})", fontsize=14, fontweight='bold', pad=10)
+    ax_auc.set_xlabel("Epochs")
+    ax_auc.set_ylabel("AUC")
+    ax_auc.set_ylim([0.5, 1.02])
     
-    # Plot Accuracy
-    ax2.plot(df_log['epoch'], df_log['accuracy'], label='Train Accuracy')
-    ax2.plot(df_log['epoch'], df_log['val_accuracy'], label='Val Accuracy')
-    ax2.set_title(f'Accuracy - Fold {fold_no}')
-    ax2.set_xlabel('Epoch')
-    ax2.legend()
-    
-    plot_path = fold_out_dir / f"training_curves_fold_{fold_no}.png"
-    plt.savefig(plot_path)
-    plt.close(fig)
-    print(f"Saved training graph to {plot_path}")
+    auc_col = [col for col in df.columns if 'auc' in col.lower() and 'val' not in col.lower()]
+    val_auc_col = [col for col in df.columns if 'val_auc' in col.lower()]
+    if auc_col:
+        ax_auc.plot(epochs, df[auc_col[0]], label='Train AUC', lw=2)
+    if val_auc_col:
+        ax_auc.plot(epochs, df[val_auc_col[0]], label='Val AUC', lw=2)
+    ax_auc.legend(loc='best', frameon=True)
+    ax_auc.grid(True, linestyle='--', alpha=0.6)
+
+    plt.tight_layout()
+    save_path = fold_out_dir / f"training_curves_fold_{fold_no}.png"
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.close()
+
+    print(f"[Success] Single fold training curves saved to: {save_path}")
 
 def plot_and_evaluate_all_folds(out_dir):
     """
     Scrapes CSV metrics files across all fold subdirectories and builds a 
-    consolidated 4-panel comparison grid plot (Loss and AUC).
+    consolidated 4-panel comparison grid plot (Loss on log scale and AUC from 0.5 to 1.02).
     """
     out_dir = Path(out_dir)
     
@@ -440,22 +460,27 @@ def plot_and_evaluate_all_folds(out_dir):
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
     ((ax_train_auc, ax_val_auc), (ax_train_loss, ax_val_loss)) = axes
 
-    # Configure structural titles and tags for AUC instead of Accuracy
+    # --- AUC PLOTS (Fixed Y-axis [0.5, 1.02]) ---
     ax_train_auc.set_title("Training AUC per Fold", fontsize=14, fontweight='bold', pad=10)
     ax_train_auc.set_xlabel("Epochs")
     ax_train_auc.set_ylabel("AUC")
+    ax_train_auc.set_ylim([0.5, 1.02])
 
     ax_val_auc.set_title("Validation AUC per Fold", fontsize=14, fontweight='bold', pad=10)
     ax_val_auc.set_xlabel("Epochs")
     ax_val_auc.set_ylabel("AUC")
+    ax_val_auc.set_ylim([0.5, 1.02])
 
-    ax_train_loss.set_title("Training Loss per Fold", fontsize=14, fontweight='bold', pad=10)
+    # --- LOSS PLOTS (Logarithmic Scale) ---
+    ax_train_loss.set_title("Training Loss per Fold (Log Scale)", fontsize=14, fontweight='bold', pad=10)
     ax_train_loss.set_xlabel("Epochs")
     ax_train_loss.set_ylabel("Loss (Binary Crossentropy)")
+    ax_train_loss.set_yscale('log')
 
-    ax_val_loss.set_title("Validation Loss per Fold", fontsize=14, fontweight='bold', pad=10)
+    ax_val_loss.set_title("Validation Loss per Fold (Log Scale)", fontsize=14, fontweight='bold', pad=10)
     ax_val_loss.set_xlabel("Epochs")
     ax_val_loss.set_ylabel("Loss (Binary Crossentropy)")
+    ax_val_loss.set_yscale('log')
 
     # Iterate through directories and overlay curves onto the grid
     for fold_dir in fold_dirs:
@@ -470,7 +495,6 @@ def plot_and_evaluate_all_folds(out_dir):
         epochs = df['epoch'] + 1 
         fold_label = f"Fold {int(fold_idx) + 1}"
         
-        # Locate the AUC column name dynamically (Keras sometimes names it 'auc', 'auc_1', etc.)
         auc_col = [col for col in df.columns if 'auc' in col.lower() and 'val' not in col.lower()]
         val_auc_col = [col for col in df.columns if 'val_auc' in col.lower()]
         
@@ -486,7 +510,7 @@ def plot_and_evaluate_all_folds(out_dir):
     # Final layout design and grid rendering
     for ax in axes.flat:
         ax.legend(loc='best', frameon=True, shadow=False)
-        ax.grid(True, linestyle='--', alpha=0.6)
+        ax.grid(True, which="both", linestyle='--', alpha=0.5)
         ax.xaxis.get_major_locator().set_params(integer=True)
 
     plt.tight_layout()
@@ -496,15 +520,9 @@ def plot_and_evaluate_all_folds(out_dir):
     
     print(f"\n[Success] Consolidated multi-fold evaluation graph saved to: {save_path}")
 
-from sklearn.metrics import roc_curve, auc, precision_recall_curve, average_precision_score, confusion_matrix
-
 def plot_multilabel_roc_and_pr_curves(y_true, y_pred, fold_no, out_dir, class_names=None):
     """
-    Plots per-class ROC and Precision-Recall curves for a multi-label output.
-    y_true: numpy array of shape (n_samples, n_classes)
-    y_pred: numpy array of shape (n_samples, n_classes) (probabilities from sigmoid)
-    Precision - (correct detection / all detections)
-    Recall - (correct detections / all valid samples)
+    Plots per-class ROC and Precision-Recall curves with standardized axis limits.
     """
     n_classes = y_true.shape[1]
     if class_names is None:
@@ -513,24 +531,29 @@ def plot_multilabel_roc_and_pr_curves(y_true, y_pred, fold_no, out_dir, class_na
     fig, axes = plt.subplots(1, 2, figsize=(18, 8))
     ax_roc, ax_pr = axes
 
-    # Formatting setup
+    # --- ROC Plot (Y-axis fixed from 0.5 to 1.02) ---
     ax_roc.set_title(f"ROC Curve (Fold {fold_no})", fontsize=14, fontweight='bold', pad=10)
     ax_roc.set_xlabel("False Positive Rate")
     ax_roc.set_ylabel("True Positive Rate")
+    ax_roc.set_xlim([-0.02, 1.02])
+    ax_roc.set_ylim([0.5, 1.02])
     ax_roc.plot([0, 1], [0, 1], 'k--', lw=2, label="Random Chance")
 
+    # --- PR Plot (Y-axis fixed from 0.0 to 1.02) ---
     ax_pr.set_title(f"Precision-Recall Curve (Fold {fold_no})", fontsize=14, fontweight='bold', pad=10)
     ax_pr.set_xlabel("Recall")
     ax_pr.set_ylabel("Precision")
+    ax_pr.set_xlim([-0.02, 1.02])
+    ax_pr.set_ylim([0.0, 1.02])
 
     # Generate curves for each class
     for i in range(n_classes):
-        # --- ROC ---
+        # ROC
         fpr, tpr, _ = roc_curve(y_true[:, i], y_pred[:, i])
         roc_auc = auc(fpr, tpr)
         ax_roc.plot(fpr, tpr, lw=2, label=f"{class_names[i]} (AUC = {roc_auc:.3f})")
 
-        # --- Precision-Recall ---
+        # Precision-Recall
         precision, recall, _ = precision_recall_curve(y_true[:, i], y_pred[:, i])
         pr_auc = average_precision_score(y_true[:, i], y_pred[:, i])
         ax_pr.plot(recall, precision, lw=2, label=f"{class_names[i]} (AP = {pr_auc:.3f})")
@@ -547,7 +570,6 @@ def plot_multilabel_roc_and_pr_curves(y_true, y_pred, fold_no, out_dir, class_na
     plt.close()
     
     print(f"[Success] ROC and PR curves saved to: {save_path}")
-
 
 def plot_feature_confusion_matrix(y_true, y_pred, tabula_cols, fold_no, out_dir):
     """
@@ -606,3 +628,20 @@ def plot_feature_confusion_matrix(y_true, y_pred, tabula_cols, fold_no, out_dir)
     plt.close()
 
     print(f"[Success] Dynamic confusion matrices saved to: {save_path}")
+
+def plot_model_architecture(model, output_path):
+    """
+    Saves a 3D visual diagram of the model architecture.
+    """
+    output_path = Path(output_path)
+    print(colored(f"Saving model architecture visual diagram to {output_path}...", "green"))
+
+    visualkeras.layered_view(
+        model,
+        to_file=str(output_path),
+        legend=True, # text legend for layer types
+        show_dimension=True, # Displays input/output shape details
+        scale_xy=1.5,
+        scale_z=1.0,
+        max_z=100
+    )
