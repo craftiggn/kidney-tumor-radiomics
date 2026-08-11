@@ -636,6 +636,13 @@ def plot_model_architecture(model, output_path):
     output_path = Path(output_path)
     print(colored(f"Saving model architecture visual diagram to {output_path}...", "green"))
 
+    for layer in model.layers:
+        if not hasattr(layer, 'output_shape'):
+            try:
+                layer.output_shape = layer.output.shape
+            except AttributeError:
+                pass
+
     visualkeras.layered_view(
         model,
         to_file=str(output_path),
