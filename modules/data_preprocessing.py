@@ -769,8 +769,8 @@ def validate_no_group_leakage(df_splits: pd.DataFrame):
 from keras.utils import PyDataset
 class KITSDataGenerator(PyDataset):
     def __init__(self, paths, batch_size=4,
-                 augment=False, augment_enable=['flip','translate','zoom'],
-                 max_translation=[0,0,0],
+                 augment=False, augment_enable=['flip','translate','zoom', 'rotate'],
+                 max_translation=[1,2,2],
                  zoom_range=[0.9,1.1],
                  shuffle=True, workers=1, use_multiprocessing=True):
         
@@ -842,6 +842,10 @@ class KITSDataGenerator(PyDataset):
             scale = random.uniform(self.zoom_range[0], self.zoom_range[1])
             zoomed = ndimage.zoom(volume, zoom=(scale, scale, scale, 1), order=0, mode='constant', cval=0.0)
             volume = self._crop_or_pad_to_shape(zoomed, target_shape=volume.shape)
+
+        if 'rotate' in self.augment_enable and random.random() > 0.5:
+            angle = random.uniform(-15, 15)
+            volume = ndimage.rotate(volume, angle, axes=(1, 2), reshape=False, order=0, mode='constant', cval=0.0)
 
         missing_background = np.all(volume == 0, axis=-1)
         volume[missing_background, 0] = 1.0

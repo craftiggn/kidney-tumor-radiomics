@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 from termcolor import colored
 from modules import plotting_functions as plf
+# from keras.regularizers import L2
 
 # --- MODEL DEFINITIONS ---
 
@@ -44,8 +45,38 @@ def model_anisotropic_0(input_shape):
         keras.layers.Dense(6, activation='sigmoid')
         ], name='RPN_classification_model_anisotropic')
 
+def model_anisotropic_reg_0(input_shape):
+    """3D CNN anisotropic model, with added regularization"""
+    reg = keras.regularizers.L2(1e-4)
+
+    return keras.Sequential([
+        keras.layers.Input(shape=input_shape),
+
+        keras.layers.Conv3D(32, kernel_size=(1, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.MaxPooling3D(pool_size=(1, 2, 2)),
+
+        keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.GlobalAveragePooling3D(),
+
+        keras.layers.Dense(256, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.5),
+
+        keras.layers.Dense(6, activation='sigmoid')
+    ], name='RPN_classification_model_anisotropic_regularized') 
+
 MODEL_DICT = {
     'anisotropic_0': model_anisotropic_0,
+    'anisotropic_reg_0': model_anisotropic_reg_0,
 }
 
 # --- FUNCTIONS ---
@@ -87,14 +118,13 @@ def build_model(input_shape, model_key):
 
     return model
 
-def train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir, learning_rate=1e-4):
+def train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir, learning_rate=1e-4, lr_scheduler=None):
     """
     Trains the Sequential model.
     """
     callbacks = [
         CSVLogger(fold_out_dir / f"training_log_fold_{fold_no}.csv", append=False)
     ]
-
 
     # Dynamic vs Static Learning
     if isinstance(learning_rate, keras.callbacks.Callback):
@@ -116,13 +146,17 @@ def train_model(model, train_generator, val_generator, class_weights, args, fold
         metrics=['accuracy', keras.metrics.AUC(multi_label=True)]
     )
 
-    EARLY_STOPPING = False
-    if EARLY_STOPPING:
-        patience = 8
-        callbacks.append(EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True, verbose=1))
-        print(colored(f"Early stopping ENABLED (patience={patience}).", "blue"))
+    # --- LR Scheduler ---
+    if lr_scheduler is not None:
+        callbacks.append(lr_scheduler)
+        print(colored("LR Scheduler ENABLED via parameter.", "blue"))
     else:
-        print(colored(f"Early stopping DISABLED.", "yellow"))
+        print(colored(f"LR Scheduler DISABLED. Using static LR: {learning_rate}", "blue"))
+    
+    # --- Early Stopping ---
+    early_stopping_patience = 30
+    callbacks.append(EarlyStopping(monitor='val_loss', patience=early_stopping_patience, restore_best_weights=True, verbose=1))
+    print(colored(f"Early stopping ENABLED (hardcoded patience={early_stopping_patience}).", "blue"))
     
     if args.save_model:
         model_path = fold_out_dir / f"best_model_fold_{fold_no}.keras"
@@ -136,13 +170,14 @@ def train_model(model, train_generator, val_generator, class_weights, args, fold
 
     print(colored(f"Starting training for fold {fold_no}", "green"))
     
-    # Removed workers, use_multiprocessing, and max_queue_size to resolve the TypeError
+    # --- Model Training ---
     history = model.fit(
         train_generator,
         validation_data=val_generator,
         epochs=args.epochs,
         class_weight=class_weights,
         callbacks=callbacks
+        verbose=0
     )
 
     # --- ROC and PR curves --- 

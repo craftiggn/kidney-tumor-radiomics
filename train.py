@@ -11,7 +11,8 @@ import keras
 from termcolor import colored
 import json
 import gc
-from datetime import datetime
+from datetime import datetime, timedelta
+import time
 
 # import custom modules
 from modules import plotting_functions as plf
@@ -33,13 +34,18 @@ def parse_arguments():
     parser.add_argument('--save_model', action='store_true', help="Flag to save the best model")
     parser.add_argument('--workers', type=int, default=4, help="Number of CPU workers for data generation")
     parser.add_argument('--architecture', type=str, default='anisotropic_0' ,help="Model architecture key as seen in MODEL_DICT")
+    parser.add_argument('--use_lr_scheduler', action='store_true', help="Enable ReduceLROnPlateau callback")
 
     return parser.parse_args()
 
 def main():
+    start_time = time.time()
+
     args = parse_arguments()
+    config_dict = vars(args).copy()
 
     out_dir = Path(args.out_dir)
+    config_path = out_dir / "run_config.json"
     timestamp = datetime.now().strftime(r"%Y-%m-%d_%H-%M") # to help keep trac of trainings
     out_dir = out_dir / timestamp
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -78,13 +84,14 @@ def main():
         # Extract class weights
         class_weights = dataPrep.get_keras_class_weights(train_paths)
 
-        # Generator
+        # --- Generators ---
         train_generator = dataPrep.KITSDataGenerator(
             train_paths,
             batch_size=args.batch_size,
             augment=True,
             shuffle=True,
-            max_translation=[3, 8, 8]
+            max_translation=[2, 4, 4],
+            workers=args.workers
         )
 
         val_generator = dataPrep.KITSDataGenerator(
@@ -94,7 +101,7 @@ def main():
             shuffle=False # so that every validation runs identically
         )
 
-        # Build and compile model
+        # --- Build and compile model ---
         model = mod.build_model(input_shape=input_shape, model_key=args.architecture)
 
         # print sumary and save run config
@@ -103,18 +110,38 @@ def main():
             plf.plot_model_architecture(model, out_dir / "model_architecture.png")
 
             # Store complete run configuration with all metadata
-            config_dict = vars(args).copy()
             config_dict["input_shape"] = list(input_shape)
             config_dict["keras_model_name"] = model.name
             config_dict["total_parameters"] = int(model.count_params())
             config_dict["run_timestamp"] = timestamp
 
-            config_path = out_dir / "run_config.json"
             with open(config_path, 'w') as f:
                 json.dump(config_dict, f, indent=4)
             print(colored(f"Saved run configuration to {config_path}", "green"))
 
-        mod.train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir, learning_rate=args.learning_rate)
+        # Instantiate LR Scheduler if flagged in arguments
+        if args.use_lr_scheduler:
+            lr_scheduler = keras.callbacks.ReduceLROnPlateau(
+                monitor='val_loss',
+                factor=0.5,
+                patience=15,
+                min_lr=1e-6,
+                verbose=1
+            )
+        else:
+            lr_scheduler = None
+
+        mod.train_model(
+            model=model, 
+            train_generator=train_generator, 
+            val_generator=val_generator, 
+            class_weights=class_weights, 
+            args=args, 
+            fold_no=fold_no, 
+            fold_out_dir=fold_out_dir, 
+            learning_rate=args.learning_rate,
+            lr_scheduler=lr_scheduler
+        )
 
         plf.plot_and_evaluate(fold_out_dir, fold_no)
 
@@ -126,6 +153,22 @@ def main():
         gc.collect()
 
     plf.plot_and_evaluate_all_folds(out_dir)
+
+    # add the run length information to the run_config.json
+    total_seconds = int(time.time() - start_time)
+    formatted_time = str(timedelta(seconds=int(total_seconds)))
+    seconds_per_fold = total_seconds / args.n_folds
+    avg_fold_time_formated = str(timedelta(seconds=int(seconds_per_fold)))
+
+
+    config_dict["total_runtime_seconds"] = total_seconds
+    config_dict["total_runtime_formatted"] = formatted_time
+    config_dict["average_fold_runtime_formatted"] = avg_fold_time_formated
+
+    with open(config_path, 'w') as f:
+        json.dump(config_dict, f, indent=4)
+
+    print(colored(f"Training time completed in {formatted_time} ({total_seconds}s)"))
 
 if __name__ == "__main__":
     main()
