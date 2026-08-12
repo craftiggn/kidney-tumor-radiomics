@@ -1,10 +1,10 @@
 {
     "data_dir": "/home/marcel42/Data/kits23_processed/kits_dataset_16_30_30_kidney",
     "out_dir": "/home/marcel42/kidney-tumor-radiomics/HPC_out",
-    "epochs": 256,
+    "epochs": 320,
     "batch_size": 4,
     "learning_rate": 0.0001,
-    "n_folds": 3,
+    "n_folds": 5,
     "save_model": true,
     "workers": 8,
     "architecture": "anisotropic_reg_0",
@@ -17,8 +17,8 @@
     ],
     "keras_model_name": "RPN_classification_model_anisotropic_regularized",
     "total_parameters": 313030,
-    "run_timestamp": "2026-08-12_20-18",
-    "total_runtime_seconds": 1015,
-    "total_runtime_formatted": "0:16:55",
-    "average_fold_runtime_formatted": "0:05:38"
+    "run_timestamp": "2026-08-12_21-07",
+    "total_runtime_seconds": 2261,
+    "total_runtime_formatted": "0:37:41",
+    "average_fold_runtime_formatted": "0:07:32"
 }

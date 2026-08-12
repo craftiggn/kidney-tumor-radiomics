@@ -1,0 +1,2915 @@
+Job started on rysy-n7.icm.edu.pl at Wed 12 Aug 21:06:53 CEST 2026
+INFO:    underlay of /etc/localtime required more than 50 (100) bind mounts
+INFO:    underlay of /usr/bin/nvidia-smi required more than 50 (538) bind mounts
+Requirement already satisfied: numpy in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 1)) (1.26.4)
+Requirement already satisfied: pandas in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 2)) (1.5.3)
+Requirement already satisfied: matplotlib in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 3)) (3.10.0)
+Requirement already satisfied: seaborn in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 4)) (0.13.2)
+Requirement already satisfied: scipy in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 5)) (1.15.2)
+Requirement already satisfied: scikit-learn in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 6)) (1.6.1)
+Requirement already satisfied: tensorflow in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 7)) (2.16.2)
+Requirement already satisfied: keras in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 8)) (3.6.0)
+Requirement already satisfied: nibabel in ./env_libs/lib/python3.11/site-packages (from -r requirements.txt (line 9)) (5.4.2)
+Requirement already satisfied: tqdm in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 10)) (4.67.1)
+Requirement already satisfied: termcolor in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 11)) (2.5.0)
+Requirement already satisfied: visualkeras in ./env_libs/lib/python3.11/site-packages (from -r requirements.txt (line 12)) (0.2.0)
+Requirement already satisfied: pillow in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 13)) (11.1.0)
+Requirement already satisfied: pydot in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 14)) (1.4.2)
+Requirement already satisfied: python-dateutil>=2.8.1 in /usr/local/lib/python3.11/dist-packages (from pandas->-r requirements.txt (line 2)) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.11/dist-packages (from pandas->-r requirements.txt (line 2)) (2025.1)
+Requirement already satisfied: contourpy>=1.0.1 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (1.3.1)
+Requirement already satisfied: cycler>=0.10 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (0.12.1)
+Requirement already satisfied: fonttools>=4.22.0 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (4.56.0)
+Requirement already satisfied: kiwisolver>=1.3.1 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (1.4.8)
+Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (24.1)
+Requirement already satisfied: pyparsing>=2.3.1 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (3.2.1)
+Requirement already satisfied: joblib>=1.2.0 in /usr/local/lib/python3.11/dist-packages (from scikit-learn->-r requirements.txt (line 6)) (1.4.2)
+Requirement already satisfied: threadpoolctl>=3.1.0 in /usr/local/lib/python3.11/dist-packages (from scikit-learn->-r requirements.txt (line 6)) (3.5.0)
+Requirement already satisfied: absl-py>=1.0.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.4.0)
+Requirement already satisfied: astunparse>=1.6.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.6.3)
+Requirement already satisfied: flatbuffers>=23.5.26 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (24.3.25)
+Requirement already satisfied: gast!=0.5.0,!=0.5.1,!=0.5.2,>=0.2.1 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (0.6.0)
+Requirement already satisfied: google-pasta>=0.1.1 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (0.2.0)
+Requirement already satisfied: h5py>=3.10.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (3.12.1)
+Requirement already satisfied: libclang>=13.0.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (18.1.1)
+Requirement already satisfied: ml-dtypes~=0.3.1 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (0.3.2)
+Requirement already satisfied: opt-einsum>=2.3.2 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (3.4.0)
+Requirement already satisfied: protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (4.25.6)
+Requirement already satisfied: requests<3,>=2.21.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (2.32.3)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (75.2.0)
+Requirement already satisfied: six>=1.12.0 in /usr/lib/python3/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.16.0)
+Requirement already satisfied: typing-extensions>=3.6.6 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (4.12.2)
+Requirement already satisfied: wrapt>=1.11.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.16.0)
+Requirement already satisfied: grpcio<2.0,>=1.24.3 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.65.5)
+Requirement already satisfied: tensorboard<2.17,>=2.16 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (2.16.2)
+Requirement already satisfied: tensorflow-io-gcs-filesystem>=0.23.1 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (0.37.1)
+Requirement already satisfied: rich in /usr/local/lib/python3.11/dist-packages (from keras->-r requirements.txt (line 8)) (13.9.3)
+Requirement already satisfied: namex in /usr/local/lib/python3.11/dist-packages (from keras->-r requirements.txt (line 8)) (0.0.8)
+Requirement already satisfied: optree in /usr/local/lib/python3.11/dist-packages (from keras->-r requirements.txt (line 8)) (0.13.0)
+Requirement already satisfied: importlib-resources>=5.12 in /usr/local/lib/python3.11/dist-packages (from nibabel->-r requirements.txt (line 9)) (6.5.2)
+Requirement already satisfied: aggdraw>=1.3.11 in ./env_libs/lib/python3.11/site-packages (from visualkeras->-r requirements.txt (line 12)) (1.4.1)
+Requirement already satisfied: wheel<1.0,>=0.23.0 in /usr/local/lib/python3.11/dist-packages (from astunparse>=1.6.0->tensorflow->-r requirements.txt (line 7)) (0.44.0)
+Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 7)) (3.4.0)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 7)) (3.10)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 7)) (2.2.3)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 7)) (2024.8.30)
+Requirement already satisfied: markdown>=2.6.8 in /usr/local/lib/python3.11/dist-packages (from tensorboard<2.17,>=2.16->tensorflow->-r requirements.txt (line 7)) (3.7)
+Requirement already satisfied: tensorboard-data-server<0.8.0,>=0.7.0 in /usr/local/lib/python3.11/dist-packages (from tensorboard<2.17,>=2.16->tensorflow->-r requirements.txt (line 7)) (0.7.2)
+Requirement already satisfied: werkzeug>=1.0.1 in /usr/local/lib/python3.11/dist-packages (from tensorboard<2.17,>=2.16->tensorflow->-r requirements.txt (line 7)) (3.0.5)
+Requirement already satisfied: markdown-it-py>=2.2.0 in /usr/local/lib/python3.11/dist-packages (from rich->keras->-r requirements.txt (line 8)) (3.0.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /usr/local/lib/python3.11/dist-packages (from rich->keras->-r requirements.txt (line 8)) (2.18.0)
+Requirement already satisfied: mdurl~=0.1 in /usr/local/lib/python3.11/dist-packages (from markdown-it-py>=2.2.0->rich->keras->-r requirements.txt (line 8)) (0.1.2)
+Requirement already satisfied: MarkupSafe>=2.1.1 in /usr/local/lib/python3.11/dist-packages (from werkzeug>=1.0.1->tensorboard<2.17,>=2.16->tensorflow->-r requirements.txt (line 7)) (3.0.2)
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+INFO:    underlay of /etc/localtime required more than 50 (100) bind mounts
+INFO:    underlay of /usr/bin/nvidia-smi required more than 50 (538) bind mounts
+--- KiTS23 Processed Data Model Training ---
+Dataset Directory: /home/marcel42/Data/kits23_processed/kits_dataset_16_30_30_kidney
+Batch Size: 4 | Epochs: 320 | Total Folds: 5
+Loaded target shape from metadata /home/marcel42/Data/kits23_processed/kits_dataset_16_30_30_kidney/dataset_metadata.json
+Processing 5 folds
+
+========================================
+	Processing fold 0
+========================================
+
+Loaded paths for Fold 0 from /home/marcel42/Data/kits23_processed/kits_dataset_16_30_30_kidney
+Building model using architecture: anisotropic_reg_0
+Model: "RPN_classification_model_anisotropic_regularized"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ conv3d (Conv3D)                 │ (None, 16, 30, 30, 32) │           896 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization             │ (None, 16, 30, 30, 32) │           128 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d (MaxPooling3D)    │ (None, 16, 15, 15, 32) │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_1 (Conv3D)               │ (None, 16, 15, 15, 64) │        55,360 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_1           │ (None, 16, 15, 15, 64) │           256 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ spatial_dropout3d               │ (None, 16, 15, 15, 64) │             0 │
+│ (SpatialDropout3D)              │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d_1 (MaxPooling3D)  │ (None, 8, 7, 7, 64)    │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_2 (Conv3D)               │ (None, 8, 7, 7, 128)   │       221,312 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_2           │ (None, 8, 7, 7, 128)   │           512 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ spatial_dropout3d_1             │ (None, 8, 7, 7, 128)   │             0 │
+│ (SpatialDropout3D)              │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d_2 (MaxPooling3D)  │ (None, 4, 3, 3, 128)   │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ global_average_pooling3d        │ (None, 128)            │             0 │
+│ (GlobalAveragePooling3D)        │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense (Dense)                   │ (None, 256)            │        33,024 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout (Dropout)               │ (None, 256)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_1 (Dense)                 │ (None, 6)              │         1,542 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 313,030 (1.19 MB)
+ Trainable params: 312,582 (1.19 MB)
+ Non-trainable params: 448 (1.75 KB)
+Saving model architecture visual diagram to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/model_architecture.png...
+Saved run configuration to /home/marcel42/kidney-tumor-radiomics/HPC_out/run_config.json
+Using static learning rate: 0.0001
+LR Scheduler ENABLED via parameter.
+Early stopping ENABLED (hardcoded patience=64).
+Starting training for fold 0
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1786561653.448276  147301 service.cc:145] XLA service 0x2b2e54013300 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1786561653.448443  147301 service.cc:153]   StreamExecutor device (0): Tesla V100-PCIE-16GB, Compute Capability 7.0
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1786561678.872772  147301 asm_compiler.cc:369] ptxas warning : Registers are spilled to local memory in function 'input_reduce_fusion_2', 76 bytes spill stores, 76 bytes spill loads
+
+I0000 00:00:1786561678.892869  147301 device_compiler.h:188] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+
+Epoch 1: val_loss improved from inf to 0.72749, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 2: val_loss improved from 0.72749 to 0.71771, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 3: val_loss improved from 0.71771 to 0.66435, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 4: val_loss improved from 0.66435 to 0.58540, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 5: val_loss improved from 0.58540 to 0.54293, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 6: val_loss improved from 0.54293 to 0.52091, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 7: val_loss improved from 0.52091 to 0.49668, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 8: val_loss improved from 0.49668 to 0.48037, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 9: val_loss improved from 0.48037 to 0.47789, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 10: val_loss did not improve from 0.47789
+
+Epoch 11: val_loss did not improve from 0.47789
+
+Epoch 12: val_loss did not improve from 0.47789
+
+Epoch 13: val_loss improved from 0.47789 to 0.47604, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 14: val_loss improved from 0.47604 to 0.47582, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 15: val_loss did not improve from 0.47582
+
+Epoch 16: val_loss did not improve from 0.47582
+
+Epoch 17: val_loss did not improve from 0.47582
+
+Epoch 18: val_loss did not improve from 0.47582
+
+Epoch 19: val_loss did not improve from 0.47582
+
+Epoch 20: val_loss improved from 0.47582 to 0.47354, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 21: val_loss improved from 0.47354 to 0.47167, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 22: val_loss did not improve from 0.47167
+
+Epoch 23: val_loss improved from 0.47167 to 0.47130, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 24: val_loss did not improve from 0.47130
+
+Epoch 25: val_loss improved from 0.47130 to 0.46818, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 26: val_loss improved from 0.46818 to 0.46561, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 27: val_loss did not improve from 0.46561
+
+Epoch 28: val_loss did not improve from 0.46561
+
+Epoch 29: val_loss did not improve from 0.46561
+
+Epoch 30: val_loss did not improve from 0.46561
+
+Epoch 31: val_loss improved from 0.46561 to 0.46213, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 32: val_loss did not improve from 0.46213
+
+Epoch 33: val_loss improved from 0.46213 to 0.45732, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 34: val_loss did not improve from 0.45732
+
+Epoch 35: val_loss did not improve from 0.45732
+
+Epoch 36: val_loss did not improve from 0.45732
+
+Epoch 37: val_loss did not improve from 0.45732
+
+Epoch 38: val_loss did not improve from 0.45732
+
+Epoch 39: val_loss did not improve from 0.45732
+
+Epoch 40: val_loss did not improve from 0.45732
+
+Epoch 41: val_loss did not improve from 0.45732
+
+Epoch 42: val_loss improved from 0.45732 to 0.45651, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 43: val_loss did not improve from 0.45651
+
+Epoch 44: val_loss did not improve from 0.45651
+
+Epoch 45: val_loss did not improve from 0.45651
+
+Epoch 46: val_loss improved from 0.45651 to 0.45236, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 47: val_loss did not improve from 0.45236
+
+Epoch 48: val_loss did not improve from 0.45236
+
+Epoch 49: val_loss improved from 0.45236 to 0.44988, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 50: val_loss did not improve from 0.44988
+
+Epoch 51: val_loss improved from 0.44988 to 0.44702, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 52: val_loss did not improve from 0.44702
+
+Epoch 53: val_loss improved from 0.44702 to 0.44459, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 54: val_loss did not improve from 0.44459
+
+Epoch 55: val_loss did not improve from 0.44459
+
+Epoch 56: val_loss did not improve from 0.44459
+
+Epoch 57: val_loss did not improve from 0.44459
+
+Epoch 58: val_loss did not improve from 0.44459
+
+Epoch 59: val_loss did not improve from 0.44459
+
+Epoch 60: val_loss did not improve from 0.44459
+
+Epoch 61: val_loss did not improve from 0.44459
+
+Epoch 62: val_loss did not improve from 0.44459
+
+Epoch 63: ReduceLROnPlateau reducing learning rate to 7.999999797903001e-05.
+
+Epoch 63: val_loss did not improve from 0.44459
+
+Epoch 64: val_loss did not improve from 0.44459
+
+Epoch 65: val_loss did not improve from 0.44459
+
+Epoch 66: val_loss did not improve from 0.44459
+
+Epoch 67: val_loss did not improve from 0.44459
+
+Epoch 68: val_loss did not improve from 0.44459
+
+Epoch 69: val_loss did not improve from 0.44459
+
+Epoch 70: val_loss did not improve from 0.44459
+
+Epoch 71: val_loss did not improve from 0.44459
+
+Epoch 72: val_loss improved from 0.44459 to 0.43526, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 73: val_loss did not improve from 0.43526
+
+Epoch 74: val_loss did not improve from 0.43526
+
+Epoch 75: val_loss did not improve from 0.43526
+
+Epoch 76: val_loss did not improve from 0.43526
+
+Epoch 77: val_loss did not improve from 0.43526
+
+Epoch 78: val_loss did not improve from 0.43526
+
+Epoch 79: val_loss did not improve from 0.43526
+
+Epoch 80: val_loss did not improve from 0.43526
+
+Epoch 81: val_loss did not improve from 0.43526
+
+Epoch 82: ReduceLROnPlateau reducing learning rate to 6.399999838322402e-05.
+
+Epoch 82: val_loss did not improve from 0.43526
+
+Epoch 83: val_loss did not improve from 0.43526
+
+Epoch 84: val_loss did not improve from 0.43526
+
+Epoch 85: val_loss did not improve from 0.43526
+
+Epoch 86: val_loss improved from 0.43526 to 0.43066, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 87: val_loss did not improve from 0.43066
+
+Epoch 88: val_loss did not improve from 0.43066
+
+Epoch 89: val_loss did not improve from 0.43066
+
+Epoch 90: val_loss did not improve from 0.43066
+
+Epoch 91: val_loss did not improve from 0.43066
+
+Epoch 92: val_loss did not improve from 0.43066
+
+Epoch 93: val_loss did not improve from 0.43066
+
+Epoch 94: val_loss improved from 0.43066 to 0.42370, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/best_model_fold_0.keras
+
+Epoch 95: val_loss did not improve from 0.42370
+
+Epoch 96: val_loss did not improve from 0.42370
+
+Epoch 97: val_loss did not improve from 0.42370
+
+Epoch 98: val_loss did not improve from 0.42370
+
+Epoch 99: val_loss did not improve from 0.42370
+
+Epoch 100: val_loss did not improve from 0.42370
+
+Epoch 101: val_loss did not improve from 0.42370
+
+Epoch 102: val_loss did not improve from 0.42370
+
+Epoch 103: val_loss did not improve from 0.42370
+
+Epoch 104: ReduceLROnPlateau reducing learning rate to 5.119999987073243e-05.
+
+Epoch 104: val_loss did not improve from 0.42370
+
+Epoch 105: val_loss did not improve from 0.42370
+
+Epoch 106: val_loss did not improve from 0.42370
+
+Epoch 107: val_loss did not improve from 0.42370
+
+Epoch 108: val_loss did not improve from 0.42370
+
+Epoch 109: val_loss did not improve from 0.42370
+
+Epoch 110: val_loss did not improve from 0.42370
+
+Epoch 111: val_loss did not improve from 0.42370
+
+Epoch 112: val_loss did not improve from 0.42370
+
+Epoch 113: val_loss did not improve from 0.42370
+
+Epoch 114: ReduceLROnPlateau reducing learning rate to 4.0960000478662555e-05.
+
+Epoch 114: val_loss did not improve from 0.42370
+
+Epoch 115: val_loss did not improve from 0.42370
+
+Epoch 116: val_loss did not improve from 0.42370
+
+Epoch 117: val_loss did not improve from 0.42370
+
+Epoch 118: val_loss did not improve from 0.42370
+
+Epoch 119: val_loss did not improve from 0.42370
+
+Epoch 120: val_loss did not improve from 0.42370
+
+Epoch 121: val_loss did not improve from 0.42370
+
+Epoch 122: val_loss did not improve from 0.42370
+
+Epoch 123: val_loss did not improve from 0.42370
+
+Epoch 124: ReduceLROnPlateau reducing learning rate to 3.2767999800853435e-05.
+
+Epoch 124: val_loss did not improve from 0.42370
+
+Epoch 125: val_loss did not improve from 0.42370
+
+Epoch 126: val_loss did not improve from 0.42370
+
+Epoch 127: val_loss did not improve from 0.42370
+
+Epoch 128: val_loss did not improve from 0.42370
+
+Epoch 129: val_loss did not improve from 0.42370
+
+Epoch 130: val_loss did not improve from 0.42370
+
+Epoch 131: val_loss did not improve from 0.42370
+
+Epoch 132: val_loss did not improve from 0.42370
+
+Epoch 133: val_loss did not improve from 0.42370
+
+Epoch 134: ReduceLROnPlateau reducing learning rate to 2.6214399258606137e-05.
+
+Epoch 134: val_loss did not improve from 0.42370
+
+Epoch 135: val_loss did not improve from 0.42370
+
+Epoch 136: val_loss did not improve from 0.42370
+
+Epoch 137: val_loss did not improve from 0.42370
+
+Epoch 138: val_loss did not improve from 0.42370
+
+Epoch 139: val_loss did not improve from 0.42370
+
+Epoch 140: val_loss did not improve from 0.42370
+
+Epoch 141: val_loss did not improve from 0.42370
+
+Epoch 142: val_loss did not improve from 0.42370
+
+Epoch 143: val_loss did not improve from 0.42370
+
+Epoch 144: ReduceLROnPlateau reducing learning rate to 2.09715188248083e-05.
+
+Epoch 144: val_loss did not improve from 0.42370
+
+Epoch 145: val_loss did not improve from 0.42370
+
+Epoch 146: val_loss did not improve from 0.42370
+
+Epoch 147: val_loss did not improve from 0.42370
+
+Epoch 148: val_loss did not improve from 0.42370
+
+Epoch 149: val_loss did not improve from 0.42370
+
+Epoch 150: val_loss did not improve from 0.42370
+
+Epoch 151: val_loss did not improve from 0.42370
+
+Epoch 152: val_loss did not improve from 0.42370
+
+Epoch 153: val_loss did not improve from 0.42370
+
+Epoch 154: ReduceLROnPlateau reducing learning rate to 1.6777214477770033e-05.
+
+Epoch 154: val_loss did not improve from 0.42370
+
+Epoch 155: val_loss did not improve from 0.42370
+
+Epoch 156: val_loss did not improve from 0.42370
+
+Epoch 157: val_loss did not improve from 0.42370
+
+Epoch 158: val_loss did not improve from 0.42370
+Epoch 158: early stopping
+Restoring model weights from the end of the best epoch: 94.
+Generating validation predictions for ROC and PR curves...
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/roc_pr_curves_fold_0.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/confusion_matrix_fold_0.png
+[Success] Single fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_0/training_curves_fold_0.png
+
+========================================
+	Processing fold 1
+========================================
+
+Loaded paths for Fold 1 from /home/marcel42/Data/kits23_processed/kits_dataset_16_30_30_kidney
+Building model using architecture: anisotropic_reg_0
+Using static learning rate: 0.0001
+LR Scheduler ENABLED via parameter.
+Early stopping ENABLED (hardcoded patience=64).
+Starting training for fold 1
+
+Epoch 1: val_loss improved from inf to 0.77908, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 2: val_loss did not improve from 0.77908
+
+Epoch 3: val_loss improved from 0.77908 to 0.76492, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 4: val_loss improved from 0.76492 to 0.67517, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 5: val_loss improved from 0.67517 to 0.59338, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 6: val_loss improved from 0.59338 to 0.53380, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 7: val_loss improved from 0.53380 to 0.50221, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 8: val_loss improved from 0.50221 to 0.49346, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 9: val_loss improved from 0.49346 to 0.48787, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 10: val_loss improved from 0.48787 to 0.47782, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 11: val_loss did not improve from 0.47782
+
+Epoch 12: val_loss did not improve from 0.47782
+
+Epoch 13: val_loss improved from 0.47782 to 0.46750, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 14: val_loss improved from 0.46750 to 0.46545, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 15: val_loss improved from 0.46545 to 0.46476, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 16: val_loss improved from 0.46476 to 0.46220, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 17: val_loss did not improve from 0.46220
+
+Epoch 18: val_loss did not improve from 0.46220
+
+Epoch 19: val_loss improved from 0.46220 to 0.45630, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 20: val_loss improved from 0.45630 to 0.45247, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 21: val_loss did not improve from 0.45247
+
+Epoch 22: val_loss improved from 0.45247 to 0.44947, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 23: val_loss improved from 0.44947 to 0.44612, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 24: val_loss improved from 0.44612 to 0.44113, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 25: val_loss did not improve from 0.44113
+
+Epoch 26: val_loss did not improve from 0.44113
+
+Epoch 27: val_loss did not improve from 0.44113
+
+Epoch 28: val_loss improved from 0.44113 to 0.44038, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 29: val_loss did not improve from 0.44038
+
+Epoch 30: val_loss did not improve from 0.44038
+
+Epoch 31: val_loss improved from 0.44038 to 0.43394, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 32: val_loss improved from 0.43394 to 0.42643, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 33: val_loss did not improve from 0.42643
+
+Epoch 34: val_loss did not improve from 0.42643
+
+Epoch 35: val_loss did not improve from 0.42643
+
+Epoch 36: val_loss improved from 0.42643 to 0.42386, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 37: val_loss improved from 0.42386 to 0.42095, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 38: val_loss did not improve from 0.42095
+
+Epoch 39: val_loss improved from 0.42095 to 0.41783, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 40: val_loss did not improve from 0.41783
+
+Epoch 41: val_loss improved from 0.41783 to 0.41568, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 42: val_loss did not improve from 0.41568
+
+Epoch 43: val_loss did not improve from 0.41568
+
+Epoch 44: val_loss did not improve from 0.41568
+
+Epoch 45: val_loss did not improve from 0.41568
+
+Epoch 46: val_loss did not improve from 0.41568
+
+Epoch 47: val_loss improved from 0.41568 to 0.41238, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 48: val_loss improved from 0.41238 to 0.40998, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 49: val_loss did not improve from 0.40998
+
+Epoch 50: val_loss improved from 0.40998 to 0.40715, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 51: val_loss did not improve from 0.40715
+
+Epoch 52: val_loss did not improve from 0.40715
+
+Epoch 53: val_loss did not improve from 0.40715
+
+Epoch 54: val_loss improved from 0.40715 to 0.40304, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 55: val_loss improved from 0.40304 to 0.40004, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 56: val_loss improved from 0.40004 to 0.39452, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 57: val_loss did not improve from 0.39452
+
+Epoch 58: val_loss did not improve from 0.39452
+
+Epoch 59: val_loss did not improve from 0.39452
+
+Epoch 60: val_loss did not improve from 0.39452
+
+Epoch 61: val_loss improved from 0.39452 to 0.38657, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 62: val_loss improved from 0.38657 to 0.38333, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 63: val_loss improved from 0.38333 to 0.38207, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 64: val_loss did not improve from 0.38207
+
+Epoch 65: val_loss did not improve from 0.38207
+
+Epoch 66: val_loss did not improve from 0.38207
+
+Epoch 67: val_loss did not improve from 0.38207
+
+Epoch 68: val_loss did not improve from 0.38207
+
+Epoch 69: val_loss did not improve from 0.38207
+
+Epoch 70: val_loss did not improve from 0.38207
+
+Epoch 71: val_loss did not improve from 0.38207
+
+Epoch 72: val_loss did not improve from 0.38207
+
+Epoch 73: ReduceLROnPlateau reducing learning rate to 7.999999797903001e-05.
+
+Epoch 73: val_loss did not improve from 0.38207
+
+Epoch 74: val_loss did not improve from 0.38207
+
+Epoch 75: val_loss improved from 0.38207 to 0.37897, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 76: val_loss did not improve from 0.37897
+
+Epoch 77: val_loss improved from 0.37897 to 0.37564, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 78: val_loss did not improve from 0.37564
+
+Epoch 79: val_loss did not improve from 0.37564
+
+Epoch 80: val_loss improved from 0.37564 to 0.37549, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 81: val_loss improved from 0.37549 to 0.36932, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 82: val_loss did not improve from 0.36932
+
+Epoch 83: val_loss did not improve from 0.36932
+
+Epoch 84: val_loss did not improve from 0.36932
+
+Epoch 85: val_loss improved from 0.36932 to 0.36852, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 86: val_loss did not improve from 0.36852
+
+Epoch 87: val_loss did not improve from 0.36852
+
+Epoch 88: val_loss improved from 0.36852 to 0.36435, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 89: val_loss did not improve from 0.36435
+
+Epoch 90: val_loss improved from 0.36435 to 0.35874, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 91: val_loss did not improve from 0.35874
+
+Epoch 92: val_loss did not improve from 0.35874
+
+Epoch 93: val_loss improved from 0.35874 to 0.34973, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 94: val_loss did not improve from 0.34973
+
+Epoch 95: val_loss did not improve from 0.34973
+
+Epoch 96: val_loss did not improve from 0.34973
+
+Epoch 97: val_loss did not improve from 0.34973
+
+Epoch 98: val_loss did not improve from 0.34973
+
+Epoch 99: val_loss did not improve from 0.34973
+
+Epoch 100: val_loss improved from 0.34973 to 0.34111, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 101: val_loss did not improve from 0.34111
+
+Epoch 102: val_loss did not improve from 0.34111
+
+Epoch 103: val_loss did not improve from 0.34111
+
+Epoch 104: val_loss did not improve from 0.34111
+
+Epoch 105: val_loss did not improve from 0.34111
+
+Epoch 106: val_loss did not improve from 0.34111
+
+Epoch 107: val_loss did not improve from 0.34111
+
+Epoch 108: val_loss did not improve from 0.34111
+
+Epoch 109: val_loss did not improve from 0.34111
+
+Epoch 110: ReduceLROnPlateau reducing learning rate to 6.399999838322402e-05.
+
+Epoch 110: val_loss did not improve from 0.34111
+
+Epoch 111: val_loss did not improve from 0.34111
+
+Epoch 112: val_loss did not improve from 0.34111
+
+Epoch 113: val_loss did not improve from 0.34111
+
+Epoch 114: val_loss did not improve from 0.34111
+
+Epoch 115: val_loss did not improve from 0.34111
+
+Epoch 116: val_loss did not improve from 0.34111
+
+Epoch 117: val_loss did not improve from 0.34111
+
+Epoch 118: val_loss improved from 0.34111 to 0.33982, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 119: val_loss did not improve from 0.33982
+
+Epoch 120: val_loss did not improve from 0.33982
+
+Epoch 121: val_loss improved from 0.33982 to 0.32838, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 122: val_loss did not improve from 0.32838
+
+Epoch 123: val_loss improved from 0.32838 to 0.32693, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 124: val_loss did not improve from 0.32693
+
+Epoch 125: val_loss did not improve from 0.32693
+
+Epoch 126: val_loss did not improve from 0.32693
+
+Epoch 127: val_loss did not improve from 0.32693
+
+Epoch 128: val_loss did not improve from 0.32693
+
+Epoch 129: val_loss improved from 0.32693 to 0.32591, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 130: val_loss did not improve from 0.32591
+
+Epoch 131: val_loss did not improve from 0.32591
+
+Epoch 132: val_loss improved from 0.32591 to 0.32381, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 133: val_loss did not improve from 0.32381
+
+Epoch 134: val_loss did not improve from 0.32381
+
+Epoch 135: val_loss did not improve from 0.32381
+
+Epoch 136: val_loss did not improve from 0.32381
+
+Epoch 137: val_loss did not improve from 0.32381
+
+Epoch 138: val_loss did not improve from 0.32381
+
+Epoch 139: val_loss did not improve from 0.32381
+
+Epoch 140: val_loss did not improve from 0.32381
+
+Epoch 141: val_loss did not improve from 0.32381
+
+Epoch 142: ReduceLROnPlateau reducing learning rate to 5.119999987073243e-05.
+
+Epoch 142: val_loss did not improve from 0.32381
+
+Epoch 143: val_loss did not improve from 0.32381
+
+Epoch 144: val_loss did not improve from 0.32381
+
+Epoch 145: val_loss did not improve from 0.32381
+
+Epoch 146: val_loss did not improve from 0.32381
+
+Epoch 147: val_loss improved from 0.32381 to 0.31983, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 148: val_loss did not improve from 0.31983
+
+Epoch 149: val_loss did not improve from 0.31983
+
+Epoch 150: val_loss did not improve from 0.31983
+
+Epoch 151: val_loss did not improve from 0.31983
+
+Epoch 152: val_loss improved from 0.31983 to 0.31967, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 153: val_loss improved from 0.31967 to 0.31834, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 154: val_loss did not improve from 0.31834
+
+Epoch 155: val_loss did not improve from 0.31834
+
+Epoch 156: val_loss did not improve from 0.31834
+
+Epoch 157: val_loss did not improve from 0.31834
+
+Epoch 158: val_loss did not improve from 0.31834
+
+Epoch 159: val_loss did not improve from 0.31834
+
+Epoch 160: val_loss did not improve from 0.31834
+
+Epoch 161: val_loss did not improve from 0.31834
+
+Epoch 162: val_loss did not improve from 0.31834
+
+Epoch 163: ReduceLROnPlateau reducing learning rate to 4.0960000478662555e-05.
+
+Epoch 163: val_loss did not improve from 0.31834
+
+Epoch 164: val_loss did not improve from 0.31834
+
+Epoch 165: val_loss improved from 0.31834 to 0.31723, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 166: val_loss improved from 0.31723 to 0.31097, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 167: val_loss did not improve from 0.31097
+
+Epoch 168: val_loss did not improve from 0.31097
+
+Epoch 169: val_loss did not improve from 0.31097
+
+Epoch 170: val_loss did not improve from 0.31097
+
+Epoch 171: val_loss did not improve from 0.31097
+
+Epoch 172: val_loss did not improve from 0.31097
+
+Epoch 173: val_loss did not improve from 0.31097
+
+Epoch 174: val_loss did not improve from 0.31097
+
+Epoch 175: val_loss did not improve from 0.31097
+
+Epoch 176: ReduceLROnPlateau reducing learning rate to 3.2767999800853435e-05.
+
+Epoch 176: val_loss did not improve from 0.31097
+
+Epoch 177: val_loss did not improve from 0.31097
+
+Epoch 178: val_loss did not improve from 0.31097
+
+Epoch 179: val_loss did not improve from 0.31097
+
+Epoch 180: val_loss did not improve from 0.31097
+
+Epoch 181: val_loss did not improve from 0.31097
+
+Epoch 182: val_loss did not improve from 0.31097
+
+Epoch 183: val_loss did not improve from 0.31097
+
+Epoch 184: val_loss did not improve from 0.31097
+
+Epoch 185: val_loss improved from 0.31097 to 0.30622, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 186: val_loss did not improve from 0.30622
+
+Epoch 187: val_loss did not improve from 0.30622
+
+Epoch 188: val_loss did not improve from 0.30622
+
+Epoch 189: val_loss did not improve from 0.30622
+
+Epoch 190: val_loss improved from 0.30622 to 0.30535, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 191: val_loss did not improve from 0.30535
+
+Epoch 192: val_loss improved from 0.30535 to 0.30305, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 193: val_loss did not improve from 0.30305
+
+Epoch 194: val_loss did not improve from 0.30305
+
+Epoch 195: val_loss did not improve from 0.30305
+
+Epoch 196: val_loss did not improve from 0.30305
+
+Epoch 197: val_loss did not improve from 0.30305
+
+Epoch 198: val_loss improved from 0.30305 to 0.30094, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 199: val_loss improved from 0.30094 to 0.30040, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 200: val_loss improved from 0.30040 to 0.29650, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 201: val_loss improved from 0.29650 to 0.29455, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 202: val_loss did not improve from 0.29455
+
+Epoch 203: val_loss did not improve from 0.29455
+
+Epoch 204: val_loss did not improve from 0.29455
+
+Epoch 205: val_loss did not improve from 0.29455
+
+Epoch 206: val_loss did not improve from 0.29455
+
+Epoch 207: val_loss did not improve from 0.29455
+
+Epoch 208: val_loss did not improve from 0.29455
+
+Epoch 209: val_loss did not improve from 0.29455
+
+Epoch 210: val_loss did not improve from 0.29455
+
+Epoch 211: ReduceLROnPlateau reducing learning rate to 2.6214399258606137e-05.
+
+Epoch 211: val_loss did not improve from 0.29455
+
+Epoch 212: val_loss did not improve from 0.29455
+
+Epoch 213: val_loss did not improve from 0.29455
+
+Epoch 214: val_loss did not improve from 0.29455
+
+Epoch 215: val_loss did not improve from 0.29455
+
+Epoch 216: val_loss did not improve from 0.29455
+
+Epoch 217: val_loss did not improve from 0.29455
+
+Epoch 218: val_loss did not improve from 0.29455
+
+Epoch 219: val_loss did not improve from 0.29455
+
+Epoch 220: val_loss did not improve from 0.29455
+
+Epoch 221: ReduceLROnPlateau reducing learning rate to 2.09715188248083e-05.
+
+Epoch 221: val_loss did not improve from 0.29455
+
+Epoch 222: val_loss did not improve from 0.29455
+
+Epoch 223: val_loss did not improve from 0.29455
+
+Epoch 224: val_loss did not improve from 0.29455
+
+Epoch 225: val_loss did not improve from 0.29455
+
+Epoch 226: val_loss did not improve from 0.29455
+
+Epoch 227: val_loss did not improve from 0.29455
+
+Epoch 228: val_loss did not improve from 0.29455
+
+Epoch 229: val_loss did not improve from 0.29455
+
+Epoch 230: val_loss did not improve from 0.29455
+
+Epoch 231: ReduceLROnPlateau reducing learning rate to 1.6777214477770033e-05.
+
+Epoch 231: val_loss did not improve from 0.29455
+
+Epoch 232: val_loss did not improve from 0.29455
+
+Epoch 233: val_loss did not improve from 0.29455
+
+Epoch 234: val_loss did not improve from 0.29455
+
+Epoch 235: val_loss did not improve from 0.29455
+
+Epoch 236: val_loss did not improve from 0.29455
+
+Epoch 237: val_loss did not improve from 0.29455
+
+Epoch 238: val_loss did not improve from 0.29455
+
+Epoch 239: val_loss did not improve from 0.29455
+
+Epoch 240: val_loss did not improve from 0.29455
+
+Epoch 241: ReduceLROnPlateau reducing learning rate to 1.3421771291177721e-05.
+
+Epoch 241: val_loss did not improve from 0.29455
+
+Epoch 242: val_loss did not improve from 0.29455
+
+Epoch 243: val_loss did not improve from 0.29455
+
+Epoch 244: val_loss did not improve from 0.29455
+
+Epoch 245: val_loss did not improve from 0.29455
+
+Epoch 246: val_loss did not improve from 0.29455
+
+Epoch 247: val_loss did not improve from 0.29455
+
+Epoch 248: val_loss did not improve from 0.29455
+
+Epoch 249: val_loss improved from 0.29455 to 0.29268, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 250: val_loss did not improve from 0.29268
+
+Epoch 251: val_loss did not improve from 0.29268
+
+Epoch 252: val_loss did not improve from 0.29268
+
+Epoch 253: val_loss did not improve from 0.29268
+
+Epoch 254: val_loss did not improve from 0.29268
+
+Epoch 255: val_loss did not improve from 0.29268
+
+Epoch 256: val_loss did not improve from 0.29268
+
+Epoch 257: val_loss did not improve from 0.29268
+
+Epoch 258: val_loss did not improve from 0.29268
+
+Epoch 259: ReduceLROnPlateau reducing learning rate to 1.0737417323980481e-05.
+
+Epoch 259: val_loss did not improve from 0.29268
+
+Epoch 260: val_loss did not improve from 0.29268
+
+Epoch 261: val_loss did not improve from 0.29268
+
+Epoch 262: val_loss did not improve from 0.29268
+
+Epoch 263: val_loss did not improve from 0.29268
+
+Epoch 264: val_loss improved from 0.29268 to 0.29197, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 265: val_loss did not improve from 0.29197
+
+Epoch 266: val_loss did not improve from 0.29197
+
+Epoch 267: val_loss did not improve from 0.29197
+
+Epoch 268: val_loss did not improve from 0.29197
+
+Epoch 269: val_loss did not improve from 0.29197
+
+Epoch 270: val_loss did not improve from 0.29197
+
+Epoch 271: val_loss did not improve from 0.29197
+
+Epoch 272: val_loss improved from 0.29197 to 0.29153, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 273: val_loss did not improve from 0.29153
+
+Epoch 274: val_loss did not improve from 0.29153
+
+Epoch 275: val_loss did not improve from 0.29153
+
+Epoch 276: val_loss improved from 0.29153 to 0.29049, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 277: val_loss did not improve from 0.29049
+
+Epoch 278: val_loss did not improve from 0.29049
+
+Epoch 279: val_loss did not improve from 0.29049
+
+Epoch 280: val_loss did not improve from 0.29049
+
+Epoch 281: val_loss did not improve from 0.29049
+
+Epoch 282: val_loss did not improve from 0.29049
+
+Epoch 283: val_loss did not improve from 0.29049
+
+Epoch 284: val_loss did not improve from 0.29049
+
+Epoch 285: val_loss improved from 0.29049 to 0.29028, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 286: val_loss did not improve from 0.29028
+
+Epoch 287: val_loss did not improve from 0.29028
+
+Epoch 288: val_loss improved from 0.29028 to 0.29017, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 289: val_loss did not improve from 0.29017
+
+Epoch 290: val_loss did not improve from 0.29017
+
+Epoch 291: val_loss did not improve from 0.29017
+
+Epoch 292: val_loss did not improve from 0.29017
+
+Epoch 293: val_loss improved from 0.29017 to 0.29016, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 294: val_loss did not improve from 0.29016
+
+Epoch 295: val_loss did not improve from 0.29016
+
+Epoch 296: val_loss did not improve from 0.29016
+
+Epoch 297: val_loss did not improve from 0.29016
+
+Epoch 298: ReduceLROnPlateau reducing learning rate to 8.589933713665232e-06.
+
+Epoch 298: val_loss did not improve from 0.29016
+
+Epoch 299: val_loss did not improve from 0.29016
+
+Epoch 300: val_loss improved from 0.29016 to 0.28900, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 301: val_loss did not improve from 0.28900
+
+Epoch 302: val_loss did not improve from 0.28900
+
+Epoch 303: val_loss did not improve from 0.28900
+
+Epoch 304: val_loss did not improve from 0.28900
+
+Epoch 305: val_loss did not improve from 0.28900
+
+Epoch 306: val_loss improved from 0.28900 to 0.28799, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 307: val_loss improved from 0.28799 to 0.28793, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 308: val_loss did not improve from 0.28793
+
+Epoch 309: val_loss did not improve from 0.28793
+
+Epoch 310: val_loss did not improve from 0.28793
+
+Epoch 311: val_loss did not improve from 0.28793
+
+Epoch 312: val_loss did not improve from 0.28793
+
+Epoch 313: val_loss did not improve from 0.28793
+
+Epoch 314: val_loss did not improve from 0.28793
+
+Epoch 315: val_loss did not improve from 0.28793
+
+Epoch 316: val_loss improved from 0.28793 to 0.28742, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 317: val_loss improved from 0.28742 to 0.28491, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/best_model_fold_1.keras
+
+Epoch 318: val_loss did not improve from 0.28491
+
+Epoch 319: val_loss did not improve from 0.28491
+
+Epoch 320: val_loss did not improve from 0.28491
+Restoring model weights from the end of the best epoch: 317.
+Generating validation predictions for ROC and PR curves...
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/roc_pr_curves_fold_1.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/confusion_matrix_fold_1.png
+[Success] Single fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_1/training_curves_fold_1.png
+
+========================================
+	Processing fold 2
+========================================
+
+Loaded paths for Fold 2 from /home/marcel42/Data/kits23_processed/kits_dataset_16_30_30_kidney
+Building model using architecture: anisotropic_reg_0
+Using static learning rate: 0.0001
+LR Scheduler ENABLED via parameter.
+Early stopping ENABLED (hardcoded patience=64).
+Starting training for fold 2
+
+Epoch 1: val_loss improved from inf to 0.69382, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 2: val_loss improved from 0.69382 to 0.66789, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 3: val_loss improved from 0.66789 to 0.63049, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 4: val_loss improved from 0.63049 to 0.58852, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 5: val_loss improved from 0.58852 to 0.52836, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 6: val_loss improved from 0.52836 to 0.49323, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 7: val_loss improved from 0.49323 to 0.48379, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 8: val_loss improved from 0.48379 to 0.46729, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 9: val_loss improved from 0.46729 to 0.45085, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 10: val_loss did not improve from 0.45085
+
+Epoch 11: val_loss did not improve from 0.45085
+
+Epoch 12: val_loss improved from 0.45085 to 0.44847, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 13: val_loss did not improve from 0.44847
+
+Epoch 14: val_loss did not improve from 0.44847
+
+Epoch 15: val_loss did not improve from 0.44847
+
+Epoch 16: val_loss improved from 0.44847 to 0.44004, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 17: val_loss improved from 0.44004 to 0.43612, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 18: val_loss did not improve from 0.43612
+
+Epoch 19: val_loss did not improve from 0.43612
+
+Epoch 20: val_loss did not improve from 0.43612
+
+Epoch 21: val_loss improved from 0.43612 to 0.43228, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 22: val_loss did not improve from 0.43228
+
+Epoch 23: val_loss did not improve from 0.43228
+
+Epoch 24: val_loss improved from 0.43228 to 0.42594, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 25: val_loss improved from 0.42594 to 0.42558, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 26: val_loss did not improve from 0.42558
+
+Epoch 27: val_loss did not improve from 0.42558
+
+Epoch 28: val_loss did not improve from 0.42558
+
+Epoch 29: val_loss did not improve from 0.42558
+
+Epoch 30: val_loss improved from 0.42558 to 0.42173, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 31: val_loss improved from 0.42173 to 0.42041, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 32: val_loss did not improve from 0.42041
+
+Epoch 33: val_loss did not improve from 0.42041
+
+Epoch 34: val_loss improved from 0.42041 to 0.41649, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 35: val_loss improved from 0.41649 to 0.41342, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 36: val_loss did not improve from 0.41342
+
+Epoch 37: val_loss did not improve from 0.41342
+
+Epoch 38: val_loss did not improve from 0.41342
+
+Epoch 39: val_loss did not improve from 0.41342
+
+Epoch 40: val_loss improved from 0.41342 to 0.39971, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 41: val_loss did not improve from 0.39971
+
+Epoch 42: val_loss improved from 0.39971 to 0.39191, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 43: val_loss did not improve from 0.39191
+
+Epoch 44: val_loss improved from 0.39191 to 0.38906, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 45: val_loss did not improve from 0.38906
+
+Epoch 46: val_loss did not improve from 0.38906
+
+Epoch 47: val_loss did not improve from 0.38906
+
+Epoch 48: val_loss did not improve from 0.38906
+
+Epoch 49: val_loss did not improve from 0.38906
+
+Epoch 50: val_loss did not improve from 0.38906
+
+Epoch 51: val_loss improved from 0.38906 to 0.38905, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 52: val_loss did not improve from 0.38905
+
+Epoch 53: val_loss did not improve from 0.38905
+
+Epoch 54: val_loss improved from 0.38905 to 0.38874, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 55: val_loss improved from 0.38874 to 0.38146, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 56: val_loss did not improve from 0.38146
+
+Epoch 57: val_loss did not improve from 0.38146
+
+Epoch 58: val_loss improved from 0.38146 to 0.37922, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 59: val_loss did not improve from 0.37922
+
+Epoch 60: val_loss improved from 0.37922 to 0.37183, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 61: val_loss did not improve from 0.37183
+
+Epoch 62: val_loss did not improve from 0.37183
+
+Epoch 63: val_loss did not improve from 0.37183
+
+Epoch 64: val_loss did not improve from 0.37183
+
+Epoch 65: val_loss did not improve from 0.37183
+
+Epoch 66: val_loss improved from 0.37183 to 0.36933, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 67: val_loss did not improve from 0.36933
+
+Epoch 68: val_loss did not improve from 0.36933
+
+Epoch 69: val_loss did not improve from 0.36933
+
+Epoch 70: val_loss did not improve from 0.36933
+
+Epoch 71: val_loss did not improve from 0.36933
+
+Epoch 72: val_loss did not improve from 0.36933
+
+Epoch 73: val_loss did not improve from 0.36933
+
+Epoch 74: val_loss did not improve from 0.36933
+
+Epoch 75: val_loss did not improve from 0.36933
+
+Epoch 76: ReduceLROnPlateau reducing learning rate to 7.999999797903001e-05.
+
+Epoch 76: val_loss did not improve from 0.36933
+
+Epoch 77: val_loss did not improve from 0.36933
+
+Epoch 78: val_loss did not improve from 0.36933
+
+Epoch 79: val_loss improved from 0.36933 to 0.36786, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 80: val_loss did not improve from 0.36786
+
+Epoch 81: val_loss improved from 0.36786 to 0.36527, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 82: val_loss did not improve from 0.36527
+
+Epoch 83: val_loss did not improve from 0.36527
+
+Epoch 84: val_loss did not improve from 0.36527
+
+Epoch 85: val_loss did not improve from 0.36527
+
+Epoch 86: val_loss did not improve from 0.36527
+
+Epoch 87: val_loss did not improve from 0.36527
+
+Epoch 88: val_loss improved from 0.36527 to 0.36302, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 89: val_loss did not improve from 0.36302
+
+Epoch 90: val_loss did not improve from 0.36302
+
+Epoch 91: val_loss did not improve from 0.36302
+
+Epoch 92: val_loss did not improve from 0.36302
+
+Epoch 93: val_loss did not improve from 0.36302
+
+Epoch 94: val_loss did not improve from 0.36302
+
+Epoch 95: val_loss did not improve from 0.36302
+
+Epoch 96: val_loss improved from 0.36302 to 0.36078, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 97: val_loss improved from 0.36078 to 0.35538, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 98: val_loss did not improve from 0.35538
+
+Epoch 99: val_loss did not improve from 0.35538
+
+Epoch 100: val_loss did not improve from 0.35538
+
+Epoch 101: val_loss did not improve from 0.35538
+
+Epoch 102: val_loss did not improve from 0.35538
+
+Epoch 103: val_loss improved from 0.35538 to 0.34569, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 104: val_loss did not improve from 0.34569
+
+Epoch 105: val_loss did not improve from 0.34569
+
+Epoch 106: val_loss did not improve from 0.34569
+
+Epoch 107: val_loss did not improve from 0.34569
+
+Epoch 108: val_loss did not improve from 0.34569
+
+Epoch 109: val_loss did not improve from 0.34569
+
+Epoch 110: val_loss did not improve from 0.34569
+
+Epoch 111: val_loss did not improve from 0.34569
+
+Epoch 112: val_loss did not improve from 0.34569
+
+Epoch 113: ReduceLROnPlateau reducing learning rate to 6.399999838322402e-05.
+
+Epoch 113: val_loss did not improve from 0.34569
+
+Epoch 114: val_loss did not improve from 0.34569
+
+Epoch 115: val_loss did not improve from 0.34569
+
+Epoch 116: val_loss did not improve from 0.34569
+
+Epoch 117: val_loss did not improve from 0.34569
+
+Epoch 118: val_loss did not improve from 0.34569
+
+Epoch 119: val_loss did not improve from 0.34569
+
+Epoch 120: val_loss did not improve from 0.34569
+
+Epoch 121: val_loss did not improve from 0.34569
+
+Epoch 122: val_loss did not improve from 0.34569
+
+Epoch 123: ReduceLROnPlateau reducing learning rate to 5.119999987073243e-05.
+
+Epoch 123: val_loss did not improve from 0.34569
+
+Epoch 124: val_loss did not improve from 0.34569
+
+Epoch 125: val_loss did not improve from 0.34569
+
+Epoch 126: val_loss did not improve from 0.34569
+
+Epoch 127: val_loss did not improve from 0.34569
+
+Epoch 128: val_loss did not improve from 0.34569
+
+Epoch 129: val_loss did not improve from 0.34569
+
+Epoch 130: val_loss did not improve from 0.34569
+
+Epoch 131: val_loss did not improve from 0.34569
+
+Epoch 132: val_loss improved from 0.34569 to 0.33792, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 133: val_loss did not improve from 0.33792
+
+Epoch 134: val_loss did not improve from 0.33792
+
+Epoch 135: val_loss did not improve from 0.33792
+
+Epoch 136: val_loss did not improve from 0.33792
+
+Epoch 137: val_loss did not improve from 0.33792
+
+Epoch 138: val_loss did not improve from 0.33792
+
+Epoch 139: val_loss did not improve from 0.33792
+
+Epoch 140: val_loss improved from 0.33792 to 0.33519, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 141: val_loss did not improve from 0.33519
+
+Epoch 142: val_loss did not improve from 0.33519
+
+Epoch 143: val_loss did not improve from 0.33519
+
+Epoch 144: val_loss improved from 0.33519 to 0.33229, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 145: val_loss did not improve from 0.33229
+
+Epoch 146: val_loss did not improve from 0.33229
+
+Epoch 147: val_loss did not improve from 0.33229
+
+Epoch 148: val_loss did not improve from 0.33229
+
+Epoch 149: val_loss did not improve from 0.33229
+
+Epoch 150: val_loss did not improve from 0.33229
+
+Epoch 151: val_loss did not improve from 0.33229
+
+Epoch 152: val_loss did not improve from 0.33229
+
+Epoch 153: val_loss did not improve from 0.33229
+
+Epoch 154: ReduceLROnPlateau reducing learning rate to 4.0960000478662555e-05.
+
+Epoch 154: val_loss did not improve from 0.33229
+
+Epoch 155: val_loss did not improve from 0.33229
+
+Epoch 156: val_loss improved from 0.33229 to 0.32581, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 157: val_loss did not improve from 0.32581
+
+Epoch 158: val_loss did not improve from 0.32581
+
+Epoch 159: val_loss did not improve from 0.32581
+
+Epoch 160: val_loss did not improve from 0.32581
+
+Epoch 161: val_loss did not improve from 0.32581
+
+Epoch 162: val_loss did not improve from 0.32581
+
+Epoch 163: val_loss improved from 0.32581 to 0.31388, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 164: val_loss did not improve from 0.31388
+
+Epoch 165: val_loss did not improve from 0.31388
+
+Epoch 166: val_loss did not improve from 0.31388
+
+Epoch 167: val_loss did not improve from 0.31388
+
+Epoch 168: val_loss did not improve from 0.31388
+
+Epoch 169: val_loss did not improve from 0.31388
+
+Epoch 170: val_loss did not improve from 0.31388
+
+Epoch 171: val_loss did not improve from 0.31388
+
+Epoch 172: val_loss did not improve from 0.31388
+
+Epoch 173: ReduceLROnPlateau reducing learning rate to 3.2767999800853435e-05.
+
+Epoch 173: val_loss did not improve from 0.31388
+
+Epoch 174: val_loss did not improve from 0.31388
+
+Epoch 175: val_loss did not improve from 0.31388
+
+Epoch 176: val_loss did not improve from 0.31388
+
+Epoch 177: val_loss did not improve from 0.31388
+
+Epoch 178: val_loss did not improve from 0.31388
+
+Epoch 179: val_loss did not improve from 0.31388
+
+Epoch 180: val_loss did not improve from 0.31388
+
+Epoch 181: val_loss did not improve from 0.31388
+
+Epoch 182: val_loss did not improve from 0.31388
+
+Epoch 183: ReduceLROnPlateau reducing learning rate to 2.6214399258606137e-05.
+
+Epoch 183: val_loss did not improve from 0.31388
+
+Epoch 184: val_loss did not improve from 0.31388
+
+Epoch 185: val_loss did not improve from 0.31388
+
+Epoch 186: val_loss did not improve from 0.31388
+
+Epoch 187: val_loss did not improve from 0.31388
+
+Epoch 188: val_loss did not improve from 0.31388
+
+Epoch 189: val_loss did not improve from 0.31388
+
+Epoch 190: val_loss did not improve from 0.31388
+
+Epoch 191: val_loss did not improve from 0.31388
+
+Epoch 192: val_loss did not improve from 0.31388
+
+Epoch 193: ReduceLROnPlateau reducing learning rate to 2.09715188248083e-05.
+
+Epoch 193: val_loss did not improve from 0.31388
+
+Epoch 194: val_loss did not improve from 0.31388
+
+Epoch 195: val_loss did not improve from 0.31388
+
+Epoch 196: val_loss did not improve from 0.31388
+
+Epoch 197: val_loss did not improve from 0.31388
+
+Epoch 198: val_loss did not improve from 0.31388
+
+Epoch 199: val_loss did not improve from 0.31388
+
+Epoch 200: val_loss did not improve from 0.31388
+
+Epoch 201: val_loss did not improve from 0.31388
+
+Epoch 202: val_loss did not improve from 0.31388
+
+Epoch 203: ReduceLROnPlateau reducing learning rate to 1.6777214477770033e-05.
+
+Epoch 203: val_loss did not improve from 0.31388
+
+Epoch 204: val_loss did not improve from 0.31388
+
+Epoch 205: val_loss did not improve from 0.31388
+
+Epoch 206: val_loss did not improve from 0.31388
+
+Epoch 207: val_loss did not improve from 0.31388
+
+Epoch 208: val_loss did not improve from 0.31388
+
+Epoch 209: val_loss did not improve from 0.31388
+
+Epoch 210: val_loss did not improve from 0.31388
+
+Epoch 211: val_loss did not improve from 0.31388
+
+Epoch 212: val_loss did not improve from 0.31388
+
+Epoch 213: ReduceLROnPlateau reducing learning rate to 1.3421771291177721e-05.
+
+Epoch 213: val_loss did not improve from 0.31388
+
+Epoch 214: val_loss did not improve from 0.31388
+
+Epoch 215: val_loss did not improve from 0.31388
+
+Epoch 216: val_loss did not improve from 0.31388
+
+Epoch 217: val_loss did not improve from 0.31388
+
+Epoch 218: val_loss did not improve from 0.31388
+
+Epoch 219: val_loss did not improve from 0.31388
+
+Epoch 220: val_loss did not improve from 0.31388
+
+Epoch 221: val_loss did not improve from 0.31388
+
+Epoch 222: val_loss improved from 0.31388 to 0.31133, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 223: val_loss did not improve from 0.31133
+
+Epoch 224: val_loss did not improve from 0.31133
+
+Epoch 225: val_loss did not improve from 0.31133
+
+Epoch 226: val_loss did not improve from 0.31133
+
+Epoch 227: val_loss did not improve from 0.31133
+
+Epoch 228: val_loss did not improve from 0.31133
+
+Epoch 229: val_loss improved from 0.31133 to 0.31050, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 230: val_loss did not improve from 0.31050
+
+Epoch 231: val_loss did not improve from 0.31050
+
+Epoch 232: val_loss did not improve from 0.31050
+
+Epoch 233: val_loss did not improve from 0.31050
+
+Epoch 234: val_loss did not improve from 0.31050
+
+Epoch 235: val_loss did not improve from 0.31050
+
+Epoch 236: val_loss did not improve from 0.31050
+
+Epoch 237: val_loss did not improve from 0.31050
+
+Epoch 238: val_loss did not improve from 0.31050
+
+Epoch 239: ReduceLROnPlateau reducing learning rate to 1.0737417323980481e-05.
+
+Epoch 239: val_loss did not improve from 0.31050
+
+Epoch 240: val_loss did not improve from 0.31050
+
+Epoch 241: val_loss did not improve from 0.31050
+
+Epoch 242: val_loss did not improve from 0.31050
+
+Epoch 243: val_loss did not improve from 0.31050
+
+Epoch 244: val_loss did not improve from 0.31050
+
+Epoch 245: val_loss did not improve from 0.31050
+
+Epoch 246: val_loss did not improve from 0.31050
+
+Epoch 247: val_loss did not improve from 0.31050
+
+Epoch 248: val_loss did not improve from 0.31050
+
+Epoch 249: ReduceLROnPlateau reducing learning rate to 8.589933713665232e-06.
+
+Epoch 249: val_loss did not improve from 0.31050
+
+Epoch 250: val_loss did not improve from 0.31050
+
+Epoch 251: val_loss did not improve from 0.31050
+
+Epoch 252: val_loss did not improve from 0.31050
+
+Epoch 253: val_loss did not improve from 0.31050
+
+Epoch 254: val_loss did not improve from 0.31050
+
+Epoch 255: val_loss did not improve from 0.31050
+
+Epoch 256: val_loss did not improve from 0.31050
+
+Epoch 257: val_loss did not improve from 0.31050
+
+Epoch 258: val_loss did not improve from 0.31050
+
+Epoch 259: ReduceLROnPlateau reducing learning rate to 6.871946970932186e-06.
+
+Epoch 259: val_loss did not improve from 0.31050
+
+Epoch 260: val_loss did not improve from 0.31050
+
+Epoch 261: val_loss did not improve from 0.31050
+
+Epoch 262: val_loss did not improve from 0.31050
+
+Epoch 263: val_loss did not improve from 0.31050
+
+Epoch 264: val_loss did not improve from 0.31050
+
+Epoch 265: val_loss did not improve from 0.31050
+
+Epoch 266: val_loss did not improve from 0.31050
+
+Epoch 267: val_loss improved from 0.31050 to 0.30989, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 268: val_loss did not improve from 0.30989
+
+Epoch 269: val_loss did not improve from 0.30989
+
+Epoch 270: val_loss did not improve from 0.30989
+
+Epoch 271: val_loss did not improve from 0.30989
+
+Epoch 272: val_loss did not improve from 0.30989
+
+Epoch 273: val_loss did not improve from 0.30989
+
+Epoch 274: val_loss did not improve from 0.30989
+
+Epoch 275: val_loss did not improve from 0.30989
+
+Epoch 276: val_loss did not improve from 0.30989
+
+Epoch 277: ReduceLROnPlateau reducing learning rate to 5.497557503986173e-06.
+
+Epoch 277: val_loss did not improve from 0.30989
+
+Epoch 278: val_loss did not improve from 0.30989
+
+Epoch 279: val_loss did not improve from 0.30989
+
+Epoch 280: val_loss did not improve from 0.30989
+
+Epoch 281: val_loss did not improve from 0.30989
+
+Epoch 282: val_loss did not improve from 0.30989
+
+Epoch 283: val_loss did not improve from 0.30989
+
+Epoch 284: val_loss did not improve from 0.30989
+
+Epoch 285: val_loss did not improve from 0.30989
+
+Epoch 286: val_loss did not improve from 0.30989
+
+Epoch 287: ReduceLROnPlateau reducing learning rate to 4.398046075948514e-06.
+
+Epoch 287: val_loss did not improve from 0.30989
+
+Epoch 288: val_loss did not improve from 0.30989
+
+Epoch 289: val_loss did not improve from 0.30989
+
+Epoch 290: val_loss did not improve from 0.30989
+
+Epoch 291: val_loss did not improve from 0.30989
+
+Epoch 292: val_loss did not improve from 0.30989
+
+Epoch 293: val_loss improved from 0.30989 to 0.30894, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/best_model_fold_2.keras
+
+Epoch 294: val_loss did not improve from 0.30894
+
+Epoch 295: val_loss did not improve from 0.30894
+
+Epoch 296: val_loss did not improve from 0.30894
+
+Epoch 297: val_loss did not improve from 0.30894
+
+Epoch 298: val_loss did not improve from 0.30894
+
+Epoch 299: val_loss did not improve from 0.30894
+
+Epoch 300: val_loss did not improve from 0.30894
+
+Epoch 301: val_loss did not improve from 0.30894
+
+Epoch 302: val_loss did not improve from 0.30894
+
+Epoch 303: ReduceLROnPlateau reducing learning rate to 3.518437006277964e-06.
+
+Epoch 303: val_loss did not improve from 0.30894
+
+Epoch 304: val_loss did not improve from 0.30894
+
+Epoch 305: val_loss did not improve from 0.30894
+
+Epoch 306: val_loss did not improve from 0.30894
+
+Epoch 307: val_loss did not improve from 0.30894
+
+Epoch 308: val_loss did not improve from 0.30894
+
+Epoch 309: val_loss did not improve from 0.30894
+
+Epoch 310: val_loss did not improve from 0.30894
+
+Epoch 311: val_loss did not improve from 0.30894
+
+Epoch 312: val_loss did not improve from 0.30894
+
+Epoch 313: ReduceLROnPlateau reducing learning rate to 2.814749677781947e-06.
+
+Epoch 313: val_loss did not improve from 0.30894
+
+Epoch 314: val_loss did not improve from 0.30894
+
+Epoch 315: val_loss did not improve from 0.30894
+
+Epoch 316: val_loss did not improve from 0.30894
+
+Epoch 317: val_loss did not improve from 0.30894
+
+Epoch 318: val_loss did not improve from 0.30894
+
+Epoch 319: val_loss did not improve from 0.30894
+
+Epoch 320: val_loss did not improve from 0.30894
+Restoring model weights from the end of the best epoch: 293.
+Generating validation predictions for ROC and PR curves...
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/roc_pr_curves_fold_2.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/confusion_matrix_fold_2.png
+[Success] Single fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_2/training_curves_fold_2.png
+
+========================================
+	Processing fold 3
+========================================
+
+Loaded paths for Fold 3 from /home/marcel42/Data/kits23_processed/kits_dataset_16_30_30_kidney
+Building model using architecture: anisotropic_reg_0
+Using static learning rate: 0.0001
+LR Scheduler ENABLED via parameter.
+Early stopping ENABLED (hardcoded patience=64).
+Starting training for fold 3
+
+Epoch 1: val_loss improved from inf to 0.73331, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 2: val_loss improved from 0.73331 to 0.69978, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 3: val_loss improved from 0.69978 to 0.65702, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 4: val_loss improved from 0.65702 to 0.59925, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 5: val_loss improved from 0.59925 to 0.54609, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 6: val_loss improved from 0.54609 to 0.50511, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 7: val_loss improved from 0.50511 to 0.48202, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 8: val_loss improved from 0.48202 to 0.47444, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 9: val_loss improved from 0.47444 to 0.46466, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 10: val_loss improved from 0.46466 to 0.45918, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 11: val_loss improved from 0.45918 to 0.45535, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 12: val_loss did not improve from 0.45535
+
+Epoch 13: val_loss improved from 0.45535 to 0.45307, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 14: val_loss did not improve from 0.45307
+
+Epoch 15: val_loss improved from 0.45307 to 0.45083, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 16: val_loss did not improve from 0.45083
+
+Epoch 17: val_loss improved from 0.45083 to 0.44746, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 18: val_loss did not improve from 0.44746
+
+Epoch 19: val_loss improved from 0.44746 to 0.44475, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 20: val_loss improved from 0.44475 to 0.43993, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 21: val_loss improved from 0.43993 to 0.43833, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 22: val_loss improved from 0.43833 to 0.43621, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 23: val_loss improved from 0.43621 to 0.43507, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 24: val_loss did not improve from 0.43507
+
+Epoch 25: val_loss did not improve from 0.43507
+
+Epoch 26: val_loss improved from 0.43507 to 0.43015, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 27: val_loss did not improve from 0.43015
+
+Epoch 28: val_loss did not improve from 0.43015
+
+Epoch 29: val_loss did not improve from 0.43015
+
+Epoch 30: val_loss improved from 0.43015 to 0.42634, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 31: val_loss did not improve from 0.42634
+
+Epoch 32: val_loss improved from 0.42634 to 0.42271, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 33: val_loss did not improve from 0.42271
+
+Epoch 34: val_loss improved from 0.42271 to 0.41626, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 35: val_loss did not improve from 0.41626
+
+Epoch 36: val_loss did not improve from 0.41626
+
+Epoch 37: val_loss did not improve from 0.41626
+
+Epoch 38: val_loss did not improve from 0.41626
+
+Epoch 39: val_loss did not improve from 0.41626
+
+Epoch 40: val_loss did not improve from 0.41626
+
+Epoch 41: val_loss did not improve from 0.41626
+
+Epoch 42: val_loss did not improve from 0.41626
+
+Epoch 43: val_loss did not improve from 0.41626
+
+Epoch 44: val_loss improved from 0.41626 to 0.41046, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 45: val_loss improved from 0.41046 to 0.40951, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 46: val_loss did not improve from 0.40951
+
+Epoch 47: val_loss did not improve from 0.40951
+
+Epoch 48: val_loss did not improve from 0.40951
+
+Epoch 49: val_loss did not improve from 0.40951
+
+Epoch 50: val_loss did not improve from 0.40951
+
+Epoch 51: val_loss improved from 0.40951 to 0.40816, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 52: val_loss improved from 0.40816 to 0.40672, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 53: val_loss did not improve from 0.40672
+
+Epoch 54: val_loss improved from 0.40672 to 0.40187, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 55: val_loss did not improve from 0.40187
+
+Epoch 56: val_loss did not improve from 0.40187
+
+Epoch 57: val_loss improved from 0.40187 to 0.39217, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 58: val_loss improved from 0.39217 to 0.39086, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 59: val_loss improved from 0.39086 to 0.38624, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 60: val_loss did not improve from 0.38624
+
+Epoch 61: val_loss did not improve from 0.38624
+
+Epoch 62: val_loss did not improve from 0.38624
+
+Epoch 63: val_loss improved from 0.38624 to 0.38317, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 64: val_loss did not improve from 0.38317
+
+Epoch 65: val_loss did not improve from 0.38317
+
+Epoch 66: val_loss improved from 0.38317 to 0.38058, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 67: val_loss improved from 0.38058 to 0.37639, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 68: val_loss improved from 0.37639 to 0.37087, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 69: val_loss did not improve from 0.37087
+
+Epoch 70: val_loss did not improve from 0.37087
+
+Epoch 71: val_loss improved from 0.37087 to 0.37084, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 72: val_loss did not improve from 0.37084
+
+Epoch 73: val_loss improved from 0.37084 to 0.35788, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 74: val_loss did not improve from 0.35788
+
+Epoch 75: val_loss did not improve from 0.35788
+
+Epoch 76: val_loss did not improve from 0.35788
+
+Epoch 77: val_loss did not improve from 0.35788
+
+Epoch 78: val_loss did not improve from 0.35788
+
+Epoch 79: val_loss did not improve from 0.35788
+
+Epoch 80: val_loss did not improve from 0.35788
+
+Epoch 81: val_loss did not improve from 0.35788
+
+Epoch 82: val_loss did not improve from 0.35788
+
+Epoch 83: ReduceLROnPlateau reducing learning rate to 7.999999797903001e-05.
+
+Epoch 83: val_loss did not improve from 0.35788
+
+Epoch 84: val_loss did not improve from 0.35788
+
+Epoch 85: val_loss did not improve from 0.35788
+
+Epoch 86: val_loss did not improve from 0.35788
+
+Epoch 87: val_loss did not improve from 0.35788
+
+Epoch 88: val_loss improved from 0.35788 to 0.35550, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 89: val_loss did not improve from 0.35550
+
+Epoch 90: val_loss did not improve from 0.35550
+
+Epoch 91: val_loss improved from 0.35550 to 0.35015, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 92: val_loss did not improve from 0.35015
+
+Epoch 93: val_loss did not improve from 0.35015
+
+Epoch 94: val_loss did not improve from 0.35015
+
+Epoch 95: val_loss did not improve from 0.35015
+
+Epoch 96: val_loss did not improve from 0.35015
+
+Epoch 97: val_loss improved from 0.35015 to 0.34597, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 98: val_loss did not improve from 0.34597
+
+Epoch 99: val_loss did not improve from 0.34597
+
+Epoch 100: val_loss improved from 0.34597 to 0.34549, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 101: val_loss did not improve from 0.34549
+
+Epoch 102: val_loss did not improve from 0.34549
+
+Epoch 103: val_loss did not improve from 0.34549
+
+Epoch 104: val_loss improved from 0.34549 to 0.34397, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 105: val_loss improved from 0.34397 to 0.34036, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 106: val_loss did not improve from 0.34036
+
+Epoch 107: val_loss improved from 0.34036 to 0.33915, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 108: val_loss did not improve from 0.33915
+
+Epoch 109: val_loss did not improve from 0.33915
+
+Epoch 110: val_loss did not improve from 0.33915
+
+Epoch 111: val_loss did not improve from 0.33915
+
+Epoch 112: val_loss did not improve from 0.33915
+
+Epoch 113: val_loss did not improve from 0.33915
+
+Epoch 114: val_loss did not improve from 0.33915
+
+Epoch 115: val_loss improved from 0.33915 to 0.33817, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 116: val_loss did not improve from 0.33817
+
+Epoch 117: val_loss did not improve from 0.33817
+
+Epoch 118: val_loss did not improve from 0.33817
+
+Epoch 119: val_loss did not improve from 0.33817
+
+Epoch 120: val_loss did not improve from 0.33817
+
+Epoch 121: val_loss did not improve from 0.33817
+
+Epoch 122: val_loss did not improve from 0.33817
+
+Epoch 123: val_loss improved from 0.33817 to 0.33740, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 124: val_loss did not improve from 0.33740
+
+Epoch 125: val_loss improved from 0.33740 to 0.33233, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 126: val_loss did not improve from 0.33233
+
+Epoch 127: val_loss did not improve from 0.33233
+
+Epoch 128: val_loss did not improve from 0.33233
+
+Epoch 129: val_loss improved from 0.33233 to 0.33035, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 130: val_loss did not improve from 0.33035
+
+Epoch 131: val_loss improved from 0.33035 to 0.32983, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 132: val_loss did not improve from 0.32983
+
+Epoch 133: val_loss did not improve from 0.32983
+
+Epoch 134: val_loss did not improve from 0.32983
+
+Epoch 135: val_loss improved from 0.32983 to 0.31912, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 136: val_loss did not improve from 0.31912
+
+Epoch 137: val_loss improved from 0.31912 to 0.31648, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 138: val_loss did not improve from 0.31648
+
+Epoch 139: val_loss did not improve from 0.31648
+
+Epoch 140: val_loss did not improve from 0.31648
+
+Epoch 141: val_loss did not improve from 0.31648
+
+Epoch 142: val_loss did not improve from 0.31648
+
+Epoch 143: val_loss did not improve from 0.31648
+
+Epoch 144: val_loss did not improve from 0.31648
+
+Epoch 145: val_loss did not improve from 0.31648
+
+Epoch 146: val_loss did not improve from 0.31648
+
+Epoch 147: ReduceLROnPlateau reducing learning rate to 6.399999838322402e-05.
+
+Epoch 147: val_loss did not improve from 0.31648
+
+Epoch 148: val_loss did not improve from 0.31648
+
+Epoch 149: val_loss did not improve from 0.31648
+
+Epoch 150: val_loss did not improve from 0.31648
+
+Epoch 151: val_loss did not improve from 0.31648
+
+Epoch 152: val_loss did not improve from 0.31648
+
+Epoch 153: val_loss did not improve from 0.31648
+
+Epoch 154: val_loss did not improve from 0.31648
+
+Epoch 155: val_loss did not improve from 0.31648
+
+Epoch 156: val_loss did not improve from 0.31648
+
+Epoch 157: ReduceLROnPlateau reducing learning rate to 5.119999987073243e-05.
+
+Epoch 157: val_loss did not improve from 0.31648
+
+Epoch 158: val_loss did not improve from 0.31648
+
+Epoch 159: val_loss did not improve from 0.31648
+
+Epoch 160: val_loss did not improve from 0.31648
+
+Epoch 161: val_loss did not improve from 0.31648
+
+Epoch 162: val_loss did not improve from 0.31648
+
+Epoch 163: val_loss did not improve from 0.31648
+
+Epoch 164: val_loss did not improve from 0.31648
+
+Epoch 165: val_loss did not improve from 0.31648
+
+Epoch 166: val_loss did not improve from 0.31648
+
+Epoch 167: ReduceLROnPlateau reducing learning rate to 4.0960000478662555e-05.
+
+Epoch 167: val_loss did not improve from 0.31648
+
+Epoch 168: val_loss did not improve from 0.31648
+
+Epoch 169: val_loss did not improve from 0.31648
+
+Epoch 170: val_loss did not improve from 0.31648
+
+Epoch 171: val_loss did not improve from 0.31648
+
+Epoch 172: val_loss did not improve from 0.31648
+
+Epoch 173: val_loss did not improve from 0.31648
+
+Epoch 174: val_loss did not improve from 0.31648
+
+Epoch 175: val_loss did not improve from 0.31648
+
+Epoch 176: val_loss did not improve from 0.31648
+
+Epoch 177: ReduceLROnPlateau reducing learning rate to 3.2767999800853435e-05.
+
+Epoch 177: val_loss did not improve from 0.31648
+
+Epoch 178: val_loss did not improve from 0.31648
+
+Epoch 179: val_loss did not improve from 0.31648
+
+Epoch 180: val_loss did not improve from 0.31648
+
+Epoch 181: val_loss did not improve from 0.31648
+
+Epoch 182: val_loss did not improve from 0.31648
+
+Epoch 183: val_loss did not improve from 0.31648
+
+Epoch 184: val_loss did not improve from 0.31648
+
+Epoch 185: val_loss did not improve from 0.31648
+
+Epoch 186: val_loss did not improve from 0.31648
+
+Epoch 187: ReduceLROnPlateau reducing learning rate to 2.6214399258606137e-05.
+
+Epoch 187: val_loss did not improve from 0.31648
+
+Epoch 188: val_loss did not improve from 0.31648
+
+Epoch 189: val_loss did not improve from 0.31648
+
+Epoch 190: val_loss improved from 0.31648 to 0.31602, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 191: val_loss improved from 0.31602 to 0.31408, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/best_model_fold_3.keras
+
+Epoch 192: val_loss did not improve from 0.31408
+
+Epoch 193: val_loss did not improve from 0.31408
+
+Epoch 194: val_loss did not improve from 0.31408
+
+Epoch 195: val_loss did not improve from 0.31408
+
+Epoch 196: val_loss did not improve from 0.31408
+
+Epoch 197: val_loss did not improve from 0.31408
+
+Epoch 198: val_loss did not improve from 0.31408
+
+Epoch 199: val_loss did not improve from 0.31408
+
+Epoch 200: val_loss did not improve from 0.31408
+
+Epoch 201: ReduceLROnPlateau reducing learning rate to 2.09715188248083e-05.
+
+Epoch 201: val_loss did not improve from 0.31408
+
+Epoch 202: val_loss did not improve from 0.31408
+
+Epoch 203: val_loss did not improve from 0.31408
+
+Epoch 204: val_loss did not improve from 0.31408
+
+Epoch 205: val_loss did not improve from 0.31408
+
+Epoch 206: val_loss did not improve from 0.31408
+
+Epoch 207: val_loss did not improve from 0.31408
+
+Epoch 208: val_loss did not improve from 0.31408
+
+Epoch 209: val_loss did not improve from 0.31408
+
+Epoch 210: val_loss did not improve from 0.31408
+
+Epoch 211: ReduceLROnPlateau reducing learning rate to 1.6777214477770033e-05.
+
+Epoch 211: val_loss did not improve from 0.31408
+
+Epoch 212: val_loss did not improve from 0.31408
+
+Epoch 213: val_loss did not improve from 0.31408
+
+Epoch 214: val_loss did not improve from 0.31408
+
+Epoch 215: val_loss did not improve from 0.31408
+
+Epoch 216: val_loss did not improve from 0.31408
+
+Epoch 217: val_loss did not improve from 0.31408
+
+Epoch 218: val_loss did not improve from 0.31408
+
+Epoch 219: val_loss did not improve from 0.31408
+
+Epoch 220: val_loss did not improve from 0.31408
+
+Epoch 221: ReduceLROnPlateau reducing learning rate to 1.3421771291177721e-05.
+
+Epoch 221: val_loss did not improve from 0.31408
+
+Epoch 222: val_loss did not improve from 0.31408
+
+Epoch 223: val_loss did not improve from 0.31408
+
+Epoch 224: val_loss did not improve from 0.31408
+
+Epoch 225: val_loss did not improve from 0.31408
+
+Epoch 226: val_loss did not improve from 0.31408
+
+Epoch 227: val_loss did not improve from 0.31408
+
+Epoch 228: val_loss did not improve from 0.31408
+
+Epoch 229: val_loss did not improve from 0.31408
+
+Epoch 230: val_loss did not improve from 0.31408
+
+Epoch 231: ReduceLROnPlateau reducing learning rate to 1.0737417323980481e-05.
+
+Epoch 231: val_loss did not improve from 0.31408
+
+Epoch 232: val_loss did not improve from 0.31408
+
+Epoch 233: val_loss did not improve from 0.31408
+
+Epoch 234: val_loss did not improve from 0.31408
+
+Epoch 235: val_loss did not improve from 0.31408
+
+Epoch 236: val_loss did not improve from 0.31408
+
+Epoch 237: val_loss did not improve from 0.31408
+
+Epoch 238: val_loss did not improve from 0.31408
+
+Epoch 239: val_loss did not improve from 0.31408
+
+Epoch 240: val_loss did not improve from 0.31408
+
+Epoch 241: ReduceLROnPlateau reducing learning rate to 8.589933713665232e-06.
+
+Epoch 241: val_loss did not improve from 0.31408
+
+Epoch 242: val_loss did not improve from 0.31408
+
+Epoch 243: val_loss did not improve from 0.31408
+
+Epoch 244: val_loss did not improve from 0.31408
+
+Epoch 245: val_loss did not improve from 0.31408
+
+Epoch 246: val_loss did not improve from 0.31408
+
+Epoch 247: val_loss did not improve from 0.31408
+
+Epoch 248: val_loss did not improve from 0.31408
+
+Epoch 249: val_loss did not improve from 0.31408
+
+Epoch 250: val_loss did not improve from 0.31408
+
+Epoch 251: ReduceLROnPlateau reducing learning rate to 6.871946970932186e-06.
+
+Epoch 251: val_loss did not improve from 0.31408
+
+Epoch 252: val_loss did not improve from 0.31408
+
+Epoch 253: val_loss did not improve from 0.31408
+
+Epoch 254: val_loss did not improve from 0.31408
+
+Epoch 255: val_loss did not improve from 0.31408
+Epoch 255: early stopping
+Restoring model weights from the end of the best epoch: 191.
+Generating validation predictions for ROC and PR curves...
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/roc_pr_curves_fold_3.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/confusion_matrix_fold_3.png
+[Success] Single fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_3/training_curves_fold_3.png
+
+========================================
+	Processing fold 4
+========================================
+
+Loaded paths for Fold 4 from /home/marcel42/Data/kits23_processed/kits_dataset_16_30_30_kidney
+Building model using architecture: anisotropic_reg_0
+Using static learning rate: 0.0001
+LR Scheduler ENABLED via parameter.
+Early stopping ENABLED (hardcoded patience=64).
+Starting training for fold 4
+
+Epoch 1: val_loss improved from inf to 0.76595, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 2: val_loss did not improve from 0.76595
+
+Epoch 3: val_loss improved from 0.76595 to 0.75869, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 4: val_loss improved from 0.75869 to 0.67216, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 5: val_loss improved from 0.67216 to 0.58959, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 6: val_loss improved from 0.58959 to 0.51761, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 7: val_loss improved from 0.51761 to 0.48827, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 8: val_loss improved from 0.48827 to 0.47679, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 9: val_loss improved from 0.47679 to 0.47588, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 10: val_loss improved from 0.47588 to 0.47414, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 11: val_loss improved from 0.47414 to 0.46852, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 12: val_loss improved from 0.46852 to 0.46459, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 13: val_loss improved from 0.46459 to 0.46131, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 14: val_loss improved from 0.46131 to 0.45788, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 15: val_loss did not improve from 0.45788
+
+Epoch 16: val_loss did not improve from 0.45788
+
+Epoch 17: val_loss improved from 0.45788 to 0.45669, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 18: val_loss improved from 0.45669 to 0.45201, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 19: val_loss did not improve from 0.45201
+
+Epoch 20: val_loss did not improve from 0.45201
+
+Epoch 21: val_loss did not improve from 0.45201
+
+Epoch 22: val_loss did not improve from 0.45201
+
+Epoch 23: val_loss did not improve from 0.45201
+
+Epoch 24: val_loss improved from 0.45201 to 0.44439, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 25: val_loss did not improve from 0.44439
+
+Epoch 26: val_loss improved from 0.44439 to 0.44109, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 27: val_loss did not improve from 0.44109
+
+Epoch 28: val_loss did not improve from 0.44109
+
+Epoch 29: val_loss did not improve from 0.44109
+
+Epoch 30: val_loss did not improve from 0.44109
+
+Epoch 31: val_loss did not improve from 0.44109
+
+Epoch 32: val_loss did not improve from 0.44109
+
+Epoch 33: val_loss did not improve from 0.44109
+
+Epoch 34: val_loss did not improve from 0.44109
+
+Epoch 35: val_loss did not improve from 0.44109
+
+Epoch 36: val_loss improved from 0.44109 to 0.43805, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 37: val_loss improved from 0.43805 to 0.43749, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 38: val_loss improved from 0.43749 to 0.41884, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 39: val_loss did not improve from 0.41884
+
+Epoch 40: val_loss did not improve from 0.41884
+
+Epoch 41: val_loss did not improve from 0.41884
+
+Epoch 42: val_loss improved from 0.41884 to 0.41594, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 43: val_loss improved from 0.41594 to 0.41085, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 44: val_loss did not improve from 0.41085
+
+Epoch 45: val_loss did not improve from 0.41085
+
+Epoch 46: val_loss did not improve from 0.41085
+
+Epoch 47: val_loss did not improve from 0.41085
+
+Epoch 48: val_loss did not improve from 0.41085
+
+Epoch 49: val_loss improved from 0.41085 to 0.40758, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 50: val_loss did not improve from 0.40758
+
+Epoch 51: val_loss improved from 0.40758 to 0.39920, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 52: val_loss did not improve from 0.39920
+
+Epoch 53: val_loss did not improve from 0.39920
+
+Epoch 54: val_loss did not improve from 0.39920
+
+Epoch 55: val_loss did not improve from 0.39920
+
+Epoch 56: val_loss did not improve from 0.39920
+
+Epoch 57: val_loss did not improve from 0.39920
+
+Epoch 58: val_loss did not improve from 0.39920
+
+Epoch 59: val_loss did not improve from 0.39920
+
+Epoch 60: val_loss did not improve from 0.39920
+
+Epoch 61: ReduceLROnPlateau reducing learning rate to 7.999999797903001e-05.
+
+Epoch 61: val_loss did not improve from 0.39920
+
+Epoch 62: val_loss did not improve from 0.39920
+
+Epoch 63: val_loss improved from 0.39920 to 0.39864, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 64: val_loss did not improve from 0.39864
+
+Epoch 65: val_loss improved from 0.39864 to 0.39100, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 66: val_loss did not improve from 0.39100
+
+Epoch 67: val_loss did not improve from 0.39100
+
+Epoch 68: val_loss improved from 0.39100 to 0.38282, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 69: val_loss improved from 0.38282 to 0.37897, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 70: val_loss did not improve from 0.37897
+
+Epoch 71: val_loss did not improve from 0.37897
+
+Epoch 72: val_loss did not improve from 0.37897
+
+Epoch 73: val_loss did not improve from 0.37897
+
+Epoch 74: val_loss did not improve from 0.37897
+
+Epoch 75: val_loss did not improve from 0.37897
+
+Epoch 76: val_loss improved from 0.37897 to 0.37780, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 77: val_loss improved from 0.37780 to 0.37379, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 78: val_loss did not improve from 0.37379
+
+Epoch 79: val_loss did not improve from 0.37379
+
+Epoch 80: val_loss improved from 0.37379 to 0.36803, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 81: val_loss did not improve from 0.36803
+
+Epoch 82: val_loss did not improve from 0.36803
+
+Epoch 83: val_loss did not improve from 0.36803
+
+Epoch 84: val_loss did not improve from 0.36803
+
+Epoch 85: val_loss did not improve from 0.36803
+
+Epoch 86: val_loss did not improve from 0.36803
+
+Epoch 87: val_loss did not improve from 0.36803
+
+Epoch 88: val_loss did not improve from 0.36803
+
+Epoch 89: val_loss did not improve from 0.36803
+
+Epoch 90: ReduceLROnPlateau reducing learning rate to 6.399999838322402e-05.
+
+Epoch 90: val_loss did not improve from 0.36803
+
+Epoch 91: val_loss did not improve from 0.36803
+
+Epoch 92: val_loss did not improve from 0.36803
+
+Epoch 93: val_loss improved from 0.36803 to 0.36733, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 94: val_loss did not improve from 0.36733
+
+Epoch 95: val_loss improved from 0.36733 to 0.36551, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 96: val_loss did not improve from 0.36551
+
+Epoch 97: val_loss did not improve from 0.36551
+
+Epoch 98: val_loss did not improve from 0.36551
+
+Epoch 99: val_loss did not improve from 0.36551
+
+Epoch 100: val_loss did not improve from 0.36551
+
+Epoch 101: val_loss did not improve from 0.36551
+
+Epoch 102: val_loss did not improve from 0.36551
+
+Epoch 103: val_loss did not improve from 0.36551
+
+Epoch 104: val_loss did not improve from 0.36551
+
+Epoch 105: ReduceLROnPlateau reducing learning rate to 5.119999987073243e-05.
+
+Epoch 105: val_loss did not improve from 0.36551
+
+Epoch 106: val_loss did not improve from 0.36551
+
+Epoch 107: val_loss did not improve from 0.36551
+
+Epoch 108: val_loss improved from 0.36551 to 0.36339, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 109: val_loss did not improve from 0.36339
+
+Epoch 110: val_loss did not improve from 0.36339
+
+Epoch 111: val_loss did not improve from 0.36339
+
+Epoch 112: val_loss did not improve from 0.36339
+
+Epoch 113: val_loss did not improve from 0.36339
+
+Epoch 114: val_loss did not improve from 0.36339
+
+Epoch 115: val_loss did not improve from 0.36339
+
+Epoch 116: val_loss improved from 0.36339 to 0.36092, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 117: val_loss did not improve from 0.36092
+
+Epoch 118: val_loss did not improve from 0.36092
+
+Epoch 119: val_loss did not improve from 0.36092
+
+Epoch 120: val_loss did not improve from 0.36092
+
+Epoch 121: val_loss did not improve from 0.36092
+
+Epoch 122: val_loss did not improve from 0.36092
+
+Epoch 123: val_loss did not improve from 0.36092
+
+Epoch 124: val_loss did not improve from 0.36092
+
+Epoch 125: val_loss did not improve from 0.36092
+
+Epoch 126: ReduceLROnPlateau reducing learning rate to 4.0960000478662555e-05.
+
+Epoch 126: val_loss did not improve from 0.36092
+
+Epoch 127: val_loss did not improve from 0.36092
+
+Epoch 128: val_loss did not improve from 0.36092
+
+Epoch 129: val_loss did not improve from 0.36092
+
+Epoch 130: val_loss did not improve from 0.36092
+
+Epoch 131: val_loss did not improve from 0.36092
+
+Epoch 132: val_loss improved from 0.36092 to 0.35329, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 133: val_loss did not improve from 0.35329
+
+Epoch 134: val_loss did not improve from 0.35329
+
+Epoch 135: val_loss did not improve from 0.35329
+
+Epoch 136: val_loss did not improve from 0.35329
+
+Epoch 137: val_loss did not improve from 0.35329
+
+Epoch 138: val_loss did not improve from 0.35329
+
+Epoch 139: val_loss did not improve from 0.35329
+
+Epoch 140: val_loss did not improve from 0.35329
+
+Epoch 141: val_loss did not improve from 0.35329
+
+Epoch 142: ReduceLROnPlateau reducing learning rate to 3.2767999800853435e-05.
+
+Epoch 142: val_loss did not improve from 0.35329
+
+Epoch 143: val_loss did not improve from 0.35329
+
+Epoch 144: val_loss did not improve from 0.35329
+
+Epoch 145: val_loss did not improve from 0.35329
+
+Epoch 146: val_loss did not improve from 0.35329
+
+Epoch 147: val_loss did not improve from 0.35329
+
+Epoch 148: val_loss did not improve from 0.35329
+
+Epoch 149: val_loss did not improve from 0.35329
+
+Epoch 150: val_loss did not improve from 0.35329
+
+Epoch 151: val_loss did not improve from 0.35329
+
+Epoch 152: ReduceLROnPlateau reducing learning rate to 2.6214399258606137e-05.
+
+Epoch 152: val_loss did not improve from 0.35329
+
+Epoch 153: val_loss did not improve from 0.35329
+
+Epoch 154: val_loss did not improve from 0.35329
+
+Epoch 155: val_loss did not improve from 0.35329
+
+Epoch 156: val_loss did not improve from 0.35329
+
+Epoch 157: val_loss did not improve from 0.35329
+
+Epoch 158: val_loss did not improve from 0.35329
+
+Epoch 159: val_loss did not improve from 0.35329
+
+Epoch 160: val_loss did not improve from 0.35329
+
+Epoch 161: val_loss did not improve from 0.35329
+
+Epoch 162: ReduceLROnPlateau reducing learning rate to 2.09715188248083e-05.
+
+Epoch 162: val_loss did not improve from 0.35329
+
+Epoch 163: val_loss did not improve from 0.35329
+
+Epoch 164: val_loss did not improve from 0.35329
+
+Epoch 165: val_loss did not improve from 0.35329
+
+Epoch 166: val_loss did not improve from 0.35329
+
+Epoch 167: val_loss did not improve from 0.35329
+
+Epoch 168: val_loss did not improve from 0.35329
+
+Epoch 169: val_loss did not improve from 0.35329
+
+Epoch 170: val_loss did not improve from 0.35329
+
+Epoch 171: val_loss did not improve from 0.35329
+
+Epoch 172: ReduceLROnPlateau reducing learning rate to 1.6777214477770033e-05.
+
+Epoch 172: val_loss did not improve from 0.35329
+
+Epoch 173: val_loss did not improve from 0.35329
+
+Epoch 174: val_loss improved from 0.35329 to 0.35232, saving model to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/best_model_fold_4.keras
+
+Epoch 175: val_loss did not improve from 0.35232
+
+Epoch 176: val_loss did not improve from 0.35232
+
+Epoch 177: val_loss did not improve from 0.35232
+
+Epoch 178: val_loss did not improve from 0.35232
+
+Epoch 179: val_loss did not improve from 0.35232
+
+Epoch 180: val_loss did not improve from 0.35232
+
+Epoch 181: val_loss did not improve from 0.35232
+
+Epoch 182: val_loss did not improve from 0.35232
+
+Epoch 183: val_loss did not improve from 0.35232
+
+Epoch 184: ReduceLROnPlateau reducing learning rate to 1.3421771291177721e-05.
+
+Epoch 184: val_loss did not improve from 0.35232
+
+Epoch 185: val_loss did not improve from 0.35232
+
+Epoch 186: val_loss did not improve from 0.35232
+
+Epoch 187: val_loss did not improve from 0.35232
+
+Epoch 188: val_loss did not improve from 0.35232
+
+Epoch 189: val_loss did not improve from 0.35232
+
+Epoch 190: val_loss did not improve from 0.35232
+
+Epoch 191: val_loss did not improve from 0.35232
+
+Epoch 192: val_loss did not improve from 0.35232
+
+Epoch 193: val_loss did not improve from 0.35232
+
+Epoch 194: ReduceLROnPlateau reducing learning rate to 1.0737417323980481e-05.
+
+Epoch 194: val_loss did not improve from 0.35232
+
+Epoch 195: val_loss did not improve from 0.35232
+
+Epoch 196: val_loss did not improve from 0.35232
+
+Epoch 197: val_loss did not improve from 0.35232
+
+Epoch 198: val_loss did not improve from 0.35232
+
+Epoch 199: val_loss did not improve from 0.35232
+
+Epoch 200: val_loss did not improve from 0.35232
+
+Epoch 201: val_loss did not improve from 0.35232
+
+Epoch 202: val_loss did not improve from 0.35232
+
+Epoch 203: val_loss did not improve from 0.35232
+
+Epoch 204: ReduceLROnPlateau reducing learning rate to 8.589933713665232e-06.
+
+Epoch 204: val_loss did not improve from 0.35232
+
+Epoch 205: val_loss did not improve from 0.35232
+
+Epoch 206: val_loss did not improve from 0.35232
+
+Epoch 207: val_loss did not improve from 0.35232
+
+Epoch 208: val_loss did not improve from 0.35232
+
+Epoch 209: val_loss did not improve from 0.35232
+
+Epoch 210: val_loss did not improve from 0.35232
+
+Epoch 211: val_loss did not improve from 0.35232
+
+Epoch 212: val_loss did not improve from 0.35232
+
+Epoch 213: val_loss did not improve from 0.35232
+
+Epoch 214: ReduceLROnPlateau reducing learning rate to 6.871946970932186e-06.
+
+Epoch 214: val_loss did not improve from 0.35232
+
+Epoch 215: val_loss did not improve from 0.35232
+
+Epoch 216: val_loss did not improve from 0.35232
+
+Epoch 217: val_loss did not improve from 0.35232
+
+Epoch 218: val_loss did not improve from 0.35232
+
+Epoch 219: val_loss did not improve from 0.35232
+
+Epoch 220: val_loss did not improve from 0.35232
+
+Epoch 221: val_loss did not improve from 0.35232
+
+Epoch 222: val_loss did not improve from 0.35232
+
+Epoch 223: val_loss did not improve from 0.35232
+
+Epoch 224: ReduceLROnPlateau reducing learning rate to 5.497557503986173e-06.
+
+Epoch 224: val_loss did not improve from 0.35232
+
+Epoch 225: val_loss did not improve from 0.35232
+
+Epoch 226: val_loss did not improve from 0.35232
+
+Epoch 227: val_loss did not improve from 0.35232
+
+Epoch 228: val_loss did not improve from 0.35232
+
+Epoch 229: val_loss did not improve from 0.35232
+
+Epoch 230: val_loss did not improve from 0.35232
+
+Epoch 231: val_loss did not improve from 0.35232
+
+Epoch 232: val_loss did not improve from 0.35232
+
+Epoch 233: val_loss did not improve from 0.35232
+
+Epoch 234: ReduceLROnPlateau reducing learning rate to 4.398046075948514e-06.
+
+Epoch 234: val_loss did not improve from 0.35232
+
+Epoch 235: val_loss did not improve from 0.35232
+
+Epoch 236: val_loss did not improve from 0.35232
+
+Epoch 237: val_loss did not improve from 0.35232
+
+Epoch 238: val_loss did not improve from 0.35232
+Epoch 238: early stopping
+Restoring model weights from the end of the best epoch: 174.
+Generating validation predictions for ROC and PR curves...
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/roc_pr_curves_fold_4.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/confusion_matrix_fold_4.png
+[Success] Single fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/fold_4/training_curves_fold_4.png
+
+[Success] Consolidated multi-fold evaluation graph saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-12_21-07/all_folds_performance_matrix.png
+Training time completed in 0:37:41 (2261s)
+Job finished at Wed 12 Aug 21:45:10 CEST 2026
