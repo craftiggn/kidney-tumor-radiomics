@@ -176,7 +176,7 @@ def train_model(model, train_generator, val_generator, class_weights, args, fold
         validation_data=val_generator,
         epochs=args.epochs,
         class_weight=class_weights,
-        callbacks=callbacks
+        callbacks=callbacks,
         verbose=0
     )
 
