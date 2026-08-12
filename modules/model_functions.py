@@ -154,7 +154,7 @@ def train_model(model, train_generator, val_generator, class_weights, args, fold
         print(colored(f"LR Scheduler DISABLED. Using static LR: {learning_rate}", "blue"))
     
     # --- Early Stopping ---
-    early_stopping_patience = 30
+    early_stopping_patience = 64
     callbacks.append(EarlyStopping(monitor='val_loss', patience=early_stopping_patience, restore_best_weights=True, verbose=1))
     print(colored(f"Early stopping ENABLED (hardcoded patience={early_stopping_patience}).", "blue"))
     

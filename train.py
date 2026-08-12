@@ -123,8 +123,8 @@ def main():
         if args.use_lr_scheduler:
             lr_scheduler = keras.callbacks.ReduceLROnPlateau(
                 monitor='val_loss',
-                factor=0.5,
-                patience=15,
+                factor=0.8,
+                patience=10,
                 min_lr=1e-6,
                 verbose=1
             )

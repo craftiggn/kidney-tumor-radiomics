@@ -28,7 +28,7 @@ export PATH=$PYTHONUSERBASE/bin:$PATH
 apptainer exec --nv /lu/tetyda/projects/center4ml/Containers/tensorflow-gpu.sif pip3 install --user -r requirements.txt
 
 # 3. Run python script within container (using the newly installed libraries)
-apptainer exec --nv /lu/tetyda/projects/center4ml/Containers/tensorflow-gpu.sif python3 train.py --data_dir /home/marcel42/Data/kits23_processed/kits_dataset_16_30_30_kidney --out_dir /home/marcel42/kidney-tumor-radiomics/HPC_out --epochs 256 --n_folds 3 --workers 8 --save_model --architecture anisotropic_reg_0  --use_lr_scheduler
+apptainer exec --nv /lu/tetyda/projects/center4ml/Containers/tensorflow-gpu.sif python3 train.py --data_dir /home/marcel42/Data/kits23_processed/kits_dataset_16_30_30_kidney --out_dir /home/marcel42/kidney-tumor-radiomics/HPC_out --epochs 320 --n_folds 5 --workers 8 --save_model --architecture anisotropic_reg_0  --use_lr_scheduler
 
 # Print completion status
 echo "Job finished at $(date)"
