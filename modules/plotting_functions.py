@@ -17,6 +17,7 @@ import pandas as pd
 import re
 import seaborn
 import visualkeras
+import keras
 
 def browse_volume(vol: np.ndarray, axis: int = 0, cmap: str = "gray", figsize=(6, 6)) -> None:
     """
@@ -536,7 +537,7 @@ def plot_multilabel_roc_and_pr_curves(y_true, y_pred, fold_no, out_dir, class_na
     ax_roc.set_xlabel("False Positive Rate")
     ax_roc.set_ylabel("True Positive Rate")
     ax_roc.set_xlim([-0.02, 1.02])
-    ax_roc.set_ylim([0.5, 1.02])
+    ax_roc.set_ylim([-0.02, 1.02])
     ax_roc.plot([0, 1], [0, 1], 'k--', lw=2, label="Random Chance")
 
     # --- PR Plot (Y-axis fixed from 0.0 to 1.02) ---
@@ -544,7 +545,7 @@ def plot_multilabel_roc_and_pr_curves(y_true, y_pred, fold_no, out_dir, class_na
     ax_pr.set_xlabel("Recall")
     ax_pr.set_ylabel("Precision")
     ax_pr.set_xlim([-0.02, 1.02])
-    ax_pr.set_ylim([0.0, 1.02])
+    ax_pr.set_ylim([-0.02, 1.02])
 
     # Generate curves for each class
     for i in range(n_classes):
@@ -643,12 +644,14 @@ def plot_model_architecture(model, output_path):
             except AttributeError:
                 pass
 
-    visualkeras.layered_view(
+    keras.utils.plot_model(
         model,
         to_file=str(output_path),
-        legend=True, # text legend for layer types
-        show_dimension=True, # Displays input/output shape details
-        scale_xy=1.5,
-        scale_z=1.0,
-        max_z=100
+        show_shapes=True,              # Shows Input/Output tensor dimensions
+        show_dtype=False,              # Keeps boxes clean by hiding float32 labels
+        show_layer_names=True,         # Shows Conv3D, MaxPooling3D, etc.
+        rankdir='TB',                  # Forces Top-to-Bottom vertical layout
+        expand_nested=True,
+        dpi=200,                       # High resolution
+        show_layer_activations=True    # Explicitly lists relu, sigmoid, etc.
     )

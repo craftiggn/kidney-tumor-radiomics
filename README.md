@@ -55,6 +55,7 @@ To train a model on a given dataset:
 - [ ] add a model visualization to the figures
 - [ ] add a parameter to the learning rate
 - [ ] add some "score" value that can grade the different models
+- [ ] add a timer to the `run_config.json`
 
 ### Helpfull tensorflow functions
 use one-hot encoding for input? - https://www.tensorflow.org/api_docs/python/tf/one_hot
