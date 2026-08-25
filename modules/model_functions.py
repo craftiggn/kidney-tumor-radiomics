@@ -3,8 +3,10 @@ import keras
 from keras.callbacks import ModelCheckpoint, EarlyStopping, CSVLogger
 from pathlib import Path
 import numpy as np
+import pandas as pd
 from termcolor import colored
 from modules import plotting_functions as plf
+from sklearn.metrics import roc_auc_score, average_precision_score, f1_score, log_loss
 # from keras.regularizers import L2
 
 # --- MODEL DEFINITIONS ---
@@ -120,57 +122,45 @@ def build_model(input_shape, model_key):
 
 def train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir, learning_rate=1e-4, lr_scheduler=None):
     """
-    Trains the Sequential model.
+    Trains the Sequential model and returns history along with true and predicted labels.
     """
-    callbacks = [
-        CSVLogger(fold_out_dir / f"training_log_fold_{fold_no}.csv", append=False)
-    ]
+    log_csv_path = fold_out_dir / f"training_log_fold_{fold_no}.csv"
+    
+    # Custom logger callback replacing default CSVLogger
+    metrics_logger = PerClassMetricsCallback(
+        train_gen=train_generator,
+        val_gen=val_generator,
+        class_names=val_generator.tabular_cols,
+        log_path=log_csv_path
+    )
+    
+    callbacks = [metrics_logger]
 
-    # Dynamic vs Static Learning
     if isinstance(learning_rate, keras.callbacks.Callback):
-        # callbacks like ReduceLROnPlateau, append it
-        print(colored("Using dynamic learning rate via callback.", "blue"))
         callbacks.append(learning_rate)
         optimizer = keras.optimizers.Adam()
-    elif isinstance(learning_rate, float):
-        print(colored(f"Using static learning rate: {learning_rate}", "blue"))
-        optimizer = keras.optimizers.Adam(learning_rate=learning_rate)
     else:
-        print(colored("Using dynamic learning rate via Schedule.", "blue"))
         optimizer = keras.optimizers.Adam(learning_rate=learning_rate)
 
-    # compile model before training
     model.compile(
         optimizer=optimizer,
         loss='binary_crossentropy',
-        metrics=['accuracy', keras.metrics.AUC(multi_label=True)]
+        metrics=['accuracy']
     )
 
-    # --- LR Scheduler ---
+    # for custom schedulers
     if lr_scheduler is not None:
         callbacks.append(lr_scheduler)
-        print(colored("LR Scheduler ENABLED via parameter.", "blue"))
-    else:
-        print(colored(f"LR Scheduler DISABLED. Using static LR: {learning_rate}", "blue"))
-    
-    # --- Early Stopping ---
+
     early_stopping_patience = 64
     callbacks.append(EarlyStopping(monitor='val_loss', patience=early_stopping_patience, restore_best_weights=True, verbose=1))
-    print(colored(f"Early stopping ENABLED (hardcoded patience={early_stopping_patience}).", "blue"))
     
     if args.save_model:
         model_path = fold_out_dir / f"best_model_fold_{fold_no}.keras"
-        checkpoint = ModelCheckpoint(
-            filepath=str(model_path),
-            monitor='val_loss',
-            save_best_only=True,
-            verbose=1
-        )
-        callbacks.append(checkpoint)
+        callbacks.append(ModelCheckpoint(filepath=str(model_path), monitor='val_loss', save_best_only=True, verbose=1))
 
     print(colored(f"Starting training for fold {fold_no}", "green"))
     
-    # --- Model Training ---
     history = model.fit(
         train_generator,
         validation_data=val_generator,
@@ -180,40 +170,118 @@ def train_model(model, train_generator, val_generator, class_weights, args, fold
         verbose=0
     )
 
-    # --- ROC and PR curves --- 
-    # Extract true labels from the val_generator
-    print(colored("Generating validation predictions for ROC and PR curves...", "blue"))
-
-    y_true_list = []
-    y_pred_list = []
-
-    # Iterate through the val dataset
+    # final validation predictions
+    y_true_list, y_pred_list = [], []
     for i in range(len(val_generator)):
         X_batch, y_batch = val_generator[i]
         preds = model.predict(X_batch, verbose=0)
-
         y_true_list.append(y_batch)
         y_pred_list.append(preds)
 
-    # Concat into arrays
     y_true = np.concatenate(y_true_list, axis=0)
     y_pred = np.concatenate(y_pred_list, axis=0)
 
-    # plot ROC, PR
+    # fold plots
     plf.plot_multilabel_roc_and_pr_curves(
-        y_true=y_true,
-        y_pred=y_pred,
-        fold_no=fold_no,
-        out_dir=fold_out_dir,
-        class_names=val_generator.tabular_cols
+        y_true=y_true, y_pred=y_pred, fold_no=fold_no, out_dir=fold_out_dir, class_names=val_generator.tabular_cols
     )
-
     plf.plot_feature_confusion_matrix(
-        y_true=y_true,
-        y_pred=y_pred,
-        fold_no=fold_no,
-        out_dir=fold_out_dir,
-        tabula_cols=val_generator.tabular_cols
+        y_true=y_true, y_pred=y_pred, fold_no=fold_no, out_dir=fold_out_dir, tabula_cols=val_generator.tabular_cols
     )
 
-    return history
+    return history, y_true, y_pred
+
+
+
+class PerClassMetricsCallback(keras.callbacks.Callback):
+    """
+    Evaluates and records per-label: Loss, AUC, AP, F1 score on
+    train and val datasets at the end of each epoch, saving the values to a .csv file.
+    """
+
+    def __init__(self, train_gen, val_gen, class_names, log_path):
+        super().__init__()
+        self.train_gen = train_gen
+        self.val_gen = val_gen
+
+        self.class_names = class_names
+        self.log_path = Path(log_path)
+
+        self.history_data = []
+
+    def on_epoch_end(self, epoch, logs=None):
+        # Validation predictions
+        y_val_true_list, y_val_pred_list = [], []
+        for i in range(len(self.val_gen)):
+            X_b, y_b = self.val_gen[i]
+            preds = self.model.predict(X_b, verbose=0)
+            y_val_true_list.append(y_b)
+            y_val_pred_list.append(preds)
+
+        y_val_true = np.concatenate(y_val_true_list, axis=0)
+        y_val_pred = np.concatenate(y_val_pred_list, axis=0)
+
+        # Training predictions
+        y_tr_true_list, y_tr_pred_list = [], []
+        for i in range(len(self.train_gen)):
+            X_b, y_b = self.train_gen[i]
+            preds = self.model.predict(X_b, verbose=0)
+            y_tr_true_list.append(y_b)
+            y_tr_pred_list.append(preds)
+
+        y_tr_true = np.concatenate(y_tr_true_list, axis=0)
+        y_tr_pred = np.concatenate(y_tr_pred_list, axis=0)
+
+        row = {'epoch': epoch}
+        tr_losses, val_losses, tr_aucs, val_aucs = [], [], [], []
+        tr_aps, val_aps, tr_f1s, val_f1s = [], [], [], []
+
+        for i, name in enumerate(self.class_names):
+            # Loss
+            tr_l = log_loss(y_tr_true[:, i], y_tr_pred[:, i], labels=[0, 1])
+            val_l = log_loss(y_val_true[:, i], y_val_pred[:, i], labels=[0, 1])
+
+            # ROC AUC
+            try: tr_auc = roc_auc_score(y_tr_true[:, i], y_tr_pred[:, i])
+            except ValueError: tr_auc = 0.5
+            try: val_auc = roc_auc_score(y_val_true[:, i], y_val_pred[:, i])
+            except ValueError: val_auc = 0.5
+
+            # AP
+            tr_ap = average_precision_score(y_tr_true[:, i], y_tr_pred[:, i])
+            val_ap = average_precision_score(y_val_true[:, i], y_val_pred[:, i])
+
+            # F1 
+            tr_f1 = f1_score(y_tr_true[:, i], (y_tr_pred[:, i] > 0.5).astype(int), zero_division=0)
+            val_f1 = f1_score(y_val_true[:, i], (y_val_pred[:, i] > 0.5).astype(int), zero_division=0)
+
+            row[f'train_loss_{name}'] = tr_l
+            row[f'val_loss_{name}'] = val_l
+            row[f'train_auc_{name}'] = tr_auc
+            row[f'val_auc_{name}'] = val_auc
+            row[f'train_ap_{name}'] = tr_ap
+            row[f'val_ap_{name}'] = val_ap
+            row[f'train_f1_{name}'] = tr_f1
+            row[f'val_f1_{name}'] = val_f1
+
+            tr_losses.append(tr_l)
+            val_losses.append(val_l)
+            tr_aucs.append(tr_auc)
+            val_aucs.append(val_auc)
+            tr_aps.append(tr_ap)
+            val_aps.append(val_ap)
+            tr_f1s.append(tr_f1)
+            val_f1s.append(val_f1)
+
+        # averages
+        row['loss'] = float(np.mean(tr_losses))
+        row['val_loss'] = float(np.mean(val_losses))
+        row['auc'] = float(np.mean(tr_aucs))
+        row['val_auc'] = float(np.mean(val_aucs))
+        row['ap'] = float(np.mean(tr_aps))
+        row['val_ap'] = float(np.mean(val_aps))
+        row['f1'] = float(np.mean(tr_f1s))
+        row['val_f1'] = float(np.mean(val_f1s))
+
+        self.history_data.append(row)
+        pd.DataFrame(self.history_data).to_csv(self.log_path, index=False)

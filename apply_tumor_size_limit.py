@@ -1,10 +1,14 @@
 import pandas as pd
+from modules import plotting_functions as plf
 
 TUMOR_INSTANCE_PATH = 'data/kits23_tumor_instance_data.csv'
 TUMOR_SIZE_LIMIT_MM  = 75
 ANNOTATION_PATH = f'data/annotation_empty_{TUMOR_SIZE_LIMIT_MM}mm.csv'
 
 df = pd.read_csv(TUMOR_INSTANCE_PATH)
+# plot the restricted dataset
+plf.plot_threshold(df.copy(), TUMOR_SIZE_LIMIT_MM)
+
 df = df[df['calculated_diameter_mm'] <= TUMOR_SIZE_LIMIT_MM]
 
 # some tumors do not fit the RPN requirements

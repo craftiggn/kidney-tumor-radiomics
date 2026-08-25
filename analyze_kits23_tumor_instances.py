@@ -7,7 +7,7 @@ KITS_DIR = "/home/marcel/Repos/Data/kits23"
 OUTPUT_CSV = "data/kits23_tumor_instance_data.csv"
 
 # generate the list of cases, their id, radius and spacial parameters for the tumor
-tumor_df = data_prep.extract_tumor_instances(KITS_DIR) # Note, modify this such that it features also the kidney annotation
+tumor_df = data_prep.extract_tumor_instances(KITS_DIR)
 print(colored("--- Extracted tumor instances ---", 'blue', attrs=['bold']))
 print(tumor_df.head())
 

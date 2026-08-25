@@ -128,7 +128,6 @@ def browse_overlay(img, mask, axis=0):
     slider.on_changed(update)
     plt.show()
 
-
 def show_value_counts(arr):
     """
     Prints values in the ndarray as keys, and their counts as values.
@@ -298,6 +297,28 @@ def decode_labels_rpn(label_array, label_cols):
             
     return tuple(active_labels)
 
+def plot_threshold(df, threshold, output_path='./figures/threshold.png'):
+    sorted_diameters = np.sort(df['calculated_diameter_mm'].dropna())
+    y_vals = np.arange(1, len(sorted_diameters) + 1)
+    
+    # Plot CDF
+    plt.figure(figsize=(10, 4))
+    plt.step(sorted_diameters, y_vals, color='teal', where='post', linewidth=2)
+    plt.axvline(x=threshold, color='red', linestyle='--', label=f'Cutoff: {threshold}mm')
+    
+    plt.grid(True, linestyle='--', alpha=0.7)
+    
+    # Filter dataset
+    kept_df = df[df['calculated_diameter_mm'] <= threshold].copy()
+    
+    plt.title(f"Tumor Size CDF (Keeping {len(kept_df)} / {len(df)} cases)")
+    plt.xlabel("Calculated Tumor Diameter (mm)")
+    plt.ylabel("Cumulative Case Count")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(output_path)
+    
+
 ### BATCH VISUALISATION
 # contains synthetic data
 
@@ -391,9 +412,10 @@ def visualize_generator_batch(batch_X, batch_y, experiment_dir, out_dir, fps=15,
 ### MODEL FIGURES
 from sklearn.metrics import roc_curve, auc, precision_recall_curve, average_precision_score, confusion_matrix
 
-def plot_and_evaluate(fold_out_dir, fold_no):
+def plot_and_evaluate(fold_out_dir, fold_no, class_names):
     """
-    Plots single-fold Loss on a logarithmic scale and AUC with a fixed [0.5, 1.02] range.
+    Generates an 8-subplot grid for a single fold, showing Loss, AUC, AP, and F1 curves 
+    for both training and validation across each target label.
     """
     fold_out_dir = Path(fold_out_dir)
     csv_path = fold_out_dir / f"training_log_fold_{fold_no}.csv"
@@ -405,121 +427,117 @@ def plot_and_evaluate(fold_out_dir, fold_no):
     df = pd.read_csv(csv_path)
     epochs = df['epoch'] + 1
 
-    fig, (ax_loss, ax_auc) = plt.subplots(1, 2, figsize=(16, 6))
+    fig, axes = plt.subplots(2, 4, figsize=(24, 10))
+    (ax_tr_loss, ax_val_loss, ax_tr_auc, ax_val_auc), (ax_tr_ap, ax_val_ap, ax_tr_f1, ax_val_f1) = axes
 
-    # --- Loss Plot (Logarithmic Scale) ---
-    ax_loss.set_title(f"Loss Curves (Fold {fold_no})", fontsize=14, fontweight='bold', pad=10)
-    ax_loss.set_xlabel("Epochs")
-    ax_loss.set_ylabel("Loss (Binary Crossentropy)")
-    ax_loss.set_yscale('log')
-    if 'loss' in df.columns:
-        ax_loss.plot(epochs, df['loss'], label='Train Loss', lw=2)
-    if 'val_loss' in df.columns:
-        ax_loss.plot(epochs, df['val_loss'], label='Val Loss', lw=2)
-    ax_loss.legend(loc='best', frameon=True)
-    ax_loss.grid(True, which="both", linestyle='--', alpha=0.5)
-
-    # --- AUC Plot (Fixed [0.5, 1.02]) ---
-    ax_auc.set_title(f"AUC Curves (Fold {fold_no})", fontsize=14, fontweight='bold', pad=10)
-    ax_auc.set_xlabel("Epochs")
-    ax_auc.set_ylabel("AUC")
-    ax_auc.set_ylim([0.5, 1.02])
+    # Setup Titles and Scales
+    ax_tr_loss.set_title(f"Train Loss (Fold {fold_no})"); ax_tr_loss.set_yscale('log')
+    ax_val_loss.set_title(f"Val Loss (Fold {fold_no})"); ax_val_loss.set_yscale('log')
     
-    auc_col = [col for col in df.columns if 'auc' in col.lower() and 'val' not in col.lower()]
-    val_auc_col = [col for col in df.columns if 'val_auc' in col.lower()]
-    if auc_col:
-        ax_auc.plot(epochs, df[auc_col[0]], label='Train AUC', lw=2)
-    if val_auc_col:
-        ax_auc.plot(epochs, df[val_auc_col[0]], label='Val AUC', lw=2)
-    ax_auc.legend(loc='best', frameon=True)
-    ax_auc.grid(True, linestyle='--', alpha=0.6)
+    ax_tr_auc.set_title(f"Train AUC (Fold {fold_no})"); ax_tr_auc.set_ylim([0.48, 1.02])
+    ax_val_auc.set_title(f"Val AUC (Fold {fold_no})"); ax_val_auc.set_ylim([0.48, 1.02])
+    
+    ax_tr_ap.set_title(f"Train AP (Fold {fold_no})"); ax_tr_ap.set_ylim([-0.02, 1.02])
+    ax_val_ap.set_title(f"Val AP (Fold {fold_no})"); ax_val_ap.set_ylim([-0.02, 1.02])
+    
+    ax_tr_f1.set_title(f"Train F1 (Fold {fold_no})"); ax_tr_f1.set_ylim([-0.02, 1.02])
+    ax_val_f1.set_title(f"Val F1 (Fold {fold_no})"); ax_val_f1.set_ylim([-0.02, 1.02])
+
+    for c in class_names:
+        if f'train_loss_{c}' in df: ax_tr_loss.plot(epochs, df[f'train_loss_{c}'], label=c, lw=1.5)
+        if f'val_loss_{c}' in df: ax_val_loss.plot(epochs, df[f'val_loss_{c}'], label=c, lw=1.5)
+        if f'train_auc_{c}' in df: ax_tr_auc.plot(epochs, df[f'train_auc_{c}'], label=c, lw=1.5)
+        if f'val_auc_{c}' in df: ax_val_auc.plot(epochs, df[f'val_auc_{c}'], label=c, lw=1.5)
+        if f'train_ap_{c}' in df: ax_tr_ap.plot(epochs, df[f'train_ap_{c}'], label=c, lw=1.5)
+        if f'val_ap_{c}' in df: ax_val_ap.plot(epochs, df[f'val_ap_{c}'], label=c, lw=1.5)
+        if f'train_f1_{c}' in df: ax_tr_f1.plot(epochs, df[f'train_f1_{c}'], label=c, lw=1.5)
+        if f'val_f1_{c}' in df: ax_val_f1.plot(epochs, df[f'val_f1_{c}'], label=c, lw=1.5)
+
+    for ax in axes.flat:
+        ax.set_xlabel("Epochs")
+        ax.legend(loc='best', fontsize='small', frameon=True)
+        ax.grid(True, linestyle='--', alpha=0.5)
 
     plt.tight_layout()
     save_path = fold_out_dir / f"training_curves_fold_{fold_no}.png"
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
+    print(f"[Success] 8-panel fold training curves saved to: {save_path}")
 
-    print(f"[Success] Single fold training curves saved to: {save_path}")
 
 def plot_and_evaluate_all_folds(out_dir):
     """
-    Scrapes CSV metrics files across all fold subdirectories and builds a 
-    consolidated 4-panel comparison grid plot (Loss on log scale and AUC from 0.5 to 1.02).
+    Generates an 8-subplot grid across all folds, plotting average Loss, AUC, AP, and F1 curves 
+    for both training and validation (where each line represents a single Fold).
     """
     out_dir = Path(out_dir)
-    
     fold_dirs = sorted(
         [d for d in out_dir.iterdir() if d.is_dir() and re.match(r'^fold_\d+$', d.name)],
         key=lambda x: int(re.search(r'\d+', x.name).group())
     )
-    
+
     if not fold_dirs:
-        print(f"[Warning] No fold directories found inside {out_dir}")
         return
 
-    # Initialize a 2x2 grid plot
-    fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-    ((ax_train_auc, ax_val_auc), (ax_train_loss, ax_val_loss)) = axes
+    fig, axes = plt.subplots(2, 4, figsize=(24, 10))
+    (ax_tr_loss, ax_val_loss, ax_tr_auc, ax_val_auc), (ax_tr_ap, ax_val_ap, ax_tr_f1, ax_val_f1) = axes
 
-    # --- AUC PLOTS (Fixed Y-axis [0.5, 1.02]) ---
-    ax_train_auc.set_title("Training AUC per Fold", fontsize=14, fontweight='bold', pad=10)
-    ax_train_auc.set_xlabel("Epochs")
-    ax_train_auc.set_ylabel("AUC")
-    ax_train_auc.set_ylim([0.5, 1.02])
+    ax_tr_loss.set_title("Training Loss per Fold"); ax_tr_loss.set_yscale('log')
+    ax_val_loss.set_title("Validation Loss per Fold"); ax_val_loss.set_yscale('log')
+    
+    ax_tr_auc.set_title("Training AUC per Fold"); ax_tr_auc.set_ylim([0.48, 1.02])
+    ax_val_auc.set_title("Validation AUC per Fold"); ax_val_auc.set_ylim([0.48, 1.02])
+    
+    ax_tr_ap.set_title("Training AP per Fold"); ax_tr_ap.set_ylim([-0.02, 1.02])
+    ax_val_ap.set_title("Validation AP per Fold"); ax_val_ap.set_ylim([-0.02, 1.02])
+    
+    ax_tr_f1.set_title("Training F1 per Fold"); ax_tr_f1.set_ylim([-0.02, 1.02])
+    ax_val_f1.set_title("Validation F1 per Fold"); ax_val_f1.set_ylim([-0.02, 1.02])
 
-    ax_val_auc.set_title("Validation AUC per Fold", fontsize=14, fontweight='bold', pad=10)
-    ax_val_auc.set_xlabel("Epochs")
-    ax_val_auc.set_ylabel("AUC")
-    ax_val_auc.set_ylim([0.5, 1.02])
-
-    # --- LOSS PLOTS (Logarithmic Scale) ---
-    ax_train_loss.set_title("Training Loss per Fold (Log Scale)", fontsize=14, fontweight='bold', pad=10)
-    ax_train_loss.set_xlabel("Epochs")
-    ax_train_loss.set_ylabel("Loss (Binary Crossentropy)")
-    ax_train_loss.set_yscale('log')
-
-    ax_val_loss.set_title("Validation Loss per Fold (Log Scale)", fontsize=14, fontweight='bold', pad=10)
-    ax_val_loss.set_xlabel("Epochs")
-    ax_val_loss.set_ylabel("Loss (Binary Crossentropy)")
-    ax_val_loss.set_yscale('log')
-
-    # Iterate through directories and overlay curves onto the grid
     for fold_dir in fold_dirs:
         fold_idx = re.search(r'\d+', fold_dir.name).group()
         csv_path = fold_dir / f"training_log_fold_{fold_idx}.csv"
-        
-        if not csv_path.exists():
-            print(f"[Skip] Log file missing at: {csv_path}")
-            continue
-            
+        if not csv_path.exists(): continue
+
         df = pd.read_csv(csv_path)
         epochs = df['epoch'] + 1 
-        fold_label = f"Fold {int(fold_idx) + 1}"
-        
-        auc_col = [col for col in df.columns if 'auc' in col.lower() and 'val' not in col.lower()]
-        val_auc_col = [col for col in df.columns if 'val_auc' in col.lower()]
-        
-        if auc_col:
-            ax_train_auc.plot(epochs, df[auc_col[0]], marker='o', markersize=4, linewidth=2, label=fold_label)
-        if val_auc_col:
-            ax_val_auc.plot(epochs, df[val_auc_col[0]], marker='o', markersize=4, linewidth=2, label=fold_label)
-        if 'loss' in df.columns:
-            ax_train_loss.plot(epochs, df['loss'], marker='o', markersize=4, linewidth=2, label=fold_label)
-        if 'val_loss' in df.columns:
-            ax_val_loss.plot(epochs, df['val_loss'], marker='o', markersize=4, linewidth=2, label=fold_label)
+        label = f"Fold {int(fold_idx) + 1}"
 
-    # Final layout design and grid rendering
+        if 'loss' in df: ax_tr_loss.plot(epochs, df['loss'], lw=2, label=label)
+        if 'val_loss' in df: ax_val_loss.plot(epochs, df['val_loss'], lw=2, label=label)
+        if 'auc' in df: ax_tr_auc.plot(epochs, df['auc'], lw=2, label=label)
+        if 'val_auc' in df: ax_val_auc.plot(epochs, df['val_auc'], lw=2, label=label)
+        if 'ap' in df: ax_tr_ap.plot(epochs, df['ap'], lw=2, label=label)
+        if 'val_ap' in df: ax_val_ap.plot(epochs, df['val_ap'], lw=2, label=label)
+        if 'f1' in df: ax_tr_f1.plot(epochs, df['f1'], lw=2, label=label)
+        if 'val_f1' in df: ax_val_f1.plot(epochs, df['val_f1'], lw=2, label=label)
+
     for ax in axes.flat:
-        ax.legend(loc='best', frameon=True, shadow=False)
-        ax.grid(True, which="both", linestyle='--', alpha=0.5)
-        ax.xaxis.get_major_locator().set_params(integer=True)
+        ax.set_xlabel("Epochs")
+        ax.legend(loc='best', frameon=True)
+        ax.grid(True, linestyle='--', alpha=0.5)
 
     plt.tight_layout()
     save_path = out_dir / "all_folds_performance_matrix.png"
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
-    
-    print(f"\n[Success] Consolidated multi-fold evaluation graph saved to: {save_path}")
+    print(f"[Success] 8-panel overall performance matrix saved to: {save_path}")
+
+
+def plot_overall_confusion_matrix(all_y_true, all_y_pred, tabula_cols, out_dir):
+    """
+    Generates a cumulative overall confusion matrix by combining predictions across all folds.
+    """
+    y_true_concat = np.concatenate(all_y_true, axis=0)
+    y_pred_concat = np.concatenate(all_y_pred, axis=0)
+
+    plot_feature_confusion_matrix(
+        y_true=y_true_concat,
+        y_pred=y_pred_concat,
+        tabula_cols=tabula_cols,
+        fold_no="OVERALL",
+        out_dir=out_dir
+    )
 
 def plot_multilabel_roc_and_pr_curves(y_true, y_pred, fold_no, out_dir, class_names=None):
     """
@@ -580,6 +598,7 @@ def plot_feature_confusion_matrix(y_true, y_pred, tabula_cols, fold_no, out_dir)
 
     if not tabula_cols:
         print(colored("[Skip] No tabular cols provided. Cannot plot confusion matrix.", "yellow"))
+        return
 
     # parse and group columns by prefix
     features = {}

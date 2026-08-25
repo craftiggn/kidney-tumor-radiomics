@@ -18,7 +18,7 @@ Tumours may be noninvasive, semi-invasive, or invasive. Noninvasive tumours are 
 ## Launching
 after geting the repo, kits23 and the raw annotation from google drive (.xlsx) ready run:
 1. `analyze_kits23_tumor_instances.py` - to genereate `tumor_instance_data.json`
-2. `apply_original_annotation.py` - self explanatory
+2. `apply_original_annotation.py` - self explanatory, optional
 3. `apply_tumor_size_limit.py` - remove tumors that are too large from the dataframe
 
 Now the .csv is shared with annotation specialists (medical professionals specialising in Urology)
@@ -56,6 +56,7 @@ To train a model on a given dataset:
 - [ ] add a parameter to the learning rate
 - [ ] add some "score" value that can grade the different models
 - [ ] add a timer to the `run_config.json`
+- [ ] investigate the scoring methods mentioned here: https://link.springer.com/article/10.1007/s40747-024-01751-2, maybe implement them in this project
 
 ### Helpfull tensorflow functions
 use one-hot encoding for input? - https://www.tensorflow.org/api_docs/python/tf/one_hot

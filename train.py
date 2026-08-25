@@ -13,6 +13,7 @@ import json
 import gc
 from datetime import datetime, timedelta
 import time
+from sklearn.metrics import f1_score, roc_auc_score, average_precision_score, log_loss
 
 # import custom modules
 from modules import plotting_functions as plf
@@ -45,10 +46,10 @@ def main():
     config_dict = vars(args).copy()
 
     out_dir = Path(args.out_dir)
-    config_path = out_dir / "run_config.json"
     timestamp = datetime.now().strftime(r"%Y-%m-%d_%H-%M") # to help keep trac of trainings
     out_dir = out_dir / timestamp
     out_dir.mkdir(parents=True, exist_ok=True)
+    config_path = out_dir / "run_config.json"
 
     print(colored(f"--- KiTS23 Processed Data Model Training ---", "blue", attrs=["bold"]))
     print(f"Dataset Directory: {args.data_dir}")
@@ -66,6 +67,10 @@ def main():
     target_shape = metadata["target_shape"]
     input_shape = (target_shape[0], target_shape[1], target_shape[2], 3)
     print(f"Loaded target shape from metadata {metadata_path}")
+
+    all_y_true, all_y_pred, fold_summaries = [], [], []
+    tabular_cols_ref = None
+    model_summary_str = ""
 
     print(f"Processing {args.n_folds} folds")
     for fold_no in range(args.n_folds):
@@ -106,7 +111,11 @@ def main():
 
         # print sumary and save run config
         if fold_no == 0:
-            model.summary()
+            summary_lines = []
+            model.summary(print_fn=lambda x: summary_lines.append(x))
+            model_summary_str = "\n".join(summary_lines)
+            print(model_summary_str)
+
             plf.plot_model_architecture(model, out_dir / "model_architecture.png")
 
             # Store complete run configuration with all metadata
@@ -131,7 +140,7 @@ def main():
         else:
             lr_scheduler = None
 
-        mod.train_model(
+        history, y_true, y_pred = mod.train_model(
             model=model, 
             train_generator=train_generator, 
             val_generator=val_generator, 
@@ -143,7 +152,44 @@ def main():
             lr_scheduler=lr_scheduler
         )
 
-        plf.plot_and_evaluate(fold_out_dir, fold_no)
+        all_y_true.append(y_true)
+        all_y_pred.append(y_pred)
+
+        if tabular_cols_ref is None:
+            tabular_cols_ref = val_generator.tabular_cols
+
+        # process fold numerical scores
+        y_pred_bin = (y_pred > 0.5).astype(int)
+        fold_f1 = f1_score(y_true, y_pred_bin, average='macro', zero_division=0)
+        fold_auc = roc_auc_score(y_true, y_pred, average='macro')
+        fold_ap = average_precision_score(y_true, y_pred, average='macro')
+        fold_loss = log_loss(y_true, y_pred)
+
+        fold_metrics = {
+            'fold': fold_no,
+            'f1': fold_f1,
+            'auc': fold_auc,
+            'ap': fold_ap,
+            'loss': fold_loss
+        }
+        fold_summaries.append(fold_metrics)
+
+        # Per fold performance summary
+        fold_txt_path = fold_out_dir / f"metrics_summary_fold{fold_no}.txt"
+        with open(fold_txt_path, 'w') as f:
+            f.write(f"--- FOLD {fold_no} EVALUATION SUMMARY ---\n")
+            f.write(f"Macro F1 Score  : {fold_f1:.4f}\n")
+            f.write(f"Macro ROC AUC   : {fold_auc:.4f}\n")
+            f.write(f"Macro AP        : {fold_ap:.4f}\n")
+            f.write(f"Validation Loss : {fold_loss:.4f}\n\n")
+
+            f.write("--- PER-LABEL EVALUATION ---\n")
+            for i, col in enumerate(val_generator.tabular_cols):
+                lbl_f1 = f1_score(y_true[:, i], y_pred_bin[:, i], zero_division=0)
+                lbl_ap = average_precision_score(y_true[:, i], y_pred[:, i])
+                f.write(f"{col:20s} | F1: {lbl_f1:.4f} | AP: {lbl_ap:.4f}\n")
+
+        plf.plot_and_evaluate(fold_out_dir, fold_no, val_generator.tabular_cols)
 
         # HPC safety precautions
         del model
@@ -152,7 +198,36 @@ def main():
         keras.backend.clear_session()
         gc.collect()
 
+    # --- MODEL EVALUATION ACROSS ALL FOLDS ---
     plf.plot_and_evaluate_all_folds(out_dir)
+    plf.plot_overall_confusion_matrix(all_y_true, all_y_pred, tabular_cols_ref, out_dir)
+
+    f1s = [m['f1'] for m in fold_summaries]
+    aucs = [m['auc'] for m in fold_summaries]
+    aps = [m['ap'] for m in fold_summaries]
+    losses = [m['loss'] for m in fold_summaries]
+
+    best_fold_idx = int(np.argmax(f1s))
+    worst_fold_idx = int(np.argmin(f1s))
+
+    overall_txt_path = out_dir / "model_evaluation_summary.txt"
+    with open(overall_txt_path, 'w') as f:
+        f.write(f"--- MODEL SUMMARY ---\n")
+        f.write(f"Mean F1 Score       : {np.mean(f1s):.4f} +/- {np.std(f1s):.4f}\n")
+        f.write(f"Mean ROC AUC        : {np.mean(aucs):.4f} +/- {np.std(aucs):.4f}\n")
+        f.write(f"Mean AP             : {np.mean(aps):.4f} +/- {np.std(aps):.4f}\n\n")
+        f.write(f"Best Fold F1 Score  : {f1s[best_fold_idx]:.4f} (Fold {best_fold_idx})\n")
+        f.write(f"Worst Fold F1 Score : {f1s[worst_fold_idx]:.4f} (Fold {worst_fold_idx})\n")
+
+        f.write(f"--- PER-FOLD SUMMARY ---\n")
+        for m in fold_summaries:
+            f.write(f"Fold {m['fold']} | F1 {m['f1']:.4f} | AUC: {m['auc']:.4f} | AP: {m['ap']:.4f}\n\n")
+
+        f.write("--- MODEL ARCHITECTURE ---\n")
+        f.write(model_summary_str)
+
+    print(colored(f"Model evaluation report saved to {overall_txt_path}", "green"))
+
 
     # add the run length information to the run_config.json
     total_seconds = int(time.time() - start_time)
