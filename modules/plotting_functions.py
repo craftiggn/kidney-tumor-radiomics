@@ -427,8 +427,10 @@ def plot_and_evaluate(fold_out_dir, fold_no, class_names):
     df = pd.read_csv(csv_path)
     epochs = df['epoch'] + 1
 
-    fig, axes = plt.subplots(2, 4, figsize=(24, 10))
-    (ax_tr_loss, ax_val_loss, ax_tr_auc, ax_val_auc), (ax_tr_ap, ax_val_ap, ax_tr_f1, ax_val_f1) = axes
+    fig, axes = plt.subplots(4, 2, figsize=(12, 20)) 
+
+    # Unpack row by row: Loss, AUC, AP, F1
+    (ax_tr_loss, ax_val_loss), (ax_tr_auc, ax_val_auc), (ax_tr_ap, ax_val_ap), (ax_tr_f1, ax_val_f1) = axes
 
     # Setup Titles and Scales
     ax_tr_loss.set_title(f"Train Loss (Fold {fold_no})"); ax_tr_loss.set_yscale('log')

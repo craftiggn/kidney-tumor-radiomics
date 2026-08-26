@@ -41,20 +41,27 @@ def get_instance_numpy(filepath, verbose=False):
         print(f"The data is converted into an numpy array of shape {image_data.shape}")
     return image_data
 
-def calculate_max_diameter(mask, zooms, mask_value=2):
+def calculate_max_diameter(mask, zooms, mask_value):
+    """Caslculates the maximum 3D diameter of a segmentation mask in millimeters.
+    
+    Args:
+        mask: segmentation mask.
+        zooms: the pixel-to-milimeter conversion in X, Y, Z.
+        mask_values: the values on the mask representing the target.
+
+    Returns:
+        float: the maximal diameter, in millimeters, rounded to 2 decimal places.
     """
-    Caslculates the maximum 3D diameter of a segmentation mask (val = mask_value) in millimeters.
-    """
-    # Find all coordinates where val = 2
+    # find all coordinates where val = mask_value
     coords = np.argwhere(mask==mask_value)
 
     if len(coords) == 0: 
         return 0.0
     
-    # convert the coordinates to physical millimeters
+    # convert the coordinates to millimeters
     coords_mm = coords * np.array(zooms)
 
-    # check for flat dimensions (e.g. tumor exists on a single z-slice)
+    # check for flat dimensions
     valid_dims = [i for i in range(3) if len(np.unique(coords[:, i])) > 1]
 
     if len(valid_dims) == 0:
@@ -62,20 +69,20 @@ def calculate_max_diameter(mask, zooms, mask_value=2):
 
     try:
         if len(valid_dims) < 3:
-            # 2D Convex hull prevents QHullError if points are prefectly flat
+            # 2D case
             hull = ConvexHull(coords_mm[:, valid_dims])
         else:
-            # 3D Convex hull
+            # 3D case
             hull = ConvexHull(coords_mm)
 
-        # Get only the outermost vertices to save CPU time
+        # get the surface points
         hull_points = coords_mm[hull.vertices]
 
-        # Calculate max distance between hull vertices
+        # calculate max distance between surface points
         max_diameter = np.max(pdist(hull_points))
     except Exception as e:
-        # Fallback: if Qhull fails for any reason
-        # Subsample to 2000 points to prevent OOM errors with pdist
+        # if Qhull fails
+        # calculate max distance between <=2000 points
 
         if len(coords_mm) > 2000:
             idx = np.random.choice(len(coords_mm), 2000, replace=False)
