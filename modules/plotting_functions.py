@@ -481,8 +481,8 @@ def plot_and_evaluate_all_folds(out_dir):
     if not fold_dirs:
         return
 
-    fig, axes = plt.subplots(2, 4, figsize=(24, 10))
-    (ax_tr_loss, ax_val_loss, ax_tr_auc, ax_val_auc), (ax_tr_ap, ax_val_ap, ax_tr_f1, ax_val_f1) = axes
+    fig, axes = plt.subplots(4, 2, figsize=(12, 20))
+    (ax_tr_loss, ax_val_loss), (ax_tr_auc,  ax_val_auc), (ax_tr_ap,   ax_val_ap), (ax_tr_f1,   ax_val_f1) = axes
 
     ax_tr_loss.set_title("Training Loss per Fold"); ax_tr_loss.set_yscale('log')
     ax_val_loss.set_title("Validation Loss per Fold"); ax_val_loss.set_yscale('log')
