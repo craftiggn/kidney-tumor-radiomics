@@ -503,7 +503,7 @@ def plot_and_evaluate_all_folds(out_dir):
 
         df = pd.read_csv(csv_path)
         epochs = df['epoch'] + 1 
-        label = f"Fold {int(fold_idx) + 1}"
+        label = f"Fold {int(fold_idx)}"
 
         if 'loss' in df: ax_tr_loss.plot(epochs, df['loss'], lw=2, label=label)
         if 'val_loss' in df: ax_val_loss.plot(epochs, df['val_loss'], lw=2, label=label)
