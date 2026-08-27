@@ -1,0 +1,404 @@
+Job started on rysy-n3.icm.edu.pl at Thu 27 Aug 10:37:26 CEST 2026
+INFO:    underlay of /etc/localtime required more than 50 (100) bind mounts
+INFO:    underlay of /usr/bin/nvidia-smi required more than 50 (538) bind mounts
+Requirement already satisfied: numpy in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 1)) (1.26.4)
+Requirement already satisfied: pandas in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 2)) (1.5.3)
+Requirement already satisfied: matplotlib in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 3)) (3.10.0)
+Requirement already satisfied: seaborn in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 4)) (0.13.2)
+Requirement already satisfied: scipy in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 5)) (1.15.2)
+Requirement already satisfied: scikit-learn in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 6)) (1.6.1)
+Requirement already satisfied: tensorflow in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 7)) (2.16.2)
+Requirement already satisfied: keras in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 8)) (3.6.0)
+Requirement already satisfied: nibabel in ./env_libs/lib/python3.11/site-packages (from -r requirements.txt (line 9)) (5.4.2)
+Requirement already satisfied: tqdm in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 10)) (4.67.1)
+Requirement already satisfied: termcolor in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 11)) (2.5.0)
+Requirement already satisfied: visualkeras in ./env_libs/lib/python3.11/site-packages (from -r requirements.txt (line 12)) (0.2.0)
+Requirement already satisfied: pillow in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 13)) (11.1.0)
+Requirement already satisfied: pydot in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 14)) (1.4.2)
+Requirement already satisfied: python-dateutil>=2.8.1 in /usr/local/lib/python3.11/dist-packages (from pandas->-r requirements.txt (line 2)) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.11/dist-packages (from pandas->-r requirements.txt (line 2)) (2025.1)
+Requirement already satisfied: contourpy>=1.0.1 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (1.3.1)
+Requirement already satisfied: cycler>=0.10 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (0.12.1)
+Requirement already satisfied: fonttools>=4.22.0 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (4.56.0)
+Requirement already satisfied: kiwisolver>=1.3.1 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (1.4.8)
+Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (24.1)
+Requirement already satisfied: pyparsing>=2.3.1 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (3.2.1)
+Requirement already satisfied: joblib>=1.2.0 in /usr/local/lib/python3.11/dist-packages (from scikit-learn->-r requirements.txt (line 6)) (1.4.2)
+Requirement already satisfied: threadpoolctl>=3.1.0 in /usr/local/lib/python3.11/dist-packages (from scikit-learn->-r requirements.txt (line 6)) (3.5.0)
+Requirement already satisfied: absl-py>=1.0.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.4.0)
+Requirement already satisfied: astunparse>=1.6.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.6.3)
+Requirement already satisfied: flatbuffers>=23.5.26 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (24.3.25)
+Requirement already satisfied: gast!=0.5.0,!=0.5.1,!=0.5.2,>=0.2.1 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (0.6.0)
+Requirement already satisfied: google-pasta>=0.1.1 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (0.2.0)
+Requirement already satisfied: h5py>=3.10.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (3.12.1)
+Requirement already satisfied: libclang>=13.0.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (18.1.1)
+Requirement already satisfied: ml-dtypes~=0.3.1 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (0.3.2)
+Requirement already satisfied: opt-einsum>=2.3.2 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (3.4.0)
+Requirement already satisfied: protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (4.25.6)
+Requirement already satisfied: requests<3,>=2.21.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (2.32.3)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (75.2.0)
+Requirement already satisfied: six>=1.12.0 in /usr/lib/python3/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.16.0)
+Requirement already satisfied: typing-extensions>=3.6.6 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (4.12.2)
+Requirement already satisfied: wrapt>=1.11.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.16.0)
+Requirement already satisfied: grpcio<2.0,>=1.24.3 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.65.5)
+Requirement already satisfied: tensorboard<2.17,>=2.16 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (2.16.2)
+Requirement already satisfied: tensorflow-io-gcs-filesystem>=0.23.1 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (0.37.1)
+Requirement already satisfied: rich in /usr/local/lib/python3.11/dist-packages (from keras->-r requirements.txt (line 8)) (13.9.3)
+Requirement already satisfied: namex in /usr/local/lib/python3.11/dist-packages (from keras->-r requirements.txt (line 8)) (0.0.8)
+Requirement already satisfied: optree in /usr/local/lib/python3.11/dist-packages (from keras->-r requirements.txt (line 8)) (0.13.0)
+Requirement already satisfied: importlib-resources>=5.12 in /usr/local/lib/python3.11/dist-packages (from nibabel->-r requirements.txt (line 9)) (6.5.2)
+Requirement already satisfied: aggdraw>=1.3.11 in ./env_libs/lib/python3.11/site-packages (from visualkeras->-r requirements.txt (line 12)) (1.4.1)
+Requirement already satisfied: wheel<1.0,>=0.23.0 in /usr/local/lib/python3.11/dist-packages (from astunparse>=1.6.0->tensorflow->-r requirements.txt (line 7)) (0.44.0)
+Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 7)) (3.4.0)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 7)) (3.10)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 7)) (2.2.3)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 7)) (2024.8.30)
+Requirement already satisfied: markdown>=2.6.8 in /usr/local/lib/python3.11/dist-packages (from tensorboard<2.17,>=2.16->tensorflow->-r requirements.txt (line 7)) (3.7)
+Requirement already satisfied: tensorboard-data-server<0.8.0,>=0.7.0 in /usr/local/lib/python3.11/dist-packages (from tensorboard<2.17,>=2.16->tensorflow->-r requirements.txt (line 7)) (0.7.2)
+Requirement already satisfied: werkzeug>=1.0.1 in /usr/local/lib/python3.11/dist-packages (from tensorboard<2.17,>=2.16->tensorflow->-r requirements.txt (line 7)) (3.0.5)
+Requirement already satisfied: markdown-it-py>=2.2.0 in /usr/local/lib/python3.11/dist-packages (from rich->keras->-r requirements.txt (line 8)) (3.0.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /usr/local/lib/python3.11/dist-packages (from rich->keras->-r requirements.txt (line 8)) (2.18.0)
+Requirement already satisfied: mdurl~=0.1 in /usr/local/lib/python3.11/dist-packages (from markdown-it-py>=2.2.0->rich->keras->-r requirements.txt (line 8)) (0.1.2)
+Requirement already satisfied: MarkupSafe>=2.1.1 in /usr/local/lib/python3.11/dist-packages (from werkzeug>=1.0.1->tensorboard<2.17,>=2.16->tensorflow->-r requirements.txt (line 7)) (3.0.2)
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+INFO:    underlay of /etc/localtime required more than 50 (100) bind mounts
+INFO:    underlay of /usr/bin/nvidia-smi required more than 50 (538) bind mounts
+--- KiTS23 Processed Data Model Training ---
+Dataset Directory: /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Batch Size: 4 | Epochs: 200 | Total Folds: 3
+Loaded target shape from metadata /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney/dataset_metadata.json
+Processing 3 folds
+
+========================================
+	Processing fold 0
+========================================
+
+Loaded paths for Fold 0 from /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Building model using architecture: anisotropic_reg_1
+Model: "RPN_classification_model_anisotropic_regularized_1"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ conv3d (Conv3D)                 │ (None, 36, 60, 60, 32) │           896 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization             │ (None, 36, 60, 60, 32) │           128 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ spatial_dropout3d               │ (None, 36, 60, 60, 32) │             0 │
+│ (SpatialDropout3D)              │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d (MaxPooling3D)    │ (None, 36, 30, 30, 32) │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_1 (Conv3D)               │ (None, 36, 30, 30, 64) │        55,296 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_1           │ (None, 36, 30, 30, 64) │           256 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ activation (Activation)         │ (None, 36, 30, 30, 64) │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_2 (Conv3D)               │ (None, 36, 30, 30, 64) │       110,656 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_2           │ (None, 36, 30, 30, 64) │           256 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ spatial_dropout3d_1             │ (None, 36, 30, 30, 64) │             0 │
+│ (SpatialDropout3D)              │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d_1 (MaxPooling3D)  │ (None, 18, 15, 15, 64) │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_3 (Conv3D)               │ (None, 18, 15, 15,     │       221,312 │
+│                                 │ 128)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_3           │ (None, 18, 15, 15,     │           512 │
+│ (BatchNormalization)            │ 128)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ spatial_dropout3d_2             │ (None, 18, 15, 15,     │             0 │
+│ (SpatialDropout3D)              │ 128)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d_2 (MaxPooling3D)  │ (None, 9, 7, 7, 128)   │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ global_average_pooling3d        │ (None, 128)            │             0 │
+│ (GlobalAveragePooling3D)        │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense (Dense)                   │ (None, 256)            │        33,024 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout (Dropout)               │ (None, 256)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_1 (Dense)                 │ (None, 6)              │         1,542 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 423,878 (1.62 MB)
+ Trainable params: 423,302 (1.61 MB)
+ Non-trainable params: 576 (2.25 KB)
+
+Saving model architecture visual diagram to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/model_architecture.png...
+Saved run configuration to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/run_config.json
+Starting training for fold 0
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1787819907.915643   35773 service.cc:145] XLA service 0x2b38e80172f0 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1787819907.915848   35773 service.cc:153]   StreamExecutor device (0): Tesla V100-PCIE-32GB, Compute Capability 7.0
+I0000 00:00:1787819946.186270   35773 device_compiler.h:188] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+
+Epoch 53: ReduceLROnPlateau reducing learning rate to 7.999999797903001e-05.
+
+Epoch 72: ReduceLROnPlateau reducing learning rate to 6.399999838322402e-05.
+
+Epoch 82: ReduceLROnPlateau reducing learning rate to 5.119999987073243e-05.
+
+Epoch 102: ReduceLROnPlateau reducing learning rate to 4.0960000478662555e-05.
+
+Epoch 114: ReduceLROnPlateau reducing learning rate to 3.2767999800853435e-05.
+
+Epoch 124: ReduceLROnPlateau reducing learning rate to 2.6214399258606137e-05.
+
+Epoch 134: ReduceLROnPlateau reducing learning rate to 2.09715188248083e-05.
+
+Epoch 144: ReduceLROnPlateau reducing learning rate to 1.6777214477770033e-05.
+
+Epoch 154: ReduceLROnPlateau reducing learning rate to 1.3421771291177721e-05.
+
+Epoch 164: ReduceLROnPlateau reducing learning rate to 1.0737417323980481e-05.
+Epoch 168: early stopping
+Restoring model weights from the end of the best epoch: 104.
+/usr/local/lib/python3.11/dist-packages/sklearn/metrics/_classification.py:3001: UserWarning: The y_pred values do not sum to one. Make sure to pass probabilities.
+  warnings.warn(
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/fold_0/roc_pr_curves_fold_0.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/fold_0/confusion_matrix_fold_0.png
+[Success] 8-panel fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/fold_0/training_curves_fold_0.png
+
+========================================
+	Processing fold 1
+========================================
+
+Loaded paths for Fold 1 from /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Building model using architecture: anisotropic_reg_1
+Starting training for fold 1
+
+Epoch 81: ReduceLROnPlateau reducing learning rate to 7.999999797903001e-05.
+
+Epoch 95: ReduceLROnPlateau reducing learning rate to 6.399999838322402e-05.
+
+Epoch 107: ReduceLROnPlateau reducing learning rate to 5.119999987073243e-05.
+
+Epoch 119: ReduceLROnPlateau reducing learning rate to 4.0960000478662555e-05.
+
+Epoch 157: ReduceLROnPlateau reducing learning rate to 3.2767999800853435e-05.
+
+Epoch 167: ReduceLROnPlateau reducing learning rate to 2.6214399258606137e-05.
+
+Epoch 187: ReduceLROnPlateau reducing learning rate to 2.09715188248083e-05.
+
+Epoch 197: ReduceLROnPlateau reducing learning rate to 1.6777214477770033e-05.
+Restoring model weights from the end of the best epoch: 177.
+/usr/local/lib/python3.11/dist-packages/sklearn/metrics/_classification.py:3001: UserWarning: The y_pred values do not sum to one. Make sure to pass probabilities.
+  warnings.warn(
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/fold_1/roc_pr_curves_fold_1.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/fold_1/confusion_matrix_fold_1.png
+[Success] 8-panel fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/fold_1/training_curves_fold_1.png
+
+========================================
+	Processing fold 2
+========================================
+
+Loaded paths for Fold 2 from /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Building model using architecture: anisotropic_reg_1
+Starting training for fold 2
+
+Epoch 81: ReduceLROnPlateau reducing learning rate to 7.999999797903001e-05.
+
+Epoch 112: ReduceLROnPlateau reducing learning rate to 6.399999838322402e-05.
+
+Epoch 122: ReduceLROnPlateau reducing learning rate to 5.119999987073243e-05.
+
+Epoch 134: ReduceLROnPlateau reducing learning rate to 4.0960000478662555e-05.
+
+Epoch 163: ReduceLROnPlateau reducing learning rate to 3.2767999800853435e-05.
+
+Epoch 175: ReduceLROnPlateau reducing learning rate to 2.6214399258606137e-05.
+
+Epoch 185: ReduceLROnPlateau reducing learning rate to 2.09715188248083e-05.
+
+Epoch 195: ReduceLROnPlateau reducing learning rate to 1.6777214477770033e-05.
+Restoring model weights from the end of the best epoch: 165.
+/usr/local/lib/python3.11/dist-packages/sklearn/metrics/_classification.py:3001: UserWarning: The y_pred values do not sum to one. Make sure to pass probabilities.
+  warnings.warn(
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/fold_2/roc_pr_curves_fold_2.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/fold_2/confusion_matrix_fold_2.png
+[Success] 8-panel fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/fold_2/training_curves_fold_2.png
+[Success] 8-panel overall performance matrix saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/all_folds_performance_matrix.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/confusion_matrix_fold_OVERALL.png
+Model evaluation report saved to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_10-38/model_evaluation_summary.txt
+Training time completed in 3:27:43 (12463s)
+INFO:    underlay of /etc/localtime required more than 50 (100) bind mounts
+INFO:    underlay of /usr/bin/nvidia-smi required more than 50 (538) bind mounts
+--- KiTS23 Processed Data Model Training ---
+Dataset Directory: /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Batch Size: 4 | Epochs: 200 | Total Folds: 3
+Loaded target shape from metadata /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney/dataset_metadata.json
+Processing 3 folds
+
+========================================
+	Processing fold 0
+========================================
+
+Loaded paths for Fold 0 from /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Building model using architecture: anisotropic_reg_2
+Model: "RPN_classification_model_anisotropic_regularized_2"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ conv3d (Conv3D)                 │ (None, 36, 60, 60, 32) │           896 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization             │ (None, 36, 60, 60, 32) │           128 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d (MaxPooling3D)    │ (None, 36, 30, 30, 32) │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_1 (Conv3D)               │ (None, 36, 30, 30, 64) │        55,360 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_1           │ (None, 36, 30, 30, 64) │           256 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ spatial_dropout3d               │ (None, 36, 30, 30, 64) │             0 │
+│ (SpatialDropout3D)              │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d_1 (MaxPooling3D)  │ (None, 18, 15, 15, 64) │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_2 (Conv3D)               │ (None, 18, 15, 15,     │       221,312 │
+│                                 │ 128)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_2           │ (None, 18, 15, 15,     │           512 │
+│ (BatchNormalization)            │ 128)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ spatial_dropout3d_1             │ (None, 18, 15, 15,     │             0 │
+│ (SpatialDropout3D)              │ 128)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d_2 (MaxPooling3D)  │ (None, 9, 7, 7, 128)   │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_3 (Conv3D)               │ (None, 9, 7, 7, 256)   │       884,992 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_3           │ (None, 9, 7, 7, 256)   │         1,024 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ spatial_dropout3d_2             │ (None, 9, 7, 7, 256)   │             0 │
+│ (SpatialDropout3D)              │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d_3 (MaxPooling3D)  │ (None, 4, 3, 3, 256)   │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ global_average_pooling3d        │ (None, 256)            │             0 │
+│ (GlobalAveragePooling3D)        │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense (Dense)                   │ (None, 256)            │        65,792 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout (Dropout)               │ (None, 256)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_1 (Dense)                 │ (None, 128)            │        32,896 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_1 (Dropout)             │ (None, 128)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_2 (Dense)                 │ (None, 64)             │         8,256 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_2 (Dropout)             │ (None, 64)             │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_3 (Dense)                 │ (None, 32)             │         2,080 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_4 (Dense)                 │ (None, 6)              │           198 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 1,273,702 (4.86 MB)
+ Trainable params: 1,272,742 (4.86 MB)
+ Non-trainable params: 960 (3.75 KB)
+
+Saving model architecture visual diagram to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/model_architecture.png...
+Saved run configuration to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/run_config.json
+Starting training for fold 0
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1787832394.785831  138676 service.cc:145] XLA service 0x2b8b8801ae00 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1787832394.786036  138676 service.cc:153]   StreamExecutor device (0): Tesla V100-PCIE-32GB, Compute Capability 7.0
+I0000 00:00:1787832426.931345  138676 device_compiler.h:188] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+
+Epoch 64: ReduceLROnPlateau reducing learning rate to 7.999999797903001e-05.
+
+Epoch 81: ReduceLROnPlateau reducing learning rate to 6.399999838322402e-05.
+
+Epoch 91: ReduceLROnPlateau reducing learning rate to 5.119999987073243e-05.
+
+Epoch 101: ReduceLROnPlateau reducing learning rate to 4.0960000478662555e-05.
+
+Epoch 114: ReduceLROnPlateau reducing learning rate to 3.2767999800853435e-05.
+
+Epoch 124: ReduceLROnPlateau reducing learning rate to 2.6214399258606137e-05.
+
+Epoch 134: ReduceLROnPlateau reducing learning rate to 2.09715188248083e-05.
+
+Epoch 144: ReduceLROnPlateau reducing learning rate to 1.6777214477770033e-05.
+
+Epoch 154: ReduceLROnPlateau reducing learning rate to 1.3421771291177721e-05.
+
+Epoch 164: ReduceLROnPlateau reducing learning rate to 1.0737417323980481e-05.
+Epoch 168: early stopping
+Restoring model weights from the end of the best epoch: 104.
+/usr/local/lib/python3.11/dist-packages/sklearn/metrics/_classification.py:3001: UserWarning: The y_pred values do not sum to one. Make sure to pass probabilities.
+  warnings.warn(
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/fold_0/roc_pr_curves_fold_0.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/fold_0/confusion_matrix_fold_0.png
+[Success] 8-panel fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/fold_0/training_curves_fold_0.png
+
+========================================
+	Processing fold 1
+========================================
+
+Loaded paths for Fold 1 from /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Building model using architecture: anisotropic_reg_2
+Starting training for fold 1
+
+Epoch 53: ReduceLROnPlateau reducing learning rate to 7.999999797903001e-05.
+
+Epoch 150: ReduceLROnPlateau reducing learning rate to 6.399999838322402e-05.
+
+Epoch 179: ReduceLROnPlateau reducing learning rate to 5.119999987073243e-05.
+
+Epoch 200: ReduceLROnPlateau reducing learning rate to 4.0960000478662555e-05.
+Restoring model weights from the end of the best epoch: 190.
+/usr/local/lib/python3.11/dist-packages/sklearn/metrics/_classification.py:3001: UserWarning: The y_pred values do not sum to one. Make sure to pass probabilities.
+  warnings.warn(
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/fold_1/roc_pr_curves_fold_1.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/fold_1/confusion_matrix_fold_1.png
+[Success] 8-panel fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/fold_1/training_curves_fold_1.png
+
+========================================
+	Processing fold 2
+========================================
+
+Loaded paths for Fold 2 from /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Building model using architecture: anisotropic_reg_2
+Starting training for fold 2
+
+Epoch 99: ReduceLROnPlateau reducing learning rate to 7.999999797903001e-05.
+
+Epoch 109: ReduceLROnPlateau reducing learning rate to 6.399999838322402e-05.
+
+Epoch 135: ReduceLROnPlateau reducing learning rate to 5.119999987073243e-05.
+
+Epoch 150: ReduceLROnPlateau reducing learning rate to 4.0960000478662555e-05.
+
+Epoch 160: ReduceLROnPlateau reducing learning rate to 3.2767999800853435e-05.
+
+Epoch 170: ReduceLROnPlateau reducing learning rate to 2.6214399258606137e-05.
+
+Epoch 180: ReduceLROnPlateau reducing learning rate to 2.09715188248083e-05.
+
+Epoch 190: ReduceLROnPlateau reducing learning rate to 1.6777214477770033e-05.
+
+Epoch 200: ReduceLROnPlateau reducing learning rate to 1.3421771291177721e-05.
+Restoring model weights from the end of the best epoch: 140.
+/usr/local/lib/python3.11/dist-packages/sklearn/metrics/_classification.py:3001: UserWarning: The y_pred values do not sum to one. Make sure to pass probabilities.
+  warnings.warn(
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/fold_2/roc_pr_curves_fold_2.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/fold_2/confusion_matrix_fold_2.png
+[Success] 8-panel fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/fold_2/training_curves_fold_2.png
+[Success] 8-panel overall performance matrix saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/all_folds_performance_matrix.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/confusion_matrix_fold_OVERALL.png
+Model evaluation report saved to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-08-27_14-06/model_evaluation_summary.txt
+Training time completed in 3:25:18 (12318s)
+Job finished at Thu 27 Aug 17:31:47 CEST 2026
