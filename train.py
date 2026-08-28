@@ -221,7 +221,7 @@ def main():
 
         f.write(f"--- PER-FOLD SUMMARY ---\n")
         for m in fold_summaries:
-            f.write(f"Fold {m['fold']} | F1 {m['f1']:.4f} | AUC: {m['auc']:.4f} | AP: {m['ap']:.4f}\n\n")
+            f.write(f"Fold {m['fold']} | F1 {m['f1']:.4f} | AUC: {m['auc']:.4f} | AP: {m['ap']:.4f}\n")
 
         f.write("--- MODEL ARCHITECTURE ---\n")
         f.write(model_summary_str)
