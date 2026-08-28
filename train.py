@@ -27,7 +27,7 @@ from modules import model_functions as mod
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Train 3D CNN on KiTS23 Preprocessed Dataset")
     parser.add_argument('--data_dir', type=str, required=True, help="Path to the compiled training dataset directory")
-    parser.add_argument('--out_dir', type=str, default="./training_outputs", help="Directory to saved models and figures")
+    parser.add_argument('--out_dir', type=str, default="./training_outputs", help="Directory to save models and figures")
     parser.add_argument('--epochs', type=int, default=50)
     parser.add_argument('--batch_size', type=int, default=4)
     parser.add_argument('--learning_rate', '--lr', type=float, default=1e-4, help="Learning rate for model optimizer")
@@ -35,7 +35,7 @@ def parse_arguments():
     parser.add_argument('--save_model', action='store_true', help="Flag to save the best model")
     parser.add_argument('--workers', type=int, default=4, help="Number of CPU workers for data generation")
     parser.add_argument('--architecture', type=str, default='anisotropic_0' ,help="Model architecture key as seen in MODEL_DICT")
-    parser.add_argument('--use_lr_scheduler', action='store_true', help="Enable ReduceLROnPlateau callback")
+    parser.add_argument('--use_lr_scheduler_plateau', action='store_true', help="Enable ReduceLROnPlateau callback")
 
     return parser.parse_args()
 
@@ -129,7 +129,7 @@ def main():
             print(colored(f"Saved run configuration to {config_path}", "green"))
 
         # Instantiate LR Scheduler if flagged in arguments
-        if args.use_lr_scheduler:
+        if args.use_lr_scheduler_plateau:
             lr_scheduler = keras.callbacks.ReduceLROnPlateau(
                 monitor='val_loss',
                 factor=0.8,
