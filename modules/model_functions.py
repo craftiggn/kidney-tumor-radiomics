@@ -151,11 +151,195 @@ def model_anisotropic_reg_2(input_shape):
         keras.layers.Dense(6, activation='sigmoid')
     ], name='RPN_classification_model_anisotropic_regularized_2') 
 
+def model_anisotropic_reg_2_1(input_shape):
+    """3D CNN anisotropic model, double kernel"""
+    reg = keras.regularizers.L2(1e-4)
+
+    return keras.Sequential([
+        keras.layers.Input(shape=input_shape),
+
+        keras.layers.Conv3D(32, kernel_size=(1, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.MaxPooling3D(pool_size=(1, 2, 2)),
+
+        keras.layers.Conv3D(64, kernel_size=(3, 3, 3), use_bias=False, padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.Activation('relu'),
+        keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(256, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.GlobalAveragePooling3D(),
+
+        keras.layers.Dense(256, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.3),
+
+        keras.layers.Dense(128, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(64, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.1),
+
+        keras.layers.Dense(32, activation='relu', kernel_regularizer=reg),
+
+        keras.layers.Dense(6, activation='sigmoid')
+    ], name='RPN_classification_model_anisotropic_regularized_2_1') 
+
+def model_anisotropic_reg_2_2(input_shape):
+    """3D CNN anisotropic model, wider and deeper dense layers"""
+    reg = keras.regularizers.L2(1e-4)
+
+    return keras.Sequential([
+        keras.layers.Input(shape=input_shape),
+
+        keras.layers.Conv3D(32, kernel_size=(1, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.MaxPooling3D(pool_size=(1, 2, 2)),
+
+        keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(256, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.GlobalAveragePooling3D(),
+
+        keras.layers.Dense(512, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(512, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(256, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(128, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(32, activation='relu', kernel_regularizer=reg),
+
+        keras.layers.Dense(6, activation='sigmoid')
+    ], name='RPN_classification_model_anisotropic_regularized_2_2') 
+
+def model_anisotropic_reg_2_3(input_shape):
+    """3D CNN anisotropic model, fewer Dense layers and more filters"""
+    reg = keras.regularizers.L2(1e-4)
+
+    return keras.Sequential([
+        keras.layers.Input(shape=input_shape),
+
+        keras.layers.Conv3D(32, kernel_size=(1, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.MaxPooling3D(pool_size=(1, 2, 2)),
+
+        keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(256, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(512, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.GlobalAveragePooling3D(),
+
+        keras.layers.Dense(128, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(64, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.1),
+
+        keras.layers.Dense(32, activation='relu', kernel_regularizer=reg),
+
+        keras.layers.Dense(6, activation='sigmoid')
+    ], name='RPN_classification_model_anisotropic_regularized_2_3') 
+
+def model_anisotropic_reg_3(input_shape):
+    """3D CNN with Dual Pooling, Swish, and Learned Downsampling"""
+    reg = keras.regularizers.L2(1e-4)
+    inputs = keras.layers.Input(shape=input_shape)
+
+    # --- BLOCK 1: Anisotropic ---
+    x = keras.layers.Conv3D(32, kernel_size=(1, 3, 3), activation='swish', padding='same', kernel_regularizer=reg)(inputs)
+    x = keras.layers.BatchNormalization()(x)
+    # Learned downsampling (strides instead of pool)
+    x = keras.layers.Conv3D(32, kernel_size=(1, 3, 3), strides=(1, 2, 2), activation='swish', padding='same')(x)
+
+    # --- BLOCK 2: Isotropic ---
+    x = keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='swish', padding='same', kernel_regularizer=reg)(x)
+    x = keras.layers.BatchNormalization()(x)
+    x = keras.layers.SpatialDropout3D(0.2)(x)
+    x = keras.layers.Conv3D(64, kernel_size=(3, 3, 3), strides=(2, 2, 2), activation='swish', padding='same')(x)
+
+    # --- BLOCK 3 ---
+    x = keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='swish', padding='same', kernel_regularizer=reg)(x)
+    x = keras.layers.BatchNormalization()(x)
+    x = keras.layers.SpatialDropout3D(0.3)(x)
+    x = keras.layers.Conv3D(128, kernel_size=(3, 3, 3), strides=(2, 2, 2), activation='swish', padding='same')(x)
+
+    # --- BLOCK 4 ---
+    x = keras.layers.Conv3D(256, kernel_size=(3, 3, 3), activation='swish', padding='same', kernel_regularizer=reg)(x)
+    x = keras.layers.BatchNormalization()(x)
+    x = keras.layers.SpatialDropout3D(0.3)(x)
+    x = keras.layers.Conv3D(256, kernel_size=(3, 3, 3), strides=(2, 2, 2), activation='swish', padding='same')(x)
+
+    # --- DUAL POOLING HEAD ---
+    avg_pool = keras.layers.GlobalAveragePooling3D()(x)
+    max_pool = keras.layers.GlobalMaxPooling3D()(x)
+    x = keras.layers.Concatenate()([avg_pool, max_pool]) # Combines both representations
+
+    # --- DENSE LAYERS ---
+    x = keras.layers.Dense(256, activation='swish', kernel_regularizer=reg)(x)
+    x = keras.layers.Dropout(0.3)(x)
+    x = keras.layers.Dense(128, activation='swish', kernel_regularizer=reg)(x)
+    x = keras.layers.Dropout(0.2)(x)
+    x = keras.layers.Dense(64, activation='swish', kernel_regularizer=reg)(x)
+    x = keras.layers.Dropout(0.1)(x)
+    
+    outputs = keras.layers.Dense(6, activation='sigmoid')(x)
+
+    return keras.Model(inputs=inputs, outputs=outputs, name='RPN_model_3')
+
 MODEL_DICT = {
     'anisotropic_0': model_anisotropic_0,
     'anisotropic_reg_0': model_anisotropic_reg_0,
     'anisotropic_reg_1': model_anisotropic_reg_1,
     'anisotropic_reg_2': model_anisotropic_reg_2,
+    'anisotropic_reg_2_1': model_anisotropic_reg_2_1,
+    'anisotropic_reg_2_2': model_anisotropic_reg_2_2,
+    'anisotropic_reg_2_3': model_anisotropic_reg_2_3,
+    'anisotropic_reg_3': model_anisotropic_reg_3,
 }
 
 # --- FUNCTIONS ---
@@ -362,3 +546,69 @@ class PerClassMetricsCallback(keras.callbacks.Callback):
 
         self.history_data.append(row)
         pd.DataFrame(self.history_data).to_csv(self.log_path, index=False)
+
+
+
+def evaluate_and_save_fold(y_true, y_pred, tabular_cols, fold_no, out_dir):
+    """
+    Calculates fold metrics and saves a text summary.
+    """
+    y_pred_bin = (y_pred > 0.5).astype(int)
+
+    metrics = {
+        'fold': fold_no,
+        'f1': f1_score(y_true, y_pred_bin, average='macro', zero_division=0),
+        'auc': roc_auc_score(y_true, y_pred, average='macro'),
+        'ap': average_precision_score(y_true, y_pred, average='macro'),
+        'loss': log_loss(y_true, y_pred)
+    }
+
+    # per-label string
+    label_evals = []
+    for i, col in enumerate(tabular_cols):
+        label_evals.append(f"{col:20s} | F1: {f1_score(y_true[:, i], y_pred_bin[:, i], zero_division=0):.4f} | AP: {average_precision_score(y_true[:, i], y_pred[:, i]):.4f}")
+
+    summary_text = f"""--- FOLD {fold_no} EVALUATION SUMMARY ---
+Macro F1 Score  : {metrics['f1']:.4f}
+Macro ROC AUC   : {metrics['auc']:.4f}
+Macro AP        : {metrics['ap']:.4f}
+Validation Loss : {metrics['loss']:.4f}
+
+--- PER-LABEL EVALUATION ---
+{chr(10).join(label_evals)}
+"""
+    eval_path = out_dir / f"metrics_summary_fold{fold_no}.txt" 
+    eval_path.write_text(summary_text)
+    print(colored(f"Fold evaluation saved to: {eval_path}", "green"))
+    return metrics
+
+
+
+def save_overall_summary(fold_summaries, model_summary_str, out_dir):
+    """Aggregates all fold metrics and generates the final model report."""
+    df = pd.DataFrame(fold_summaries)
+    best_fold = df.loc[df['f1'].idxmax()]
+    worst_fold = df.loc[df['f1'].idxmin()]
+
+    fold_details = [
+        f"Fold {int(row.fold)} | F1: {row.f1:.4f} | AUC: {row.auc:.4f} | AP: {row.ap:.4f}"
+        for _, row in df.iterrows()
+    ]
+
+    report = f"""--- MODEL SUMMARY ---
+Mean F1 Score       : {df['f1'].mean():.4f} +/- {df['f1'].std():.4f}
+Mean ROC AUC        : {df['auc'].mean():.4f} +/- {df['auc'].std():.4f}
+Mean AP             : {df['ap'].mean():.4f} +/- {df['ap'].std():.4f}
+
+Best Fold F1 Score  : {best_fold.f1:.4f} (Fold {int(best_fold.fold)})
+Worst Fold F1 Score : {worst_fold.f1:.4f} (Fold {int(worst_fold.fold)})
+
+--- PER-FOLD SUMMARY ---
+{chr(10).join(fold_details)}
+
+--- MODEL ARCHITECTURE ---
+{model_summary_str}
+"""
+    report_path = out_dir / "model_evaluation_summary.txt"
+    report_path.write_text(report)
+    print(colored(f"Model evaluation report saved to {report_path}", "green"))

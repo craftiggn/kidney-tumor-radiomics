@@ -6,7 +6,6 @@ def benchmark_generator(generator, num_batches=None, name="Generator"):
     """
     Measures the data streaming and augmentation throughput of a sequence generator
     """
-    # Default to full epoch lenght if not specified
     if num_batches is None or num_batches > len(generator):
         num_batches = len(generator)
 
@@ -15,7 +14,7 @@ def benchmark_generator(generator, num_batches=None, name="Generator"):
 
     start_time = time.time()
 
-    # iterate through the generator like how model.fit() should
+    # iterate through the generator
     for i in tqdm(range(num_batches), desc=f"Profiling {name}", unit="batch"):
         X, y = generator[i]
     
@@ -39,7 +38,9 @@ fold_no = 0
 train_paths, val_paths = dataPrep.get_train_validation_paths(DATASET_DIR, fold_no)
 
 
-generator = dataPrep.KITSDataGenerator(train_paths, batch_size=4, augment=True, shuffle=True,
-                                       max_translation=[10, 10, 10], augment_enable=['flip', 'translate', 'zoom'])
+generator = dataPrep.KITSDataGenerator(train_paths, batch_size=4, augment=True)
+benchmark_generator(generator, 10)
 
-benchmark_generator(generator, 100)
+
+generator = dataPrep.KITSDataGenerator(train_paths, batch_size=4, augment=False)
+benchmark_generator(generator, 10)
