@@ -1,0 +1,13 @@
+--- FOLD 2 EVALUATION SUMMARY ---
+Macro F1 Score  : 0.7869
+Macro ROC AUC   : 0.9290
+Macro AP        : 0.8460
+Validation Loss : 0.8592
+
+--- PER-LABEL EVALUATION ---
+position_Central     | F1: 0.8333 | AP: 0.8767
+position_Hilar       | F1: 0.7619 | AP: 0.8463
+position_Peripheral  | F1: 0.9600 | AP: 0.9931
+invasion_Invasive    | F1: 0.7333 | AP: 0.8060
+invasion_Noninvasive | F1: 0.7879 | AP: 0.9005
+invasion_Semi-invasive | F1: 0.6452 | AP: 0.6532
