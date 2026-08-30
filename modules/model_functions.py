@@ -331,15 +331,177 @@ def model_anisotropic_reg_3(input_shape):
 
     return keras.Model(inputs=inputs, outputs=outputs, name='RPN_model_3')
 
+def model_anisotropic_reg_2_23(input_shape):
+    """3D CNN anisotropic model, more filters wider and deeper dense layers"""
+    reg = keras.regularizers.L2(1e-4)
+
+    return keras.Sequential([
+        keras.layers.Input(shape=input_shape),
+
+        keras.layers.Conv3D(32, kernel_size=(1, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.MaxPooling3D(pool_size=(1, 2, 2)),
+
+        keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(256, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(512, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.GlobalAveragePooling3D(),
+
+        keras.layers.Dense(1024, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(512, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(256, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(128, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(32, activation='relu', kernel_regularizer=reg),
+
+        keras.layers.Dense(6, activation='sigmoid')
+    ], name='RPN_classification_model_anisotropic_regularized_2_23') 
+
+def model_anisotropic_reg_2_23_MaxPooling(input_shape):
+    """3D CNN anisotropic model, more filters wider and deeper dense layers"""
+    reg = keras.regularizers.L2(1e-4)
+
+    return keras.Sequential([
+        keras.layers.Input(shape=input_shape),
+
+        keras.layers.Conv3D(32, kernel_size=(1, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.MaxPooling3D(pool_size=(1, 2, 2)),
+
+        keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(256, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(512, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.GlobalMaxPooling3D(),
+
+        keras.layers.Dense(512, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(512, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(256, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(128, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(32, activation='relu', kernel_regularizer=reg),
+
+        keras.layers.Dense(6, activation='sigmoid')
+    ], name='RPN_classification_model_anisotropic_regularized_2_23_MaxPooling') 
+
+def model_anisotropic_reg_23_Deep(input_shape):
+    """3D CNN anisotropic model, more filters wider and deeper dense layers"""
+    reg = keras.regularizers.L2(1e-4)
+
+    return keras.Sequential([
+        keras.layers.Input(shape=input_shape),
+
+        keras.layers.Conv3D(64, kernel_size=(1, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.MaxPooling3D(pool_size=(1, 2, 2)),
+
+        keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(256, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(256, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(512, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.Conv3D(1024, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.GlobalAveragePooling3D(),
+
+        keras.layers.Dense(512, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(256, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(128, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(32, activation='relu', kernel_regularizer=reg),
+
+        keras.layers.Dense(6, activation='sigmoid')
+    ], name='RPN_classification_model_anisotropic_regularized_23_Deep') 
+
 MODEL_DICT = {
     'anisotropic_0': model_anisotropic_0,
     'anisotropic_reg_0': model_anisotropic_reg_0,
     'anisotropic_reg_1': model_anisotropic_reg_1,
-    'anisotropic_reg_2': model_anisotropic_reg_2,
+    'anisotropic_reg_2': model_anisotropic_reg_2, # initial best
+    # 2nd Batch
     'anisotropic_reg_2_1': model_anisotropic_reg_2_1,
-    'anisotropic_reg_2_2': model_anisotropic_reg_2_2,
-    'anisotropic_reg_2_3': model_anisotropic_reg_2_3,
+    'anisotropic_reg_2_2': model_anisotropic_reg_2_2, # 2nd Batch best
+    'anisotropic_reg_2_3': model_anisotropic_reg_2_3, # 2nd Batch best
     'anisotropic_reg_3': model_anisotropic_reg_3,
+    # 3rd Batch
+    'anisotropic_reg_2_23': model_anisotropic_reg_2_23, # joining features of 2 and 3
+    'anisotropic_reg_2_23_MaxPooling': model_anisotropic_reg_2_23_MaxPooling,
+    'anisotropic_reg_2_23_Deep': model_anisotropic_reg_23_Deep,
 }
 
 # --- FUNCTIONS ---
