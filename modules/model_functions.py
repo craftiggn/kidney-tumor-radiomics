@@ -285,52 +285,6 @@ def model_anisotropic_reg_2_3(input_shape):
         keras.layers.Dense(6, activation='sigmoid')
     ], name='RPN_classification_model_anisotropic_regularized_2_3') 
 
-def model_anisotropic_reg_3(input_shape):
-    """3D CNN with Dual Pooling, Swish, and Learned Downsampling"""
-    reg = keras.regularizers.L2(1e-4)
-    inputs = keras.layers.Input(shape=input_shape)
-
-    # --- BLOCK 1: Anisotropic ---
-    x = keras.layers.Conv3D(32, kernel_size=(1, 3, 3), activation='swish', padding='same', kernel_regularizer=reg)(inputs)
-    x = keras.layers.BatchNormalization()(x)
-    # Learned downsampling (strides instead of pool)
-    x = keras.layers.Conv3D(32, kernel_size=(1, 3, 3), strides=(1, 2, 2), activation='swish', padding='same')(x)
-
-    # --- BLOCK 2: Isotropic ---
-    x = keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='swish', padding='same', kernel_regularizer=reg)(x)
-    x = keras.layers.BatchNormalization()(x)
-    x = keras.layers.SpatialDropout3D(0.2)(x)
-    x = keras.layers.Conv3D(64, kernel_size=(3, 3, 3), strides=(2, 2, 2), activation='swish', padding='same')(x)
-
-    # --- BLOCK 3 ---
-    x = keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='swish', padding='same', kernel_regularizer=reg)(x)
-    x = keras.layers.BatchNormalization()(x)
-    x = keras.layers.SpatialDropout3D(0.3)(x)
-    x = keras.layers.Conv3D(128, kernel_size=(3, 3, 3), strides=(2, 2, 2), activation='swish', padding='same')(x)
-
-    # --- BLOCK 4 ---
-    x = keras.layers.Conv3D(256, kernel_size=(3, 3, 3), activation='swish', padding='same', kernel_regularizer=reg)(x)
-    x = keras.layers.BatchNormalization()(x)
-    x = keras.layers.SpatialDropout3D(0.3)(x)
-    x = keras.layers.Conv3D(256, kernel_size=(3, 3, 3), strides=(2, 2, 2), activation='swish', padding='same')(x)
-
-    # --- DUAL POOLING HEAD ---
-    avg_pool = keras.layers.GlobalAveragePooling3D()(x)
-    max_pool = keras.layers.GlobalMaxPooling3D()(x)
-    x = keras.layers.Concatenate()([avg_pool, max_pool]) # Combines both representations
-
-    # --- DENSE LAYERS ---
-    x = keras.layers.Dense(256, activation='swish', kernel_regularizer=reg)(x)
-    x = keras.layers.Dropout(0.3)(x)
-    x = keras.layers.Dense(128, activation='swish', kernel_regularizer=reg)(x)
-    x = keras.layers.Dropout(0.2)(x)
-    x = keras.layers.Dense(64, activation='swish', kernel_regularizer=reg)(x)
-    x = keras.layers.Dropout(0.1)(x)
-    
-    outputs = keras.layers.Dense(6, activation='sigmoid')(x)
-
-    return keras.Model(inputs=inputs, outputs=outputs, name='RPN_model_3')
-
 def model_anisotropic_reg_2_23(input_shape):
     """3D CNN anisotropic model, more filters wider and deeper dense layers"""
     reg = keras.regularizers.L2(1e-4)
@@ -488,6 +442,105 @@ def model_anisotropic_reg_23_Deep(input_shape):
         keras.layers.Dense(6, activation='sigmoid')
     ], name='RPN_classification_model_anisotropic_regularized_23_Deep') 
 
+
+def model_anisotropic_reg_2_23_MaxPooling_1(input_shape):
+    """3D CNN anisotropic model, more filters wider and deeper dense layers, and higher final resolution"""
+    reg = keras.regularizers.L2(1e-4)
+
+    return keras.Sequential([
+        keras.layers.Input(shape=input_shape),
+
+        keras.layers.Conv3D(32, kernel_size=(1, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.MaxPooling3D(pool_size=(1, 2, 2)), # 36 30 30
+
+        keras.layers.Conv3D(64, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)), # 18 15 15
+
+        keras.layers.Conv3D(128, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+
+        keras.layers.Conv3D(256, kernel_size=(3, 3, 3), activation='relu', padding='same', kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.GlobalMaxPooling3D(),
+
+        keras.layers.Dense(512, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(512, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(256, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(128, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(64, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.1),
+
+        keras.layers.Dense(32, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.05),
+
+        keras.layers.Dense(6, activation='sigmoid')
+    ], name='RPN_classification_model_anisotropic_regularized_2_23_MaxPooling_1') 
+
+def model_anisotropic_reg_2_23_MaxPooling_2(input_shape):
+    """3D CNN with pre-activation BN, dilated convs, and tapered dense head"""
+    reg = keras.regularizers.L2(1e-4)
+
+    return keras.Sequential([
+        keras.layers.Input(shape=input_shape),
+
+        # --- BLOCK 1 ---
+        # use_bias=False saves parameters, Activation comes AFTER BatchNormalization
+        keras.layers.Conv3D(32, kernel_size=(1, 3, 3), padding='same', use_bias=False, kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.Activation('relu'),
+        keras.layers.MaxPooling3D(pool_size=(1, 2, 2)), 
+
+        # --- BLOCK 2 ---
+        keras.layers.Conv3D(64, kernel_size=(3, 3, 3), padding='same', use_bias=False, kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.Activation('relu'),
+        keras.layers.SpatialDropout3D(0.2),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)), 
+
+        # --- BLOCK 3: Dilated Convolution ---
+        # dilation_rate=2 expands the receptive field since we skipped pooling here
+        keras.layers.Conv3D(128, kernel_size=(3, 3, 3), dilation_rate=(2, 2, 2), padding='same', use_bias=False, kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.Activation('relu'),
+
+        # --- BLOCK 4 ---
+        keras.layers.Conv3D(256, kernel_size=(3, 3, 3), padding='same', use_bias=False, kernel_regularizer=reg),
+        keras.layers.BatchNormalization(),
+        keras.layers.Activation('relu'),
+        keras.layers.SpatialDropout3D(0.3),
+        keras.layers.MaxPooling3D(pool_size=(2, 2, 2)),
+
+        keras.layers.GlobalMaxPooling3D(),
+
+        # --- TAPERED DENSE HEAD ---
+        # Starts at 256 (matching the Conv3D output) and steps down naturally
+        keras.layers.Dense(256, use_bias=False, kernel_regularizer=reg),
+        keras.layers.BatchNormalization(), 
+        keras.layers.Activation('relu'),
+        keras.layers.Dropout(0.4), # High dropout early
+
+        keras.layers.Dense(128, activation='relu', kernel_regularizer=reg),
+        keras.layers.Dropout(0.2), # Lower dropout later
+
+        keras.layers.Dense(64, activation='relu', kernel_regularizer=reg),
+        
+        keras.layers.Dense(6, activation='sigmoid')
+    ], name='RPN_classification_model_anisotropic_regularized_2_23_MaxPooling_2')
+
 MODEL_DICT = {
     'anisotropic_0': model_anisotropic_0,
     'anisotropic_reg_0': model_anisotropic_reg_0,
@@ -497,11 +550,12 @@ MODEL_DICT = {
     'anisotropic_reg_2_1': model_anisotropic_reg_2_1,
     'anisotropic_reg_2_2': model_anisotropic_reg_2_2, # 2nd Batch best
     'anisotropic_reg_2_3': model_anisotropic_reg_2_3, # 2nd Batch best
-    'anisotropic_reg_3': model_anisotropic_reg_3,
     # 3rd Batch
     'anisotropic_reg_2_23': model_anisotropic_reg_2_23, # joining features of 2 and 3
     'anisotropic_reg_2_23_MaxPooling': model_anisotropic_reg_2_23_MaxPooling,
     'anisotropic_reg_2_23_Deep': model_anisotropic_reg_23_Deep,
+    'anisotropic_reg_2_23_MaxPooling_1': model_anisotropic_reg_2_23_MaxPooling_1,
+    'anisotropic_reg_2_23_MaxPooling_2': model_anisotropic_reg_2_23_MaxPooling_2,
 }
 
 # --- FUNCTIONS ---

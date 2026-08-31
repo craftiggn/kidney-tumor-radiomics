@@ -33,3 +33,19 @@ Fold 2 | F1: 0.8005 | AUC: 0.9296 | AP: 0.8489
 --- MODEL ARCHITECTURE ---
 Model: "RPN_classification_model_anisotropic_regularized_2_2"
 
+HPC_out/2026-08-31_01-50
+--- MODEL SUMMARY ---
+Mean F1 Score       : 0.7561 +/- 0.0282
+Mean ROC AUC        : 0.9060 +/- 0.0322
+Mean AP             : 0.8070 +/- 0.0310
+
+Best Fold F1 Score  : 0.7791 (Fold 2)
+Worst Fold F1 Score : 0.7246 (Fold 0)
+
+--- PER-FOLD SUMMARY ---
+Fold 0 | F1: 0.7246 | AUC: 0.8688 | AP: 0.7716
+Fold 1 | F1: 0.7646 | AUC: 0.9234 | AP: 0.8198
+Fold 2 | F1: 0.7791 | AUC: 0.9258 | AP: 0.8295
+
+--- MODEL ARCHITECTURE ---
+Model: "RPN_classification_model_anisotropic_regularized_2_23_MaxPooling"
