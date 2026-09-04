@@ -1,0 +1,349 @@
+Job started on rysy-n4.icm.edu.pl at Fri  4 Sep 01:25:34 CEST 2026
+INFO:    underlay of /etc/localtime required more than 50 (100) bind mounts
+INFO:    underlay of /usr/bin/nvidia-smi required more than 50 (538) bind mounts
+Requirement already satisfied: numpy in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 1)) (1.26.4)
+Requirement already satisfied: pandas in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 2)) (1.5.3)
+Requirement already satisfied: matplotlib in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 3)) (3.10.0)
+Requirement already satisfied: seaborn in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 4)) (0.13.2)
+Requirement already satisfied: scipy in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 5)) (1.15.2)
+Requirement already satisfied: scikit-learn in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 6)) (1.6.1)
+Requirement already satisfied: tensorflow in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 7)) (2.16.2)
+Requirement already satisfied: keras in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 8)) (3.6.0)
+Requirement already satisfied: nibabel in ./env_libs/lib/python3.11/site-packages (from -r requirements.txt (line 9)) (5.4.2)
+Requirement already satisfied: tqdm in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 10)) (4.67.1)
+Requirement already satisfied: termcolor in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 11)) (2.5.0)
+Requirement already satisfied: visualkeras in ./env_libs/lib/python3.11/site-packages (from -r requirements.txt (line 12)) (0.2.0)
+Requirement already satisfied: pillow in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 13)) (11.1.0)
+Requirement already satisfied: pydot in /usr/local/lib/python3.11/dist-packages (from -r requirements.txt (line 14)) (1.4.2)
+Requirement already satisfied: python-dateutil>=2.8.1 in /usr/local/lib/python3.11/dist-packages (from pandas->-r requirements.txt (line 2)) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.11/dist-packages (from pandas->-r requirements.txt (line 2)) (2025.1)
+Requirement already satisfied: contourpy>=1.0.1 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (1.3.1)
+Requirement already satisfied: cycler>=0.10 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (0.12.1)
+Requirement already satisfied: fonttools>=4.22.0 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (4.56.0)
+Requirement already satisfied: kiwisolver>=1.3.1 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (1.4.8)
+Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (24.1)
+Requirement already satisfied: pyparsing>=2.3.1 in /usr/local/lib/python3.11/dist-packages (from matplotlib->-r requirements.txt (line 3)) (3.2.1)
+Requirement already satisfied: joblib>=1.2.0 in /usr/local/lib/python3.11/dist-packages (from scikit-learn->-r requirements.txt (line 6)) (1.4.2)
+Requirement already satisfied: threadpoolctl>=3.1.0 in /usr/local/lib/python3.11/dist-packages (from scikit-learn->-r requirements.txt (line 6)) (3.5.0)
+Requirement already satisfied: absl-py>=1.0.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.4.0)
+Requirement already satisfied: astunparse>=1.6.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.6.3)
+Requirement already satisfied: flatbuffers>=23.5.26 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (24.3.25)
+Requirement already satisfied: gast!=0.5.0,!=0.5.1,!=0.5.2,>=0.2.1 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (0.6.0)
+Requirement already satisfied: google-pasta>=0.1.1 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (0.2.0)
+Requirement already satisfied: h5py>=3.10.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (3.12.1)
+Requirement already satisfied: libclang>=13.0.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (18.1.1)
+Requirement already satisfied: ml-dtypes~=0.3.1 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (0.3.2)
+Requirement already satisfied: opt-einsum>=2.3.2 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (3.4.0)
+Requirement already satisfied: protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (4.25.6)
+Requirement already satisfied: requests<3,>=2.21.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (2.32.3)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (75.2.0)
+Requirement already satisfied: six>=1.12.0 in /usr/lib/python3/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.16.0)
+Requirement already satisfied: typing-extensions>=3.6.6 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (4.12.2)
+Requirement already satisfied: wrapt>=1.11.0 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.16.0)
+Requirement already satisfied: grpcio<2.0,>=1.24.3 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (1.65.5)
+Requirement already satisfied: tensorboard<2.17,>=2.16 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (2.16.2)
+Requirement already satisfied: tensorflow-io-gcs-filesystem>=0.23.1 in /usr/local/lib/python3.11/dist-packages (from tensorflow->-r requirements.txt (line 7)) (0.37.1)
+Requirement already satisfied: rich in /usr/local/lib/python3.11/dist-packages (from keras->-r requirements.txt (line 8)) (13.9.3)
+Requirement already satisfied: namex in /usr/local/lib/python3.11/dist-packages (from keras->-r requirements.txt (line 8)) (0.0.8)
+Requirement already satisfied: optree in /usr/local/lib/python3.11/dist-packages (from keras->-r requirements.txt (line 8)) (0.13.0)
+Requirement already satisfied: importlib-resources>=5.12 in /usr/local/lib/python3.11/dist-packages (from nibabel->-r requirements.txt (line 9)) (6.5.2)
+Requirement already satisfied: aggdraw>=1.3.11 in ./env_libs/lib/python3.11/site-packages (from visualkeras->-r requirements.txt (line 12)) (1.4.1)
+Requirement already satisfied: wheel<1.0,>=0.23.0 in /usr/local/lib/python3.11/dist-packages (from astunparse>=1.6.0->tensorflow->-r requirements.txt (line 7)) (0.44.0)
+Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 7)) (3.4.0)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 7)) (3.10)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 7)) (2.2.3)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.21.0->tensorflow->-r requirements.txt (line 7)) (2024.8.30)
+Requirement already satisfied: markdown>=2.6.8 in /usr/local/lib/python3.11/dist-packages (from tensorboard<2.17,>=2.16->tensorflow->-r requirements.txt (line 7)) (3.7)
+Requirement already satisfied: tensorboard-data-server<0.8.0,>=0.7.0 in /usr/local/lib/python3.11/dist-packages (from tensorboard<2.17,>=2.16->tensorflow->-r requirements.txt (line 7)) (0.7.2)
+Requirement already satisfied: werkzeug>=1.0.1 in /usr/local/lib/python3.11/dist-packages (from tensorboard<2.17,>=2.16->tensorflow->-r requirements.txt (line 7)) (3.0.5)
+Requirement already satisfied: markdown-it-py>=2.2.0 in /usr/local/lib/python3.11/dist-packages (from rich->keras->-r requirements.txt (line 8)) (3.0.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /usr/local/lib/python3.11/dist-packages (from rich->keras->-r requirements.txt (line 8)) (2.18.0)
+Requirement already satisfied: mdurl~=0.1 in /usr/local/lib/python3.11/dist-packages (from markdown-it-py>=2.2.0->rich->keras->-r requirements.txt (line 8)) (0.1.2)
+Requirement already satisfied: MarkupSafe>=2.1.1 in /usr/local/lib/python3.11/dist-packages (from werkzeug>=1.0.1->tensorboard<2.17,>=2.16->tensorflow->-r requirements.txt (line 7)) (3.0.2)
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+INFO:    underlay of /etc/localtime required more than 50 (100) bind mounts
+INFO:    underlay of /usr/bin/nvidia-smi required more than 50 (538) bind mounts
+2026-09-04 01:26:00.053556: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:479] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-09-04 01:26:00.496487: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:10575] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-09-04 01:26:00.504253: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1442] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2026-09-04 01:26:01.643153: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-09-04 01:26:27.935291: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1928] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 30881 MB memory:  -> device: 0, name: Tesla V100-PCIE-32GB, pci bus id: 0000:af:00.0, compute capability: 7.0
+--- KiTS23 Processed Data Model Training ---
+Dataset Directory: /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Batch Size: 4 | Epochs: 200 | Total Folds: 3
+Loaded target shape from metadata /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney/dataset_metadata.json
+
+========================================
+	Processing fold 0
+========================================
+
+Loaded paths for Fold 0 from /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Building model using architecture: anisotropic_reg_2_23_MaxPooling_1
+Model: "RPN_classification_model_anisotropic_regularized_2_23_MaxPooling_1"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ conv3d (Conv3D)                 │ (None, 36, 60, 60, 32) │           896 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization             │ (None, 36, 60, 60, 32) │           128 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d (MaxPooling3D)    │ (None, 36, 30, 30, 32) │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_1 (Conv3D)               │ (None, 36, 30, 30, 64) │        55,360 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_1           │ (None, 36, 30, 30, 64) │           256 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ spatial_dropout3d               │ (None, 36, 30, 30, 64) │             0 │
+│ (SpatialDropout3D)              │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d_1 (MaxPooling3D)  │ (None, 18, 15, 15, 64) │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_2 (Conv3D)               │ (None, 18, 15, 15,     │       221,312 │
+│                                 │ 128)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_2           │ (None, 18, 15, 15,     │           512 │
+│ (BatchNormalization)            │ 128)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_3 (Conv3D)               │ (None, 18, 15, 15,     │       884,992 │
+│                                 │ 256)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_3           │ (None, 18, 15, 15,     │         1,024 │
+│ (BatchNormalization)            │ 256)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ spatial_dropout3d_1             │ (None, 18, 15, 15,     │             0 │
+│ (SpatialDropout3D)              │ 256)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d_2 (MaxPooling3D)  │ (None, 9, 7, 7, 256)   │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ global_max_pooling3d            │ (None, 256)            │             0 │
+│ (GlobalMaxPooling3D)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense (Dense)                   │ (None, 512)            │       131,584 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout (Dropout)               │ (None, 512)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_1 (Dense)                 │ (None, 512)            │       262,656 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_1 (Dropout)             │ (None, 512)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_2 (Dense)                 │ (None, 256)            │       131,328 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_2 (Dropout)             │ (None, 256)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_3 (Dense)                 │ (None, 128)            │        32,896 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_3 (Dropout)             │ (None, 128)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_4 (Dense)                 │ (None, 64)             │         8,256 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_4 (Dropout)             │ (None, 64)             │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_5 (Dense)                 │ (None, 32)             │         2,080 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_5 (Dropout)             │ (None, 32)             │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_6 (Dense)                 │ (None, 6)              │           198 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 1,733,478 (6.61 MB)
+ Trainable params: 1,732,518 (6.61 MB)
+ Non-trainable params: 960 (3.75 KB)
+
+Saving model architecture visual diagram to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/model_architecture.png...
+Saved run configuration to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/run_config.json
+Starting training for fold 0
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1788478000.705509   80021 service.cc:145] XLA service 0x2ac06c01c9f0 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1788478000.705697   80021 service.cc:153]   StreamExecutor device (0): Tesla V100-PCIE-32GB, Compute Capability 7.0
+2026-09-04 01:26:41.175125: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+2026-09-04 01:26:55.270880: I external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:465] Loaded cuDNN version 8906
+I0000 00:00:1788478049.728911   80021 device_compiler.h:188] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+Epoch 164: early stopping
+Restoring model weights from the end of the best epoch: 100.
+/usr/local/lib/python3.11/dist-packages/sklearn/metrics/_classification.py:3001: UserWarning: The y_pred values do not sum to one. Make sure to pass probabilities.
+  warnings.warn(
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/fold_0/roc_pr_curves_fold_0.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/fold_0/confusion_matrix_fold_0.png
+Fold evaluation saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/fold_0/metrics_summary_fold0.txt
+[Success] 8-panel fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/fold_0/training_curves_fold_0.png
+
+========================================
+	Processing fold 1
+========================================
+
+Loaded paths for Fold 1 from /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Building model using architecture: anisotropic_reg_2_23_MaxPooling_1
+Starting training for fold 1
+Restoring model weights from the end of the best epoch: 187.
+/usr/local/lib/python3.11/dist-packages/sklearn/metrics/_classification.py:3001: UserWarning: The y_pred values do not sum to one. Make sure to pass probabilities.
+  warnings.warn(
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/fold_1/roc_pr_curves_fold_1.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/fold_1/confusion_matrix_fold_1.png
+Fold evaluation saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/fold_1/metrics_summary_fold1.txt
+[Success] 8-panel fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/fold_1/training_curves_fold_1.png
+
+========================================
+	Processing fold 2
+========================================
+
+Loaded paths for Fold 2 from /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Building model using architecture: anisotropic_reg_2_23_MaxPooling_1
+Starting training for fold 2
+Restoring model weights from the end of the best epoch: 137.
+/usr/local/lib/python3.11/dist-packages/sklearn/metrics/_classification.py:3001: UserWarning: The y_pred values do not sum to one. Make sure to pass probabilities.
+  warnings.warn(
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/fold_2/roc_pr_curves_fold_2.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/fold_2/confusion_matrix_fold_2.png
+Fold evaluation saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/fold_2/metrics_summary_fold2.txt
+[Success] 8-panel fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/fold_2/training_curves_fold_2.png
+[Success] 8-panel overall performance matrix saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/all_folds_performance_matrix.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/confusion_matrix_fold_OVERALL.png
+Model evaluation report saved to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_01-26/model_evaluation_summary.txt
+Training time completed in 3:29:36 (12576s)
+INFO:    underlay of /etc/localtime required more than 50 (100) bind mounts
+INFO:    underlay of /usr/bin/nvidia-smi required more than 50 (538) bind mounts
+2026-09-04 04:56:13.371450: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:479] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-09-04 04:56:13.780116: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:10575] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-09-04 04:56:13.786350: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1442] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2026-09-04 04:56:14.558633: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-09-04 04:56:31.085883: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1928] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 30881 MB memory:  -> device: 0, name: Tesla V100-PCIE-32GB, pci bus id: 0000:af:00.0, compute capability: 7.0
+--- KiTS23 Processed Data Model Training ---
+Dataset Directory: /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Batch Size: 4 | Epochs: 200 | Total Folds: 3
+Loaded target shape from metadata /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney/dataset_metadata.json
+
+========================================
+	Processing fold 0
+========================================
+
+Loaded paths for Fold 0 from /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Building model using architecture: anisotropic_reg_2_23_MaxPooling_2
+Model: "RPN_classification_model_anisotropic_regularized_2_23_MaxPooling_2"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ conv3d (Conv3D)                 │ (None, 36, 60, 60, 32) │           864 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization             │ (None, 36, 60, 60, 32) │           128 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ activation (Activation)         │ (None, 36, 60, 60, 32) │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d (MaxPooling3D)    │ (None, 36, 30, 30, 32) │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_1 (Conv3D)               │ (None, 36, 30, 30, 64) │        55,296 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_1           │ (None, 36, 30, 30, 64) │           256 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ activation_1 (Activation)       │ (None, 36, 30, 30, 64) │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ spatial_dropout3d               │ (None, 36, 30, 30, 64) │             0 │
+│ (SpatialDropout3D)              │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d_1 (MaxPooling3D)  │ (None, 18, 15, 15, 64) │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_2 (Conv3D)               │ (None, 18, 15, 15,     │       221,184 │
+│                                 │ 128)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_2           │ (None, 18, 15, 15,     │           512 │
+│ (BatchNormalization)            │ 128)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ activation_2 (Activation)       │ (None, 18, 15, 15,     │             0 │
+│                                 │ 128)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3d_3 (Conv3D)               │ (None, 18, 15, 15,     │       884,736 │
+│                                 │ 256)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_3           │ (None, 18, 15, 15,     │         1,024 │
+│ (BatchNormalization)            │ 256)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ activation_3 (Activation)       │ (None, 18, 15, 15,     │             0 │
+│                                 │ 256)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ spatial_dropout3d_1             │ (None, 18, 15, 15,     │             0 │
+│ (SpatialDropout3D)              │ 256)                   │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling3d_2 (MaxPooling3D)  │ (None, 9, 7, 7, 256)   │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ global_max_pooling3d            │ (None, 256)            │             0 │
+│ (GlobalMaxPooling3D)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense (Dense)                   │ (None, 256)            │        65,536 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_4           │ (None, 256)            │         1,024 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ activation_4 (Activation)       │ (None, 256)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout (Dropout)               │ (None, 256)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_1 (Dense)                 │ (None, 128)            │        32,896 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_1 (Dropout)             │ (None, 128)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_2 (Dense)                 │ (None, 64)             │         8,256 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_3 (Dense)                 │ (None, 6)              │           390 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 1,272,102 (4.85 MB)
+ Trainable params: 1,270,630 (4.85 MB)
+ Non-trainable params: 1,472 (5.75 KB)
+
+Saving model architecture visual diagram to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/model_architecture.png...
+Saved run configuration to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/run_config.json
+Starting training for fold 0
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1788490599.365984   27140 service.cc:145] XLA service 0x2ac9180155f0 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1788490599.366214   27140 service.cc:153]   StreamExecutor device (0): Tesla V100-PCIE-32GB, Compute Capability 7.0
+2026-09-04 04:56:39.626106: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+2026-09-04 04:56:48.288470: I external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:465] Loaded cuDNN version 8906
+I0000 00:00:1788490628.481592   27140 device_compiler.h:188] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+Epoch 197: early stopping
+Restoring model weights from the end of the best epoch: 133.
+/usr/local/lib/python3.11/dist-packages/sklearn/metrics/_classification.py:3001: UserWarning: The y_pred values do not sum to one. Make sure to pass probabilities.
+  warnings.warn(
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/fold_0/roc_pr_curves_fold_0.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/fold_0/confusion_matrix_fold_0.png
+Fold evaluation saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/fold_0/metrics_summary_fold0.txt
+[Success] 8-panel fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/fold_0/training_curves_fold_0.png
+
+========================================
+	Processing fold 1
+========================================
+
+Loaded paths for Fold 1 from /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Building model using architecture: anisotropic_reg_2_23_MaxPooling_2
+Starting training for fold 1
+Restoring model weights from the end of the best epoch: 197.
+/usr/local/lib/python3.11/dist-packages/sklearn/metrics/_classification.py:3001: UserWarning: The y_pred values do not sum to one. Make sure to pass probabilities.
+  warnings.warn(
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/fold_1/roc_pr_curves_fold_1.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/fold_1/confusion_matrix_fold_1.png
+Fold evaluation saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/fold_1/metrics_summary_fold1.txt
+[Success] 8-panel fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/fold_1/training_curves_fold_1.png
+
+========================================
+	Processing fold 2
+========================================
+
+Loaded paths for Fold 2 from /home/marcel42/Data/kits23_processed/kits_dataset_36_60_60_kidney
+Building model using architecture: anisotropic_reg_2_23_MaxPooling_2
+Starting training for fold 2
+Restoring model weights from the end of the best epoch: 165.
+/usr/local/lib/python3.11/dist-packages/sklearn/metrics/_classification.py:3001: UserWarning: The y_pred values do not sum to one. Make sure to pass probabilities.
+  warnings.warn(
+[Success] ROC and PR curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/fold_2/roc_pr_curves_fold_2.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/fold_2/confusion_matrix_fold_2.png
+Fold evaluation saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/fold_2/metrics_summary_fold2.txt
+[Success] 8-panel fold training curves saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/fold_2/training_curves_fold_2.png
+[Success] 8-panel overall performance matrix saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/all_folds_performance_matrix.png
+[Success] Dynamic confusion matrices saved to: /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/confusion_matrix_fold_OVERALL.png
+Model evaluation report saved to /home/marcel42/kidney-tumor-radiomics/HPC_out/2026-09-04_04-56/model_evaluation_summary.txt
+Training time completed in 3:34:56 (12896s)
+Job finished at Fri  4 Sep 08:31:31 CEST 2026
