@@ -110,8 +110,6 @@ def main():
             model_summary_str = "\n".join(summary_lines)
             print(model_summary_str)
 
-            plf.plot_model_architecture(model, out_dir / "model_architecture.png")
-
             # Store complete run configuration with all metadata
             config_dict["input_shape"] = list(input_shape)
             config_dict["keras_model_name"] = model.name

@@ -641,8 +641,8 @@ def plot_feature_confusion_matrix(y_true, y_pred, tabula_cols, fold_no, out_dir)
                         cbar_kws={'label': 'Sample Count'})
 
         ax.set_title(f"{feat_name.capitalize()} Confusion Matrix (Fold {fold_no})")
-        ax.set_ylabel(f"True Label")
-        ax.set_xlabel(f"Predicted Label")
+        ax.set_ylabel(f"True Label", fontweight='bold')
+        ax.set_xlabel(f"Predicted Label", fontweight='bold')
 
     plt.tight_layout()
     save_path = Path(out_dir) / f"confusion_matrix_fold_{fold_no}.png"

@@ -335,6 +335,7 @@ def model_anisotropic_reg_2_23(input_shape):
         keras.layers.Dense(6, activation='sigmoid')
     ], name='RPN_classification_model_anisotropic_regularized_2_23') 
 
+
 def model_anisotropic_reg_2_23_MaxPooling(input_shape):
     """3D CNN anisotropic model, more filters wider and deeper dense layers"""
     reg = keras.regularizers.L2(1e-4)
@@ -554,6 +555,7 @@ MODEL_DICT = {
     'anisotropic_reg_2_23': model_anisotropic_reg_2_23, # joining features of 2 and 3
     'anisotropic_reg_2_23_MaxPooling': model_anisotropic_reg_2_23_MaxPooling,
     'anisotropic_reg_2_23_Deep': model_anisotropic_reg_23_Deep,
+    # 4th batch, underperforms, anisotropic_reg_2_23_MaxPooling performs better
     'anisotropic_reg_2_23_MaxPooling_1': model_anisotropic_reg_2_23_MaxPooling_1,
     'anisotropic_reg_2_23_MaxPooling_2': model_anisotropic_reg_2_23_MaxPooling_2,
 }
