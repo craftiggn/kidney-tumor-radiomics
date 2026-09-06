@@ -84,8 +84,8 @@ def calculate_max_diameter(mask, zooms, mask_value):
         # if Qhull fails
         # calculate max distance between <=2000 points
 
-        if len(coords_mm) > 2000:
-            idx = np.random.choice(len(coords_mm), 2000, replace=False)
+        if len(coords_mm) > 1024:
+            idx = np.random.choice(len(coords_mm), 1024, replace=False)
             max_diameter = np.max(pdist(coords_mm[idx]))
         else:
             max_diameter = np.max(pdist(coords_mm))
