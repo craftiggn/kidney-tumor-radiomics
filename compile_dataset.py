@@ -71,9 +71,10 @@ for target_shape in TARGET_SHAPES:
         df_master_splits.to_csv(compiled_dataset_dir / "dataset_splits.csv", index=False)
         
         # --- GENERATE DIAGNOSTIC VIDEOS ---
-        # print(f"Generating videos...")
-        # dirs = [p for p in compiled_dataset_dir.iterdir() if p.is_dir()]
-        # for d in dirs:
-        #     plf.generate_tumor_video_from_npy(d, dataset_figures_dir)
+        if False:
+            print(f"Generating videos...")
+            dirs = [p for p in compiled_dataset_dir.iterdir() if p.is_dir()]
+            for d in dirs:
+                plf.generate_tumor_video_from_npy(d, dataset_figures_dir)
 
 print(colored("\nDataset generation complete.", "blue", attrs=["bold"]))

@@ -588,11 +588,11 @@ def get_keras_class_weights(train_paths):
 
 def build_model(input_shape, model_key):
     """
-    Constructs and compiles the 3D CNN architecture using keras.Sequential, based on a given key.
+    Constructs the 3D CNN model using keras.Sequential, based on a given key.
     """
 
     if model_key not in MODEL_DICT:
-        raise ValueError(colored(f"Model key '{model_key}' not found in MODEL_DICT.\nAvailable keys:{list(MODEL_DICT.keys())}", "red"))
+        raise ValueError(colored(f"Model key '{model_key}' not found in MODEL_DICT.", "red"))
 
     print(f"Building model using architecture: {model_key}")
     model = MODEL_DICT[model_key](input_shape)
