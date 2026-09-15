@@ -564,10 +564,8 @@ MODEL_DICT = {
 
 def get_keras_class_weights(train_paths):
     """
-    Extracts the labels directly from disk and calculates balanced class weights.
-    6 output nodes - we calculate the inverse frequency for each node. 
+    Calculates inverse frequency weights for each class/node.
     """
-    print("Calculating class weights...")
     all_labels = []
     for path in train_paths:
         label_path = Path(path) / "tabular.npy"

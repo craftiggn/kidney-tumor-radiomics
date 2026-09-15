@@ -16,6 +16,7 @@ import keras # NOTE use this instead of tf.keras, for the annoying warnings, try
 from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.utils.class_weight import compute_class_weight
 import random
+import glob
 
 # for tumor diameter calculation
 from scipy.spatial import ConvexHull
@@ -203,7 +204,7 @@ def get_case_path(dataset_filepath: str, instance: int):
 
 def compute_radius_from_diameter(df):
     """
-    Computes the radius points, based on the calculated diameter within the labels.
+    Computes the radius points, based on the calculated diameter.
     """
     bins = [0, 25, 50, np.inf]
     labels = [0, 1, 2]
@@ -496,6 +497,31 @@ def extract_kidney_bounding_boxes(csv_path, kits_dir):
     bbox_df = pd.DataFrame(bbox_data)
 
     return bbox_df
+
+def extract_kits23_shape(csv_path="data/kits23_data_shape.csv", kits_dir="/home/marcel/Repos/Data/kits23"):
+    """
+    Extract shapes from all cases in KiTS23 dataset.
+    """
+    kits_path = Path(kits_dir)
+    seg_paths = sorted(kits_path.glob("case_*/segmentation.nii.gz"))
+
+    records = []
+    for seg_path in tqdm(seg_paths, desc="Extracting Shapes"):
+        case_id = seg_path.parent.name
+
+        segmentation_volume = get_instance_numpy(seg_path)
+        shape = segmentation_volume.shape
+
+        records.append({
+            "case_id": case_id,
+            "shape_z": shape[0],
+            "shape_y": shape[1],
+            "shape_x": shape[2]
+        })
+
+    df = pd.DataFrame(records)
+    df.to_csv(csv_path)
+    return df
 
 ### IMAGE PROCESSING
 

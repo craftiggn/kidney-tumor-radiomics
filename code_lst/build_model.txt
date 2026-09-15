@@ -1,0 +1,12 @@
+  Constructs the 3D CNN model using keras.Sequential, based on a given key.
+  """
+
+  if model_key not in MODEL_DICT:
+    raise ValueError(colored(f"Model key '{model_key}' not found in MODEL_DICT.", "red"))
+
+  print(f"Building model using architecture: {model_key}")
+  model = MODEL_DICT[model_key](input_shape)
+
+  return model
+
+def train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir, learning_rate=1e-4, lr_scheduler=None):

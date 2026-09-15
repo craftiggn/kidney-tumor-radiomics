@@ -1,0 +1,50 @@
+
+def calculate_max_diameter(mask, zooms, mask_value):
+  """Caslculates the maximum 3D diameter of a segmentation mask in millimeters.
+  
+  Args:
+    mask: segmentation mask.
+    zooms: the pixel-to-milimeter conversion in X, Y, Z.
+    mask_values: the values on the mask representing the target.
+
+  Returns:
+    float: the maximal diameter, in millimeters, rounded to 2 decimal places.
+  """
+  # find all coordinates where val = mask_value
+  coords = np.argwhere(mask==mask_value)
+
+  if len(coords) == 0: 
+    return 0.0
+  
+  # convert the coordinates to millimeters
+  coords_mm = coords * np.array(zooms)
+
+  # check for flat dimensions
+  valid_dims = [i for i in range(3) if len(np.unique(coords[:, i])) > 1]
+
+  if len(valid_dims) == 0:
+    return 0.0 # tumor is a single pixel
+
+  try:
+    if len(valid_dims) < 3:
+      # 2D case
+      hull = ConvexHull(coords_mm[:, valid_dims])
+    else:
+      # 3D case
+      hull = ConvexHull(coords_mm)
+
+    # get the surface points
+    hull_points = coords_mm[hull.vertices]
+
+    # calculate max distance between surface points
+    max_diameter = np.max(pdist(hull_points))
+  except Exception as e:
+    # if Qhull fails
+    # calculate max distance between <=2000 points
+
+    if len(coords_mm) > 1024:
+      idx = np.random.choice(len(coords_mm), 1024, replace=False)
+      max_diameter = np.max(pdist(coords_mm[idx]))
+    else:
+      max_diameter = np.max(pdist(coords_mm))
+

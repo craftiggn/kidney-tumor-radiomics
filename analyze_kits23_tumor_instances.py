@@ -1,7 +1,7 @@
-from modules import data_preprocessing as data_prep
 import pandas as pd
 import numpy as np
 from termcolor import colored
+from modules import data_preprocessing as data_prep
 
 KITS_DIR = "/home/marcel/Repos/Data/kits23"
 OUTPUT_CSV = "data/kits23_tumor_instance_data.csv"

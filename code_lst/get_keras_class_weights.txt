@@ -1,0 +1,21 @@
+def get_keras_class_weights(train_paths):
+  """
+  Calculates inverse frequency weights for each class/node.
+  """
+  all_labels = []
+  for path in train_paths:
+    label_path = Path(path) / "tabular.npy"
+    if label_path.exists():
+      all_labels.append(np.load(label_path))
+
+  labels_matrix = np.stack(all_labels)
+  total_samples = labels_matrix.shape[0]
+  
+  class_weights = {}
+  for i in range(labels_matrix.shape[1]):
+    positives = np.sum(labels_matrix[:, i])
+    weight = total_samples / (2.0 * positives) if positives > 0 else 1.0
+    class_weights[i] = weight
+
+  print(f"Calculated node weights: {class_weights}")
+  return class_weights

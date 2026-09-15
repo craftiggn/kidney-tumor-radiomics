@@ -1,3 +1,4 @@
+
 def calculate_max_diameter(mask, zooms, mask_value):
   """Caslculates the maximum 3D diameter of a segmentation mask in millimeters.
   
@@ -47,4 +48,3 @@ def calculate_max_diameter(mask, zooms, mask_value):
     else:
       max_diameter = np.max(pdist(coords_mm))
 
-  return round(max_diameter, 2)

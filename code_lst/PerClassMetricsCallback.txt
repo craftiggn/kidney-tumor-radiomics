@@ -1,0 +1,92 @@
+  Evaluates and records per-label: Loss, AUC, AP, F1 score on
+  train and val datasets at the end of each epoch, saving the values to a .csv file.
+  """
+
+  def __init__(self, train_gen, val_gen, class_names, log_path):
+    super().__init__()
+    self.train_gen = train_gen
+    self.val_gen = val_gen
+
+    self.class_names = class_names
+    self.log_path = Path(log_path)
+
+    self.history_data = []
+
+  def on_epoch_end(self, epoch, logs=None):
+    # Validation predictions
+    y_val_true_list, y_val_pred_list = [], []
+    for i in range(len(self.val_gen)):
+      X_b, y_b = self.val_gen[i]
+      preds = self.model.predict(X_b, verbose=0)
+      y_val_true_list.append(y_b)
+      y_val_pred_list.append(preds)
+
+    y_val_true = np.concatenate(y_val_true_list, axis=0)
+    y_val_pred = np.concatenate(y_val_pred_list, axis=0)
+
+    # Training predictions
+    y_tr_true_list, y_tr_pred_list = [], []
+    for i in range(len(self.train_gen)):
+      X_b, y_b = self.train_gen[i]
+      preds = self.model.predict(X_b, verbose=0)
+      y_tr_true_list.append(y_b)
+      y_tr_pred_list.append(preds)
+
+    y_tr_true = np.concatenate(y_tr_true_list, axis=0)
+    y_tr_pred = np.concatenate(y_tr_pred_list, axis=0)
+
+    row = {'epoch': epoch}
+    tr_losses, val_losses, tr_aucs, val_aucs = [], [], [], []
+    tr_aps, val_aps, tr_f1s, val_f1s = [], [], [], []
+
+    for i, name in enumerate(self.class_names):
+      # Loss
+      tr_l = log_loss(y_tr_true[:, i], y_tr_pred[:, i], labels=[0, 1])
+      val_l = log_loss(y_val_true[:, i], y_val_pred[:, i], labels=[0, 1])
+
+      # ROC AUC
+      try: tr_auc = roc_auc_score(y_tr_true[:, i], y_tr_pred[:, i])
+      except ValueError: tr_auc = 0.5
+      try: val_auc = roc_auc_score(y_val_true[:, i], y_val_pred[:, i])
+      except ValueError: val_auc = 0.5
+
+      # AP
+      tr_ap = average_precision_score(y_tr_true[:, i], y_tr_pred[:, i])
+      val_ap = average_precision_score(y_val_true[:, i], y_val_pred[:, i])
+
+      # F1 
+      tr_f1 = f1_score(y_tr_true[:, i], (y_tr_pred[:, i] > 0.5).astype(int), zero_division=0)
+      val_f1 = f1_score(y_val_true[:, i], (y_val_pred[:, i] > 0.5).astype(int), zero_division=0)
+
+      row[f'train_loss_{name}'] = tr_l
+      row[f'val_loss_{name}'] = val_l
+      row[f'train_auc_{name}'] = tr_auc
+      row[f'val_auc_{name}'] = val_auc
+      row[f'train_ap_{name}'] = tr_ap
+      row[f'val_ap_{name}'] = val_ap
+      row[f'train_f1_{name}'] = tr_f1
+      row[f'val_f1_{name}'] = val_f1
+
+      tr_losses.append(tr_l)
+      val_losses.append(val_l)
+      tr_aucs.append(tr_auc)
+      val_aucs.append(val_auc)
+      tr_aps.append(tr_ap)
+      val_aps.append(val_ap)
+      tr_f1s.append(tr_f1)
+      val_f1s.append(val_f1)
+
+    # averages
+    row['loss'] = float(np.mean(tr_losses))
+    row['val_loss'] = float(np.mean(val_losses))
+    row['auc'] = float(np.mean(tr_aucs))
+    row['val_auc'] = float(np.mean(val_aucs))
+    row['ap'] = float(np.mean(tr_aps))
+    row['val_ap'] = float(np.mean(val_aps))
+    row['f1'] = float(np.mean(tr_f1s))
+    row['val_f1'] = float(np.mean(val_f1s))
+
+    self.history_data.append(row)
+    pd.DataFrame(self.history_data).to_csv(self.log_path, index=False)
+
+
