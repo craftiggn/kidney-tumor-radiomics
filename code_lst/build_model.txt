@@ -1,3 +1,5 @@
+def build_model(input_shape, model_key):
+  """
   Constructs the 3D CNN model using keras.Sequential, based on a given key.
   """
 
@@ -8,5 +10,3 @@
   model = MODEL_DICT[model_key](input_shape)
 
   return model
-
-def train_model(model, train_generator, val_generator, class_weights, args, fold_no, fold_out_dir, learning_rate=1e-4, lr_scheduler=None):

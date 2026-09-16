@@ -1,0 +1,15 @@
+--- MODEL SUMMARY ---
+Mean F1 Score     : 0.7442 +/- 0.0598
+Mean ROC AUC    : 0.9003 +/- 0.0390
+Mean AP       : 0.8056 +/- 0.0444
+
+Best Fold F1 Score  : 0.8042 (Fold 4)
+Worst Fold F1 Score : 0.6615 (Fold 0)
+
+--- PER-FOLD SUMMARY ---
+Fold 0 | F1: 0.6615 | AUC: 0.8310 | AP: 0.7338
+Fold 1 | F1: 0.7859 | AUC: 0.9171 | AP: 0.8309
+Fold 2 | F1: 0.7657 | AUC: 0.9202 | AP: 0.8240
+Fold 3 | F1: 0.7035 | AUC: 0.9109 | AP: 0.7936
+Fold 4 | F1: 0.8042 | AUC: 0.9224 | AP: 0.8458
+
