@@ -22,17 +22,36 @@ from modules import data_preprocessing as dataPrep
 from modules import model_functions as mod
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="Train 3D CNN on KiTS23 Preprocessed Dataset")
-    parser.add_argument('--data_dir', type=str, required=True, help="Path to the compiled training dataset directory")
-    parser.add_argument('--out_dir', type=str, default="./training_outputs", help="Directory to save models and figures")
-    parser.add_argument('--epochs', type=int, default=50)
-    parser.add_argument('--batch_size', type=int, default=4)
-    parser.add_argument('--learning_rate', '--lr', type=float, default=1e-4, help="Learning rate for model optimizer")
-    parser.add_argument('--n_folds', type=int, default=5, help="Total number of cross-validation folds")
-    parser.add_argument('--save_model', action='store_true', help="Flag to save the best model")
-    parser.add_argument('--workers', type=int, default=4, help="Number of CPU workers for data generation")
-    parser.add_argument('--architecture', type=str, default='anisotropic_0' ,help="Model architecture key as seen in MODEL_DICT")
-    parser.add_argument('--use_lr_scheduler_plateau', action='store_true', help="Enable ReduceLROnPlateau callback")
+    parser = argparse.ArgumentParser(
+        description="Train 3D CNN on KiTS23 Preprocessed Dataset")
+    parser.add_argument(
+        '--data_dir', type=str, required=True,
+        help="Path to the compiled training dataset directory")
+    parser.add_argument(
+        '--out_dir', type=str, default="./training_outputs",
+        help="Directory to save models and figures")
+    parser.add_argument(
+        '--epochs', type=int, default=50)
+    parser.add_argument(
+        '--batch_size', type=int, default=4)
+    parser.add_argument(
+        '--learning_rate', '--lr', type=float, default=1e-4,
+        help="Learning rate for model optimizer")
+    parser.add_argument(
+        '--n_folds', type=int, default=5,
+        help="Total number of cross-validation folds")
+    parser.add_argument(
+        '--save_model', action='store_true',
+        help="Flag to save the best model")
+    parser.add_argument(
+        '--workers', type=int, default=4,
+        help="Number of CPU workers for data generation")
+    parser.add_argument(
+        '--architecture', type=str, default='anisotropic_0'
+        ,help="Model architecture key as seen in MODEL_DICT")
+    parser.add_argument(
+        '--use_lr_scheduler_plateau', action='store_true',
+        help="Enable ReduceLROnPlateau callback")
 
     return parser.parse_args()
 
@@ -148,7 +167,8 @@ def main():
         all_y_true.append(y_true)
         all_y_pred.append(y_pred)
 
-        metrics = mod.evaluate_and_save_fold(y_true, y_pred, val_generator.tabular_cols, fold_no, fold_out_dir)
+        metrics = mod.evaluate_and_save_fold(
+            y_true, y_pred,val_generator.tabular_cols, fold_no, fold_out_dir)
         fold_summaries.append(metrics)
         plf.plot_and_evaluate(fold_out_dir, fold_no, val_generator.tabular_cols)
 

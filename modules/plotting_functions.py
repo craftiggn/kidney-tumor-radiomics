@@ -552,7 +552,7 @@ def plot_multilabel_roc_and_pr_curves(y_true, y_pred, fold_no, out_dir, class_na
     fig, axes = plt.subplots(1, 2, figsize=(18, 8))
     ax_roc, ax_pr = axes
 
-    # --- ROC Plot (Y-axis fixed from 0.5 to 1.02) ---
+    # --- ROC Plot ---
     ax_roc.set_title(f"ROC Curve (Fold {fold_no})", fontsize=14, fontweight='bold', pad=10)
     ax_roc.set_xlabel("False Positive Rate")
     ax_roc.set_ylabel("True Positive Rate")
@@ -560,7 +560,7 @@ def plot_multilabel_roc_and_pr_curves(y_true, y_pred, fold_no, out_dir, class_na
     ax_roc.set_ylim([-0.02, 1.02])
     ax_roc.plot([0, 1], [0, 1], 'k--', lw=2, label="Random Chance")
 
-    # --- PR Plot (Y-axis fixed from 0.0 to 1.02) ---
+    # --- PR Plot ---
     ax_pr.set_title(f"Precision-Recall Curve (Fold {fold_no})", fontsize=14, fontweight='bold', pad=10)
     ax_pr.set_xlabel("Recall")
     ax_pr.set_ylabel("Precision")

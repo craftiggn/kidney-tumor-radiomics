@@ -4,14 +4,15 @@ from modules import plotting_functions as plf
 # --- CONFIGURATIONS ---
 ANNOTATION_PATH = 'data/annotations_RPN_75mm_final.csv'
 # HPC
-KITS23_DATASET_PATH = '/home/marcel42/Data/kits23'
-BASE_OUTPUT_DIR = Path('/home/marcel42/Data/kits23_processed')
+# KITS23_DATASET_PATH = '/home/marcel42/Data/kits23'
+# BASE_OUTPUT_DIR = Path('/home/marcel42/Data/kits23_processed')
 # LOCAL
-# KITS23_DATASET_PATH = '/home/marcel/Repos/Data/kits23'
-# BASE_OUTPUT_DIR = Path('/home/marcel/Repos/Data/kits23_processed')
+KITS23_DATASET_PATH = '/home/marcel/Repos/Data/kits23'
+BASE_OUTPUT_DIR = Path('/home/marcel/Repos/Data/kits23_processed')
 
 # Define target experiments to generate
-TARGET_SHAPES = [(32, 103, 116), (36, 60, 60), (16, 30, 30)]
+# TARGET_SHAPES = [(32, 103, 116), (36, 60, 60), (16, 30, 30)]
+TARGET_SHAPES = [(36, 60, 60)]
 
 BBOX_STRATEGIES = ['kidney'] # or 'kidney-tumor'
 N_SPLITS = 5
@@ -54,10 +55,9 @@ for target_shape in TARGET_SHAPES:
     df_master_splits.to_csv(compiled_dataset_dir / "dataset_splits.csv", index=False)
     
     # --- GENERATE DIAGNOSTIC VIDEOS ---
-    if False: # to enable: set to True
+    if True: # to enable: set to True
       print(f"Generating videos...")
       dirs = [p for p in compiled_dataset_dir.iterdir() if p.is_dir()]
       for d in dirs:
         plf.generate_tumor_video_from_npy(d, dataset_figures_dir)
 
-print(colored("\nDataset generation complete.", "blue", attrs=["bold"]))
