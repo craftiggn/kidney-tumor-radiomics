@@ -311,7 +311,7 @@ def plot_threshold(df, threshold, output_path='./figures/threshold.png'):
     # Filter dataset
     kept_df = df[df['calculated_diameter_mm'] <= threshold].copy()
     
-    plt.title(f"Tumor Size CDF (Keeping {len(kept_df)} / {len(df)} cases)")
+    plt.title(f"Tumor Size Cumulative Distribution Function, Keeping {len(kept_df)} / {len(df)} cases")
     plt.xlabel("Calculated Tumor Diameter (mm)")
     plt.ylabel("Cumulative Case Count")
     plt.legend()
