@@ -220,7 +220,7 @@ def generate_tumor_video_from_npy(tumor_dir, out_dir, fps=15):
 
     tumor_id = tumor_path.name
     mask_file = tumor_path / "mask.npy"
-    tabular_file = tumor_path / "tabular.npy"
+    tabular_file = tumor_path / "labels.npy"
     
     # Locate metadata file
     columns_file = tumor_path.parent / "tabular_columns.txt"
